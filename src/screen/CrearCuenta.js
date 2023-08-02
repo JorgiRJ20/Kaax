@@ -61,7 +61,6 @@ export default function CrearCuenta(props) {
       .max(10, "El número debe tener maximo 10 caracteres"),
     role: Yup.string()
       .required(true)
-      .oneOf(["solicitante", "limpiador"], "Elige un rol"),
   });
 
   const initialValues = {
@@ -124,7 +123,7 @@ export default function CrearCuenta(props) {
           validationSchema={validationSchema}
           onSubmit={(values) => console.log(values)}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, isValid }) => (
             <View>
                 <Text style={styles.labelS}>Nombre</Text>
                 <TextInput
@@ -173,14 +172,14 @@ export default function CrearCuenta(props) {
                   <Text style={styles.labelSelect}>Solicitante</Text>
                   <RadioButton
                     value="first"
-                    status={checked === "first" ? "checked" : "unchecked"}
-                    onPress={() => setChecked("first")}
+                    status={values.role === "first" ? "checked" : "unchecked"}
+                    onPress={() => setFieldValue("role", "first")}
                   />
                   <Text style={styles.labelSelect}>Limpiador</Text>
                   <RadioButton
                     value="second"
-                    status={checked === "second" ? "checked" : "unchecked"}
-                    onPress={() => setChecked("second")}
+                    status={values.role === "second" ? "checked" : "unchecked"}
+                    onPress={() => setFieldValue("role", "second")}
                   />
                 </View>
                 <Text style={styles.labelS}>Foto de perfil</Text>
@@ -201,12 +200,14 @@ export default function CrearCuenta(props) {
                   </TouchableOpacity>
               </View>
               <TouchableOpacity
-                style={styles.btnTouchable}
+              style={{ backgroundColor: isValid ? '#05668D' : '#A0A0A0', padding: 10, borderRadius: 10,marginBottom: 20,marginTop: 20 }}
+                // style={styles.btnTouchable}
                 onPress={handleSubmit}
-
+                disabled={!isValid}
               >
                 <Text style={styles.textTouchable}>Registrarme</Text>
               </TouchableOpacity>
+              
               
             </View>
           )}
