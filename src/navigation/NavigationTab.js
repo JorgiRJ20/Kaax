@@ -4,15 +4,15 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginForm from '../../src/screen/LoginForm';
 import Notificaciones from '../screen/Notificaciones';
-import Home from '../screen/Home';
+import Solicitudes from '../screen/Solicitudes'
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();
 	return (
 		<Tab.Navigator>
 			<Tab.Screen
-				name='Home'
-				component={Home}
+				name='Solicitudes'
+				component={Solicitudes}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} /> // Cambia 'home' por el nombre del icono que desees utilizar

@@ -8,12 +8,7 @@ export default function Home(props) {
 		<View style={styles.container}>
       		<ScrollView contentContainerStyle={styles.cardContainer}>
         		<Card />
-        		<Card />
-				<Card />
-				<Card />
-				<Card />
-				<Card />
-				<Card />
+        	
         		{/* Agrega más tarjetas aquí */}
       </ScrollView>
     </View>

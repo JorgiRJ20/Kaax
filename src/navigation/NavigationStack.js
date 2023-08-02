@@ -3,7 +3,7 @@ import React from 'react';
 import LoginForm from '../screen/LoginForm';
 import NavigationTab from './NavigationTab';
 import Notificaciones from '../screen/Notificaciones';
-import Home from '../screen/Home';
+import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import Solicitud from '../screen/Solicitud';
@@ -28,8 +28,8 @@ export default function NavigationStack() {
 				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
-				name='Home'
-				component={Home}
+				name='Solicitudes'
+				component={Solicitudes}
 				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
