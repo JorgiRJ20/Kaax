@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
 import React from 'react';
-import Card from '../components/SolicitudesCard'
+import Card from '../components/SolicitudesTrabajoCard'
 
 export default function Solicitudes(props) {
 	
