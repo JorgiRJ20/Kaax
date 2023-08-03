@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 export default function SolicitudesCard(props) {
 	const navigation = useNavigation();
 	const handleButtonPress = () => {
-		navigation.navigate('Solicitud'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+		navigation.navigate('LimpiezaCheck'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
 	  };
 	  
     return (

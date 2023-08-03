@@ -6,8 +6,8 @@ import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
-import Solicitud from '../screen/Solicitud';
-import MisSolicitudes from '../screen/MisSolicitudes';
+import LimpiezaCheck from '../screen/LimpiezaCheck'
+
 
 export default function NavigationStack() {
 	const Stack = createStackNavigator();
@@ -39,13 +39,8 @@ export default function NavigationStack() {
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
-				name='Solicitud'
-				component={Solicitud}
-				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
-			/>
-			<Stack.Screen
-				name='MisSolicitudes'
-				component={MisSolicitudes}
+				name='LimpiezaCheck'
+				component={LimpiezaCheck}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
