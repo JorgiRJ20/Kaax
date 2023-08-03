@@ -13,16 +13,32 @@ import {
 import React, { useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import ButtonLogin from "../components/ButtonLogin";
-import { RadioButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { perfil } from "../assets/images/perfil.png";
+import { PostUserApi } from "../api/ApiUserApi";
+import Svg, { Circle, Rect, SvgXml } from "react-native-svg";
+import { fondo } from "../assets/fondo";
 
+import {
+  Modal,
+  Portal,
+  PaperProvider,
+  RadioButton,
+  ProgressBar,
+  MD3Colors,
+} from "react-native-paper";
 export default function CrearCuenta(props) {
   const [checked, setChecked] = React.useState(null);
   const [imageUri, setImageUri] = useState("");
   const [fileBlob, setFileBlob] = useState("");
   const [fileName, setFileName] = useState("");
+  const [visible, setVisible] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [statusRegister, setStatusRegister] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
 
   const { navigation } = props;
   const goToLogin = () => {
@@ -33,9 +49,7 @@ export default function CrearCuenta(props) {
     name: Yup.string()
       .required(true)
       .min(3, "El nombre debe tener al menos 3 caracteres"),
-    email: Yup.string()
-      .required(true)
-      .email("Ingresa un correo válido" ),
+    email: Yup.string().required(true).email("Ingresa un correo válido"),
     password: Yup.string()
       .required(true)
       .min(8, "La contraseña debe tener al menos 8 caracteres")
@@ -59,8 +73,7 @@ export default function CrearCuenta(props) {
       .required(true)
       .min(10, "El número debe tener al menos 10 caracteres")
       .max(10, "El número debe tener maximo 10 caracteres"),
-    role: Yup.string()
-      .required(true)
+    role: Yup.string().required(true),
   });
 
   const initialValues = {
@@ -68,7 +81,9 @@ export default function CrearCuenta(props) {
     email: "",
     password: "",
     phone: "",
-    role: "",
+    role: null,
+    userImage: "../assets/images/perfil.png",
+    status: true,
   };
 
   const handleChooseImage = async () => {
@@ -106,9 +121,28 @@ export default function CrearCuenta(props) {
     }
   };
 
-  const handleUser = (values) => {
-    console.log(values)
-    console.log('dasdasd')
+  const saveUser = async (values) => {
+    try {
+      setStatusRegister(false);
+      const response = await PostUserApi(values);
+      if (response.response === null) {
+        console.log(response);
+        setStatusRegister(true);
+        setMessage("Ocurrio un error al registrar usuario");
+      } else {
+        setMessage("Usuario registrado correctamente");
+        setStatusRegister(true);
+        console.log("response", response);
+      }
+    } catch (error) {
+      setStatusRegister(true);
+      setMessage("Error al registrar usuario");
+      console.log("error en saveUser", error);
+    }
+  };
+
+  const login = () => {
+    navigation.navigate("Login");
   };
 
   return (
@@ -116,113 +150,167 @@ export default function CrearCuenta(props) {
       <SafeAreaView></SafeAreaView>
 
       <View style={styles.container}>
-        <Image source={require("../assets/kaax.png")} style={styles.image} />
+        <View style={styles.containerSVG}>
+          <Image
+            style={styles.imagenbg}
+            source={require("../assets/color.png")}
+          ></Image>
+          <Image
+            style={styles.imagenLogo}
+            source={require("../assets/logo.png")}
+          ></Image>
+        </View>
         <Text style={styles.titulo}>Crear Cuenta</Text>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={(values, { resetForm }) => {
+            // funcion para limpiar los campos
+            try {
+              setVisible(true);
+              setStatusRegister(false);
+              values.userImage = "../assets/images/perfil.png";
+              values.role = { idAuthority: values.role };
+              console.log("onSubmit", values);
+              saveUser(values);
+              resetForm();
+            } catch (error) {
+              // resetForm();
+            }
+          }}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, setFieldValue, isValid }) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            setFieldValue,
+            isValid,
+          }) => (
             <View>
-                <Text style={styles.labelS}>Nombre</Text>
-                <TextInput
-                  placeholder="Ingresa tu nombre"
-                  style={styles.inputText}
-                  autoCapitalize="none"
-                  onChangeText={handleChange("name")}
-                  value={values.name}
-                  onBlur={handleBlur("name")}
-                />
-                <Text style={styles.error}>{errors.name}</Text>
-                <Text style={styles.labelS}>Email</Text>
-                <TextInput
-                  placeholder="Ingresa tu correo electronico"
-                  style={styles.inputText}
-                  autoCapitalize="none"
-                  onChangeText={handleChange("email")}
-                  value={values.email}
-                  onBlur={handleBlur("email")}
-                />
-                <Text style={styles.error}>{errors.email}</Text>
-                <Text style={styles.labelS}>Contraseña</Text>
-                <TextInput
-                  placeholder="Ingresa tu contraseña"
-                  style={styles.inputText}
-                  autoCapitalize="none"
-                  secureTextEntry={true}
-                  onChangeText={handleChange("password")}
-                  value={values.password}
-                  onBlur={handleBlur("password")}
-                />
-                <Text style={styles.error}>{errors.password}</Text>
-                <Text style={styles.labelS}>Telefono</Text>
-                <TextInput
-                  placeholder="Ingresa tu número de telefono"
-                  style={styles.inputText}
-                  autoCapitalize="none"
-                  onChangeText={handleChange("phone")}
-                  value={values.phone}
-                  onBlur={handleBlur("phone")}
-                />
-                <Text style={styles.error}>{errors.phone}</Text>
-                <Text style={styles.labelS}>Elige tu rol</Text>
+              <Text style={styles.labelS}>Nombre</Text>
+              <TextInput
+                placeholder="Ingresa tu nombre"
+                style={styles.inputText}
+                autoCapitalize="none"
+                onChangeText={handleChange("name")}
+                value={values.name}
+                onBlur={handleBlur("name")}
+              />
+              <Text style={styles.error}>{errors.name}</Text>
+              <Text style={styles.labelS}>Email</Text>
+              <TextInput
+                placeholder="Ingresa tu correo electronico"
+                style={styles.inputText}
+                autoCapitalize="none"
+                onChangeText={handleChange("email")}
+                value={values.email}
+                onBlur={handleBlur("email")}
+              />
+              <Text style={styles.error}>{errors.email}</Text>
+              <Text style={styles.labelS}>Contraseña</Text>
+              <TextInput
+                placeholder="Ingresa tu contraseña"
+                style={styles.inputText}
+                autoCapitalize="none"
+                secureTextEntry={true}
+                onChangeText={handleChange("password")}
+                value={values.password}
+                onBlur={handleBlur("password")}
+              />
+              <Text style={styles.error}>{errors.password}</Text>
+              <Text style={styles.labelS}>Telefono</Text>
+              <TextInput
+                placeholder="Ingresa tu número de telefono"
+                style={styles.inputText}
+                autoCapitalize="none"
+                onChangeText={handleChange("phone")}
+                value={values.phone}
+                onBlur={handleBlur("phone")}
+              />
+              <Text style={styles.error}>{errors.phone}</Text>
+              <Text style={styles.labelS}>Elige tu rol</Text>
 
-                <View style={styles.containerSelect}>
-                  <Text style={styles.labelSelect}>Solicitante</Text>
-                  <RadioButton
-                    value="first"
-                    status={values.role === "first" ? "checked" : "unchecked"}
-                    onPress={() => setFieldValue("role", "first")}
+              <View style={styles.containerSelect}>
+                <Text style={styles.labelSelect}>Solicitante</Text>
+                <RadioButton
+                  value={1}
+                  status={values.role === 1 ? "checked" : "unchecked"}
+                  onPress={() => setFieldValue("role", 1)}
+                />
+                <Text style={styles.labelSelect}>Limpiador</Text>
+                <RadioButton
+                  value={2}
+                  status={values.role === 2 ? "checked" : "unchecked"}
+                  onPress={() => setFieldValue("role", 2)}
+                />
+              </View>
+              <Text style={styles.labelS}>Foto de perfil</Text>
+              <View style={styles.imageContainer}>
+                {imageUri ? (
+                  <Image source={{ uri: imageUri }} style={styles.image} />
+                ) : (
+                  <Image
+                    source={require("../assets/images/perfil.png")}
+                    style={styles.image}
                   />
-                  <Text style={styles.labelSelect}>Limpiador</Text>
-                  <RadioButton
-                    value="second"
-                    status={values.role === "second" ? "checked" : "unchecked"}
-                    onPress={() => setFieldValue("role", "second")}
-                  />
-                </View>
-                <Text style={styles.labelS}>Foto de perfil</Text>
-                <View style={styles.imageContainer}>
-                  {imageUri ? (
-                    <Image source={{ uri: imageUri }} style={styles.image} />
-                  ) : (
-                    <Image
-                      source={require("../assets/images/perfil.png")}
-                      style={styles.image}
-                    />
-                  )}
-                  <TouchableOpacity
-                    style={styles.addButton}
-                    onPress={handleChooseImage}
-                  >
-                    <Text style={styles.addButtonText}>+</Text>
-                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={handleChooseImage}
+                >
+                  <Text style={styles.addButtonText}>+</Text>
+                </TouchableOpacity>
               </View>
               <TouchableOpacity
-              style={{ backgroundColor: isValid ? '#05668D' : '#A0A0A0', padding: 10, borderRadius: 10,marginBottom: 20,marginTop: 20 }}
+                style={{
+                  backgroundColor: isValid ? "#05668D" : "#A0A0A0",
+                  padding: 10,
+                  borderRadius: 20,
+                  marginBottom: 40,
+                  marginTop: 20,
+                  marginRight: 40,
+                  marginLeft: 40,
+                }}
                 // style={styles.btnTouchable}
                 onPress={handleSubmit}
                 disabled={!isValid}
               >
                 <Text style={styles.textTouchable}>Registrarme</Text>
               </TouchableOpacity>
-              
-              
             </View>
           )}
         </Formik>
+        <Modal visible={visible} contentContainerStyle={styles.modal}>
+          {statusRegister ? (
+            <>
+              <Text style={styles.textProgress}>{message}</Text>
+              <TouchableOpacity
+                style={styles.aceptarbtn}
+                onPress={() => login()}
+              >
+                <Text style={styles.textaceptar}>Aceptar</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <Text style={styles.textProgress}>
+              Registrando usuario espere porfavor...
+            </Text>
+          )}
+        </Modal>
       </View>
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
   containerScroll: {
     flex: 1,
     flexGrow: 1,
   },
   container: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#F8F9FA",
     alignItems: "center",
   },
 
@@ -237,12 +325,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "#05668D",
     fontWeight: "bold",
-    marginTop: -30,
+    marginTop: 20,
   },
   labelS: {
     fontSize: 16,
     color: "#05668D",
-    marginTop: 10,
     marginBottom: -10,
     textAlign: "left",
     padding: 10,
@@ -250,11 +337,27 @@ const styles = StyleSheet.create({
   inputText: {
     height: 60,
     width: 350,
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#F8F9FA",
     borderRadius: 20,
     padding: 15,
     marginTop: 10,
     paddingStart: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  input: {
+    padding: 10,
   },
   image: {
     width: 210,
@@ -274,6 +377,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: "center",
+    padding: 10,
   },
   containerSelect: {
     flexDirection: "row",
@@ -322,5 +427,50 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: "#000",
     fontSize: 30,
+  },
+  containerSVG: {
+    width: "100%",
+    height: 500,
+    alignItems: "center",
+    marginTop: -270,
+  },
+  imagenLogo: {
+    width: 200,
+    height: 200,
+    marginTop: -210,
+  },
+  imagenbg: {
+    width: 450,
+    height: "100%",
+  },
+  modal: {
+    backgroundColor: "white",
+    padding: 20,
+    margin: 20,
+    width: "80%",
+    height: "20%",
+    alignContent: "center",
+    alignSelf: "center",
+    alignItems: "center",
+    borderRadius: 20,
+  },
+  textProgress: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#05668D",
+    textAlign: "center",
+  },
+  aceptarbtn: {
+    backgroundColor: "#05668D",
+    padding: 15,
+    width: "80%",
+    borderRadius: 20,
+    marginTop: 20,
+  },
+  textaceptar: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
   },
 });

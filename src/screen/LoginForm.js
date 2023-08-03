@@ -100,9 +100,7 @@ const styles = StyleSheet.create({
 	text3: {
 		fontSize: 15,
 		color: '#848484',
-		marginTop: 90,
-		marginBottom: -100,
-		marginRight: -20,
+		
 	},
 	boldText: {
 		fontWeight: 'bold',
