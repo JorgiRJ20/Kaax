@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { HeaderTitle, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import LoginForm from '../screen/LoginForm';
 import NavigationTab from './NavigationTab';
@@ -7,6 +7,8 @@ import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import LimpiezaCheck from '../screen/LimpiezaCheck'
+import MyLocations from '../screen/MyLocations';
+import AddLocation from '../screen/AddLocation';
 
 
 export default function NavigationStack() {
@@ -47,6 +49,16 @@ export default function NavigationStack() {
 				name='OlvidasteContrasena'
 				component={OlvidasteContrasena}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='MyLocations'
+				component={MyLocations}
+				options={{ headerTitle: 'Mis lugares de limpieza' }}
+			/>
+			<Stack.Screen
+				name='AddLocation'
+				component={AddLocation}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);
