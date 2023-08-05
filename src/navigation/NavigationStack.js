@@ -7,6 +7,9 @@ import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import LimpiezaCheck from '../screen/LimpiezaCheck'
+import PublicacionesCard from '../components/PublicacionesCard';
+import DetallePublicacion from '../components/DetallePublicacion';
+import CrearPublicacion from '../screen/CrearPublicacion';
 
 
 export default function NavigationStack() {
@@ -48,6 +51,23 @@ export default function NavigationStack() {
 				component={OlvidasteContrasena}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
+
+            <Stack.Screen
+				name='PublicacionesCard'
+				component={PublicacionesCard}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='DetallePublicacion'
+				component={DetallePublicacion}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='CrearPublicacion'
+				component={CrearPublicacion}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			
 		</Stack.Navigator>
 	);
 }

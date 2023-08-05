@@ -1,1 +1,1 @@
-export const URL_API= "http://192.168.0.7:8081/kaax/api/v1/auth/register"
+export const URL_API= "http://192.168.0.7:8081/kaax/api/"
