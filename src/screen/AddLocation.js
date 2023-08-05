@@ -8,11 +8,14 @@ import Constants from 'expo-constants';
 import Palette from '../constants/Palette';
 import { FontAwesome } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 
 const pinPlace = require('../assets/images/markPlace.png');
 
 export default function AddLocation(props) {
+
+    const navigation = useNavigation();
 
     // Datos de localización que se recibiran cuando se requiera actualizar la ubicación
     const { dataLocation, infoLocation } = props.route.params;
@@ -47,8 +50,37 @@ export default function AddLocation(props) {
     const [gettingLocation, setGettingLocation] = useState(false);
     const [currentSnapPoint, setCurrentSnapPoint] = useState(0);
     const [inputName, setInputName] = useState("");
-
+    const permissionsGranted = useRef(false);
     
+
+    /**
+     * Función para pedir permisos al usuario de usar su localización
+     * @date 8/4/2023 - 10:25:21 PM
+     * @author Alessandro Guevara
+     *
+     * @async
+     * @returns {Promise resolve} - [true | false]
+     */
+    const requestPermissions = async () => {
+
+        return new Promise(async (resolve) => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if(status !== 'granted') {
+                console.log("PERMISOS DENEGADOS");
+                // Si no da los permisos regresamos a la pantalla anterior, 
+                // porque para toda la API Location se necesitan permisos
+                navigation.goBack();
+                permissionsGranted.current = false;
+                resolve(false);
+            }else {
+                permissionsGranted.current = true;
+                resolve(true);
+            }
+        })
+
+        
+    }
+
     /**
      * Función para centrar el mapa pasandole la latitud y longitud de una localización
      * @date 8/4/2023 - 5:37:20 PM
@@ -86,27 +118,31 @@ export default function AddLocation(props) {
      */
     const geocodeLocation = async () => {
 
-        // Verificamos que el texto no este vació
-        if(searchLocation != "") {
-            const geocode = await Location.geocodeAsync(searchLocation);
+        if(permissionsGranted.current) {
 
-            // Verificamos si se encontraron datos
-            if(geocode[0] === undefined) {
-                console.log("Ubicación no encontrada");
-                return
+            // Verificamos que el texto no este vació
+            if(searchLocation != "") {
+                const geocode = await Location.geocodeAsync(searchLocation);
+
+                // Verificamos si se encontraron datos
+                if(geocode[0] === undefined) {
+                    console.log("Ubicación no encontrada");
+                    return
+                }
+
+                const objLocation = {
+                    latitude: geocode[0].latitude,
+                    longitude: geocode[0].longitude
+                }
+                setOrigin(objLocation);
+                originRef.current = objLocation;
+                handleCenterMap();
+
+
             }
-
-            const objLocation = {
-                latitude: geocode[0].latitude,
-                longitude: geocode[0].longitude
-            }
-            setOrigin(objLocation);
-            originRef.current = objLocation;
-            handleCenterMap();
-
-
+        }else {
+            navigation.goBack();
         }
-        
     }
 
     /**
@@ -118,12 +154,17 @@ export default function AddLocation(props) {
      * @returns {*}
      */
     const reverseGeocodeLocation = async () => {
-        const reverseGeocode = await Location.reverseGeocodeAsync({
-            latitude: originRef.current.latitude,
-            longitude: originRef.current.longitude
-        });
+        if(permissionsGranted.current) {
 
-        setInfoOrigin(reverseGeocode[0]);
+            const reverseGeocode = await Location.reverseGeocodeAsync({
+                latitude: originRef.current.latitude,
+                longitude: originRef.current.longitude
+            });
+
+            setInfoOrigin(reverseGeocode[0]);
+        }else {
+            navigation.goBack();
+        }
     }
 
     /**
@@ -159,29 +200,26 @@ export default function AddLocation(props) {
      */
     const getUserLocation = async () => {
 
-        setGettingLocation(true);
+        if(permissionsGranted.current) {
+            setGettingLocation(true);
 
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if(status !== 'granted') {
-            console.log("PERMISOS DENEGADOS");
-            setOrigin(default_location);
-            return
+            let location = await Location.getCurrentPositionAsync({
+                accuracy: 6
+            });
+            const current_location = {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+            }
+
+            setOrigin(current_location);
+            originRef.current = current_location;
+            reverseGeocodeLocation();
+            handleCenterMap();
+            setGettingLocation(false);
+
+        }else {
+            navigation.goBack();
         }
-
-        let location = await Location.getCurrentPositionAsync({
-            accuracy: 6
-        });
-        const current_location = {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-        }
-
-        setOrigin(current_location);
-        originRef.current = current_location;
-        reverseGeocodeLocation();
-        handleCenterMap();
-        setGettingLocation(false);
-
     }
 
     /**
@@ -211,19 +249,34 @@ export default function AddLocation(props) {
         }
     }
 
-    // useEffect(() => {
-    //     // Centrar el mapa una vez que esté listo (onLayout)
-    //     handleCenterMap();
-    // }, [handleCenterMap]);
+    /**
+     * Funciones iniciales que necesitan un async
+     * @date 8/4/2023 - 10:26:53 PM
+     * @author Alessandro Guevara
+     *
+     * @async
+     * @returns {*}
+     */
+    const runStartFunctions = async () => {
+        await requestPermissions().then((result) => {
+            if(result) {
+                if(isUpdate) {
+                    reverseGeocodeLocation();
+                    handleCenterMap();  
+                }else {
+                    getUserLocation();
+                }
+            }else {
+                navigation.goBack();
+            }
+            
+        })
+
+        
+    }
 
     useEffect(() => {
-        reverseGeocodeLocation();
-
-        if(isUpdate) {
-            handleCenterMap();
-        }else {
-            getUserLocation();
-        }
+        runStartFunctions();
     }, []); 
 
     // const onMapReady = useCallback(() => {
