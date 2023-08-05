@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { HeaderTitle, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import LoginForm from '../screen/LoginForm';
 import NavigationTab from './NavigationTab';
@@ -7,9 +7,14 @@ import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import LimpiezaCheck from '../screen/LimpiezaCheck'
+<<<<<<< HEAD
 import PublicacionesCard from '../components/PublicacionesCard';
 import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
+=======
+import MyLocations from '../screen/MyLocations';
+import AddLocation from '../screen/AddLocation';
+>>>>>>> 8d649e9fe2e13c88169105d529c54f02c0f7c4cd
 
 
 export default function NavigationStack() {
@@ -51,6 +56,7 @@ export default function NavigationStack() {
 				component={OlvidasteContrasena}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
+<<<<<<< HEAD
 
             <Stack.Screen
 				name='PublicacionesCard'
@@ -68,6 +74,18 @@ export default function NavigationStack() {
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			
+=======
+			<Stack.Screen
+				name='MyLocations'
+				component={MyLocations}
+				options={{ headerTitle: 'Mis lugares de limpieza' }}
+			/>
+			<Stack.Screen
+				name='AddLocation'
+				component={AddLocation}
+				options={{ headerShown: false }}
+			/>
+>>>>>>> 8d649e9fe2e13c88169105d529c54f02c0f7c4cd
 		</Stack.Navigator>
 	);
 }
