@@ -96,6 +96,15 @@ export default function CrearPublicacion() {
       )}
       <Text>{almacenafecha}</Text>
         </View>
+
+        <DateTimePicker
+          testID='dateTimePicker'
+          value={new Date()}
+          mode='time'
+          display='default'
+          is24Hour={true}
+          onChange={onChange}
+        />
         
     </ScrollView>
   )
