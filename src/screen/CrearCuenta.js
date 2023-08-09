@@ -78,10 +78,10 @@ export default function CrearCuenta(props) {
   });
 
   const initialValues = {
-    name: "jorge",
-    email: "jorge@gmail.com",
-    password: "ASD34%aaaa",
-    phone: "4191377583",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
     role: null,
     userImage: "../assets/images/perfil.png",
     status: true,

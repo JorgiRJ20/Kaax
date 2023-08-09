@@ -12,8 +12,8 @@ export default function NavigationTab() {
 	return (
 		<Tab.Navigator>
 			<Tab.Screen
-				name='PublicacionesCard'
-				component={PublicacionesCard}
+				name='Solicitudes'
+				component={Solicitudes}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} /> // Cambia 'home' por el nombre del icono que desees utilizar
@@ -22,8 +22,8 @@ export default function NavigationTab() {
 				}}
 			></Tab.Screen>
 			<Tab.Screen
-				name='Notificaciones'
-				component={Notificaciones}
+				name='PublicacionesCard'
+				component={PublicacionesCard}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} />
