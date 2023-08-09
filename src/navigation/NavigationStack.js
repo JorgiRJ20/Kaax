@@ -12,6 +12,7 @@ import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
 import MyLocations from '../screen/MyLocations';
 import AddLocation from '../screen/AddLocation';
+import MiPerfil from '../screen/MiPerfil';
 
 
 export default function NavigationStack() {
@@ -69,6 +70,12 @@ export default function NavigationStack() {
 				component={CrearPublicacion}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
+			<Stack.Screen
+				name='MiPerfil'
+				component={MiPerfil}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			
 			
 			<Stack.Screen
 				name='MyLocations'

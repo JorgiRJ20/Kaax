@@ -6,3 +6,4 @@ export const storageBucket= "kaax-46ae6.appspot.com"
 export const messagingSenderId= "341609620213"
 export const appId= "1:341609620213:web:4973f4b9930357d807dbbc"
 export const measurementId= "G-0LTS64YBTC"
+
