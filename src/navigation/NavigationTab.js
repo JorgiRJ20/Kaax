@@ -4,11 +4,8 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes'
-<<<<<<< HEAD
 import PublicacionesCard from '../components/PublicacionesCard';
-=======
 import NavigationOptions from './NavigationOptions';
->>>>>>> 8d649e9fe2e13c88169105d529c54f02c0f7c4cd
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import ButtonLogin from "../components/ButtonLogin";
 import * as ImagePicker from "expo-image-picker";
@@ -20,7 +20,8 @@ import { perfil } from "../assets/images/perfil.png";
 import { PostUserApi } from "../api/ApiUserApi";
 import Svg, { Circle, Rect, SvgXml } from "react-native-svg";
 import { fondo } from "../assets/fondo";
-
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db,auth,storage } from "../utils/firebaseConfig";
 import {
   Modal,
   Portal,
@@ -31,7 +32,7 @@ import {
 } from "react-native-paper";
 export default function CrearCuenta(props) {
   const [checked, setChecked] = React.useState(null);
-  const [imageUri, setImageUri] = useState("");
+  const [imageUri, setImageUri] = useState(null);
   const [fileBlob, setFileBlob] = useState("");
   const [fileName, setFileName] = useState("");
   const [visible, setVisible] = React.useState(false);
@@ -77,10 +78,10 @@ export default function CrearCuenta(props) {
   });
 
   const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
+    name: "jorge",
+    email: "jorge@gmail.com",
+    password: "ASD34%aaaa",
+    phone: "4191377583",
     role: null,
     userImage: "../assets/images/perfil.png",
     status: true,
@@ -123,21 +124,77 @@ export default function CrearCuenta(props) {
 
   const saveUser = async (values) => {
     try {
-      setStatusRegister(false);
-      const response = await PostUserApi(values);
-      if (response.response === null) {
-        console.log(response);
-        setStatusRegister(true);
-        setMessage("Ocurrio un error al registrar usuario");
-      } else {
-        setMessage("Usuario registrado correctamente");
-        setStatusRegister(true);
-        console.log("response", response);
-      }
+        const response = await PostUserApi(values);
+        if (response.response === null) {
+          console.log(response);
+          setStatusRegister(true);
+          setMessage("Ocurrio un error al registrar usuario");
+        } else {
+          setMessage("Usuario registrado correctamente");
+          setStatusRegister(true);
+          console.log("response", response);
+        }
+
     } catch (error) {
       setStatusRegister(true);
       setMessage("Error al registrar usuario");
       console.log("error en saveUser", error);
+    }
+  };
+
+  // Función para subir la imagen a Firebase Storage y actualizar el enlace en el servidor
+  const handleUploadImage = async (values) => {
+    try {
+      // Verificar si hay una imagen seleccionada para subir
+      if (fileBlob && fileName) {
+        // Crear una referencia al archivo en Firebase Storage
+        const filePath = `usuarios/${fileName}`;
+        const storageRef = ref(storage, filePath);
+
+        // Subir el blob al Firebase Storage
+        const uploadTask = uploadBytesResumable(storageRef, fileBlob);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            // Observar eventos de cambio de estado como progreso, pausa y reanudación
+            // Obtener el progreso de la tarea, incluyendo el número de bytes subidos y el número total de bytes a subir
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            // Manejar errores de subida fallida
+            console.error("Error al subir la imagen:", error);
+          },
+          () => {
+            // Manejar subida exitosa en la finalización
+            // Por ejemplo, obtener la URL de descarga: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log("File available at", downloadURL);
+
+              // Actualizar la URL de la imagen en tu estado
+              setImageUri(downloadURL);
+              values.userImage = downloadURL;
+              // Llamar a handleregister con la nueva imagen
+              saveUser(values);
+            });
+          }
+        );
+      } else {
+        console.log("No se ha seleccionado ninguna imagen");
+        saveUser(values);
+            }
+    } catch (error) {
+      console.error("Error al subir la imagen:", error);
     }
   };
 
@@ -150,6 +207,7 @@ export default function CrearCuenta(props) {
       <SafeAreaView></SafeAreaView>
 
       <View style={styles.container}>
+
         <View style={styles.containerSVG}>
           <Image
             style={styles.imagenbg}
@@ -169,10 +227,8 @@ export default function CrearCuenta(props) {
             try {
               setVisible(true);
               setStatusRegister(false);
-              values.userImage = "../assets/images/perfil.png";
               values.role = { idAuthority: values.role };
-              console.log("onSubmit", values);
-              saveUser(values);
+              handleUploadImage(values);
               resetForm();
             } catch (error) {
               // resetForm();
@@ -246,7 +302,7 @@ export default function CrearCuenta(props) {
                   onPress={() => setFieldValue("role", 2)}
                 />
               </View>
-              <Text style={styles.labelS}>Foto de perfil</Text>
+              <Text style={styles.labelPerfil}>Foto de perfil</Text>
               <View style={styles.imageContainer}>
                 {imageUri ? (
                   <Image source={{ uri: imageUri }} style={styles.image} />
@@ -332,6 +388,13 @@ const styles = StyleSheet.create({
     color: "#05668D",
     marginBottom: -10,
     textAlign: "left",
+    padding: 10,
+  },
+  labelPerfil:{
+    fontSize: 16,
+    color: "#05668D",
+    marginBottom: -10,
+    textAlign: "center",
     padding: 10,
   },
   inputText: {
