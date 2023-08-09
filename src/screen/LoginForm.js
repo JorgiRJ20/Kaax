@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { ApiUserAuthentication } from '../api/ApiUserAuthentication';
 import useAuth from '../hooks/useAuth';
+import { KeyboardAvoidingView } from 'react-native';
 
 export default function LoginForm(props) {
 	const { navigation } = props; 
@@ -94,11 +95,13 @@ export default function LoginForm(props) {
 	};
 	
 	return (
-		<View style={styles.mainContainer}>
+		<KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
+		<View style={{backgroundColor:"#FFF"}}>
+			
 			<View style={styles.containerSvg}>
 				<Image
 					source={require('../assets/kaax.png')}
-					style={{ width: 350, height: 350, top: 70, left:8}}
+					style={{ width: 350, height: 350, top: 60, left:8}}
 				/>
 	   			<Text style={styles.title}>BIENVENIDO</Text>  
 				<Formik
@@ -133,16 +136,20 @@ export default function LoginForm(props) {
 								onChangeText={handleChange("email")}
 								value={values.email}
 								onBlur={handleBlur("email")}
+								autoFocus={true}
+								textAlignVertical="center"  
 							/>
 							<Text style={styles.error}>{errors.email}</Text>
 							<TextInput
 								placeholder='Contraseña'
 								style={styles.input}
 								autoCapitalize='none'
-								secureTextEntry={true}
+								// secureTextEntry={true}
 								onChangeText={handleChange("password")}
 								value={values.password}
 								onBlur={handleBlur("password")}
+								autoFocus={true}
+								textAlignVertical="center"  
 							/>
 							<Text style={styles.error}>{errors.password}</Text>
 							<TouchableOpacity
@@ -180,7 +187,9 @@ export default function LoginForm(props) {
 					)}
 				</Modal>
 			</View>
+			
 		</View>
+		</KeyboardAvoidingView>
 	);
 }
 
@@ -248,10 +257,11 @@ const styles = StyleSheet.create({
 	text3: {
 		fontSize: 15,
 		color: '#848484',
+		marginTop: 20,
 	},
 	boldText: {
 		fontWeight: 'bold',
-		color: '#99C24D'
+		color: '#99C24D',
 
 	},
 	title:{
@@ -309,6 +319,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	  },
 	  containerInput:{
-		alignItems:"center"
+		alignItems:"center",
+		justifyContent:"center",
 	  }
 });

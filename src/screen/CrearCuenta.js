@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Button,
   Image,
-  TextInput,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
@@ -21,7 +20,7 @@ import { PostUserApi } from "../api/ApiUserApi";
 import Svg, { Circle, Rect, SvgXml } from "react-native-svg";
 import { fondo } from "../assets/fondo";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { db,auth,storage } from "../utils/firebaseConfig";
+import { db, auth, storage } from "../utils/firebaseConfig";
 import {
   Modal,
   Portal,
@@ -29,7 +28,11 @@ import {
   RadioButton,
   ProgressBar,
   MD3Colors,
+  TextInput,
+  ActivityIndicator,
+  MD2Colors,
 } from "react-native-paper";
+import { Icon } from "react-native-elements/dist/icons/Icon";
 export default function CrearCuenta(props) {
   const [checked, setChecked] = React.useState(null);
   const [imageUri, setImageUri] = useState(null);
@@ -38,8 +41,10 @@ export default function CrearCuenta(props) {
   const [visible, setVisible] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [statusRegister, setStatusRegister] = React.useState(false);
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const openPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const { navigation } = props;
   const goToLogin = () => {
@@ -78,10 +83,10 @@ export default function CrearCuenta(props) {
   });
 
   const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
+    name: "jorge",
+    email: "jorge@gmail.com",
+    password: "ASD34%aaaa",
+    phone: "4191377583",
     role: null,
     userImage: "../assets/images/perfil.png",
     status: true,
@@ -124,17 +129,16 @@ export default function CrearCuenta(props) {
 
   const saveUser = async (values) => {
     try {
-        const response = await PostUserApi(values);
-        if (response.response === null) {
-          console.log(response);
-          setStatusRegister(true);
-          setMessage("Ocurrio un error al registrar usuario");
-        } else {
-          setMessage("Usuario registrado correctamente");
-          setStatusRegister(true);
-          console.log("response", response);
-        }
-
+      const response = await PostUserApi(values);
+      if (response.response === null) {
+        console.log(response);
+        setStatusRegister(true);
+        setMessage("Ocurrio un error al registrar usuario");
+      } else {
+        setMessage("Usuario registrado correctamente");
+        setStatusRegister(true);
+        console.log("response", response);
+      }
     } catch (error) {
       setStatusRegister(true);
       setMessage("Error al registrar usuario");
@@ -192,7 +196,7 @@ export default function CrearCuenta(props) {
       } else {
         console.log("No se ha seleccionado ninguna imagen");
         saveUser(values);
-            }
+      }
     } catch (error) {
       console.error("Error al subir la imagen:", error);
     }
@@ -204,10 +208,7 @@ export default function CrearCuenta(props) {
 
   return (
     <ScrollView style={styles.containerScroll}>
-      <SafeAreaView></SafeAreaView>
-
       <View style={styles.container}>
-
         <View style={styles.containerSVG}>
           <Image
             style={styles.imagenbg}
@@ -266,15 +267,25 @@ export default function CrearCuenta(props) {
               />
               <Text style={styles.error}>{errors.email}</Text>
               <Text style={styles.labelS}>Contraseña</Text>
-              <TextInput
-                placeholder="Ingresa tu contraseña"
-                style={styles.inputText}
-                autoCapitalize="none"
-                secureTextEntry={true}
-                onChangeText={handleChange("password")}
-                value={values.password}
-                onBlur={handleBlur("password")}
-              />
+              <View>
+                <TextInput
+                  placeholder="Ingresa tu contraseña"
+                  style={styles.inputText}
+                  autoCapitalize="none"
+                  onChangeText={handleChange("password")}
+                  value={values.password}
+                  onBlur={handleBlur("password")}
+                  secureTextEntry={!showPassword}
+                />
+                <Icon
+                  name={showPassword ? "eye-off" : "eye"}
+                  type="ionicon"
+                  onPress={() => openPassword()}
+                  containerStyle={styles.iconContainer}
+                  size={30}
+                />
+              </View>
+
               <Text style={styles.error}>{errors.password}</Text>
               <Text style={styles.labelS}>Telefono</Text>
               <TextInput
@@ -340,7 +351,7 @@ export default function CrearCuenta(props) {
         </Formik>
         <Modal visible={visible} contentContainerStyle={styles.modal}>
           {statusRegister ? (
-            <>
+            <View style={styles.modalResponse}>
               <Text style={styles.textProgress}>{message}</Text>
               <TouchableOpacity
                 style={styles.aceptarbtn}
@@ -348,11 +359,15 @@ export default function CrearCuenta(props) {
               >
                 <Text style={styles.textaceptar}>Aceptar</Text>
               </TouchableOpacity>
-            </>
+            </View>
           ) : (
-            <Text style={styles.textProgress}>
-              Registrando usuario espere porfavor...
-            </Text>
+            <View>
+              <ActivityIndicator
+                animating={true}
+                color={MD2Colors.blue300}
+                size={100}
+              />
+            </View>
           )}
         </Modal>
       </View>
@@ -390,7 +405,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     padding: 10,
   },
-  labelPerfil:{
+  labelPerfil: {
     fontSize: 16,
     color: "#05668D",
     marginBottom: -10,
@@ -402,7 +417,6 @@ const styles = StyleSheet.create({
     width: 350,
     backgroundColor: "#F8F9FA",
     borderRadius: 20,
-    padding: 15,
     marginTop: 10,
     paddingStart: 20,
     backgroundColor: "white",
@@ -507,15 +521,11 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   modal: {
-    backgroundColor: "white",
-    padding: 20,
-    margin: 20,
-    width: "80%",
-    height: "20%",
     alignContent: "center",
     alignSelf: "center",
     alignItems: "center",
-    borderRadius: 20,
+    flex: 1,
+    width: "100%",
   },
   textProgress: {
     fontSize: 20,
@@ -535,5 +545,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
+  },
+  modalResponse: {
+    textAlign: "center",
+    backgroundColor: "white",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 20,
+  },
+  iconContainer: {
+    position: "absolute",
+    right: 5,
+    top: 5, // Ajusta esto según tus necesidades
+    margin: 10,
+    padding: 10,
   },
 });
