@@ -3,103 +3,101 @@ import {SafeAreaView,View, Text, Button,TouchableWithoutFeedback,Image,StyleShee
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-
-
 export default function PublicacionesCard(props) {
 
 	const navigation = useNavigation();
 
 const {publicaciones} = props
 
- const goToPublicacion = () =>{
-	console.lof(` Conoce mas de la publicación: ${publicaciones.titulo}`)
- }
- const goToDetalle = () => {
-	 navigation.navigate('DetallePublicacion'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
-   };
+const goToPublicacion = () =>{
+    navigation.navigate('DetallePublicacion',{idPublicacion:publicaciones.idPublicacion,
+	titulo: publicaciones.titulo,
+	descripcion: publicaciones.descripcion,
+	pago: publicaciones.pago,
+	fechaTrabajo: publicaciones.fechaTrabajo,
+	horaTrabajo: publicaciones.horaTrabajo,
+	status: publicaciones.status,
+	user: publicaciones.user.name,
+})
+  }
    const goToCrearPu = () => {
 	navigation.navigate('CrearPublicacion'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
   };
   return (
-	/*<TouchableWithoutFeedback onPress={goToPublicacion}>
-   <Text>Hola publicaciones</Text>
-  </TouchableWithoutFeedback>*/
-    <SafeAreaView style={styles.containerform}>
-	  <View style={styles.card}>
+<TouchableWithoutFeedback onPress={goToPublicacion}>
+<SafeAreaView style={styles.containerform1}>
+	  <View style={styles.card1}>
 		<Image
 			source={require('../assets/departamento.jpg')}
-			style={styles.image}
+			style={styles.image1}
 		  />
-		 <View style={styles.textContainer}>
-          {/* Título centrado */}
-          <Text style={styles.title}>Limpieza de departamento</Text>
-		  <Text style={styles.subtitle}>Rodrigo Alonso</Text>
-			{/* Dos textos horizontales */}
-			<View style={styles.horizontalTextContainer}>
-			<Icon name='money' style={styles.icono}/>
-            <Text style={styles.horizontalText}>$2,000</Text>
-			<Icon name='location-arrow' style={styles.icono}/>
-            <Text style={styles.horizontalText}>1.5KM</Text>
+		 <View style={styles.textContainer1}>
+          <Text style={styles.title1}>{publicaciones.titulo}</Text>
+		  <Text style={styles.subtitle1}>{publicaciones.user.name}</Text>
+			
+			<View style={styles.horizontalTextContainer1}>
+			<Icon name='money' style={styles.icono1}/>
+            <Text style={styles.horizontalText1}>${publicaciones.pago}</Text>
+			<Icon name='location-arrow' style={styles.icono1}/>
+            <Text style={styles.horizontalText1}>1.5KM</Text>
           </View>
         </View>
 		</View>
-		<Button onPress={goToDetalle} title='ir a detalle'/>
 		<Button onPress={goToCrearPu} title='ir a crear'/>
-		</SafeAreaView>
-		
-      
+   </SafeAreaView>
+  </TouchableWithoutFeedback>	
   )
 }
 const styles = StyleSheet.create({
-	containerform:{
-        alignItems:'center',
-        justifyContent: 'center'
+	containerform1:{
+		alignItems:'center',
+		justifyContent: 'center',
 	},
-	card: {
+	card1: {
 		backgroundColor: '#fff',
 		borderRadius: 8,
 		padding: 20,
-		marginTop:55,
+		marginTop:10,
 		shadowColor: '#000',
 		 width: 345, 
 		 height: 120,
 		elevation: 10,
 		flexDirection:'row',
 		marginBottom:10,
-        alignItems:'center',
-        justifyContent: 'center'
+		alignItems:'center',
 		
 	  },
-	  icono:{
+	  icono1:{
 		fontSize:18,
-		color:'#05668D'
+		color:'#05668D',
+		marginStart:10
 	  },
-	  image: {
+	  image1: {
 		width: 100,
 		height: 100,
 		borderRadius: 8,
 		marginRight: 4,
 	  },
-	  title: {
+	  title1: {
 		fontSize: 18,
 		fontWeight: 'bold',
 		marginBottom: 8,
 		left:10,
 		color:'#05668D'
 	  },
-	  subtitle: {
+	  subtitle1: {
 		fontSize: 15,
 		textAlign: 'left',
 		marginBottom: 8,
 		left:10
 	  },
-	  horizontalTextContainer: {
+	  horizontalTextContainer1: {
 		flexDirection: 'row',
-		justifyContent: 'space-evenly',
 		left:10
 	  },
-	  horizontalText: {
+	  horizontalText1: {
 		fontSize: 15,
+		marginStart:10,
 		color: '#555',
 	  }
 	});

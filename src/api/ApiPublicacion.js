@@ -6,13 +6,18 @@ import PublicacionesLists from '../components/PublicacionesList'
 
 export default function ApiPublicacion() {
 
-const [publicaciones, setPublicaiones] = useState([]);
+const [publicaciones, setPublicaciones] = useState([]);
+let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWVnbzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2OTE0NzQ5NjYsImV4cCI6MTY5MTU2MTM2Nn0.rpG6y_P0HlQP3lXn1zArot4jqOsAVtSxOoGY2hGxyrM";
+
+const config = {
+  headers: { Authorization: `Bearer ${token}` }
+};
 
 useEffect(() => {
     const fetchData = async () => {
         try {
-            const response = await axios.get(URL_API +"v1/publicaciones");
-            setCharacters(response.data.results);
+            const response = await axios.get(URL_API+'v1/publicaciones',config);
+            setPublicaciones(response.data);
         } catch (error) {
             console.error(error);
         }
@@ -23,8 +28,8 @@ useEffect(() => {
 }, []);
 
   return (
-    <SafeAreaView>
+    <View>
     <PublicacionesLists publicaciones={publicaciones}/>
-    </SafeAreaView>
+    </View>
   )
 }
