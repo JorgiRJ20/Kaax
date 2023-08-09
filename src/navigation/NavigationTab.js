@@ -6,14 +6,17 @@ import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes'
 import PublicacionesCard from '../components/PublicacionesCard';
 import NavigationOptions from './NavigationOptions';
+import NavigationOptions from './NavigationOptions';
+import ApiPublicacion from '../api/ApiPublicacion';
+import ApiPublicacionLim from '../api/ApiPublicacionLim';
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();
 	return (
 		<Tab.Navigator>
 			<Tab.Screen
-				name='Solicitudes'
-				component={Solicitudes}
+				name='Publi vista Solicitante'
+				component={ApiPublicacion}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} /> // Cambia 'home' por el nombre del icono que desees utilizar
@@ -22,8 +25,8 @@ export default function NavigationTab() {
 				}}
 			></Tab.Screen>
 			<Tab.Screen
-				name='PublicacionesCard'
-				component={PublicacionesCard}
+				name='Pubbli vista limpiador'
+				component={ApiPublicacionLim}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} />

@@ -1,17 +1,20 @@
-import { View, Text,StyleSheet,Image,SafeAreaView} from 'react-native'
-import React from 'react'
+import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity} from 'react-native'
+import React, {useEffect,useState,useCallback} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
+export default function DetallePublicacion(props) {
 
-export default function DetallePublicacion() {
+  const {navigation, route:{params}} = props
+  console.log('recuperamos id',params)
+
   return (
     <SafeAreaView style={styles.containerform}>
         <Image source={require('../assets/departamento.jpg')} style={styles.imagen}/>
-      <Text style={styles.title}>Limpieza Departamento</Text>
-      <Text style={styles.descripcion}>Limpieza de departamento pequeño, limpiar, ordenar y escombrar un cuarto, de la misma manera seria la sala. Solamente serian estos dos espacios.</Text>
+      <Text style={styles.title}>{params.titulo}</Text>
+      <Text style={styles.descripcion}>{params.descripcion}</Text>
     <View style={styles.lineacard}>
         <View style={styles.cards}>
           <Icon name="money" color={'#05668D'} size={25}/>
-          <Text style={styles.texto}> $2,000</Text>
+          <Text style={styles.texto}>${params.pago}</Text>
         </View>
         <View style={styles.cards}>
         <Icon name="arrows-h" color={'#05668D'} size={25}/>
@@ -22,14 +25,19 @@ export default function DetallePublicacion() {
     <View style={styles.lineacard}>
         <View style={styles.cards}>
           <Icon name="user" color={'#05668D'} size={25}/>
-          <Text style={styles.texto}> Rodrigo Alonso Contador</Text>
+          <Text style={styles.texto}>{params.user}</Text>
+          
+          
         </View>
         <View style={styles.cards}>
           <Icon name="calendar" color={'#05668D'} size={25}/>
-          <Text style={styles.texto}> 04/06/2023 </Text>
-          <Text style={styles.texto}>13:30</Text>
+          <Text style={styles.texto}>{params.fechaTrabajo}</Text>
+          <Text style={styles.texto}>{params.horaTrabajo}</Text>
         </View>
     </View>
+    <TouchableOpacity style={styles.buttontime} onPress={{}}>
+			      <Text style={styles.buttonText}>Editar publicación</Text>
+            </TouchableOpacity>
     
     </SafeAreaView>
   )
@@ -80,6 +88,22 @@ const styles = StyleSheet.create({
         fontSize: 15,
 		color: '#555',
         textAlign:'center'
-      }
+      },
+      buttontime: {
+        width: 190,
+        height: 60,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#006E90',
+        color: '#090808',
+        marginTop: 15,
+        alignItems: "center",
+      },
+      buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+      },
 
 })

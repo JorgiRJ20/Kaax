@@ -12,6 +12,9 @@ import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
 import MyLocations from '../screen/MyLocations';
 import AddLocation from '../screen/AddLocation';
+import ApiPublicacion from '../api/ApiPublicacion';
+import ApiPublicacionLim from '../api/ApiPublicacionLim';
+import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
 
 
 export default function NavigationStack() {
@@ -65,8 +68,8 @@ export default function NavigationStack() {
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
-				name='CrearPublicacion'
-				component={CrearPublicacion}
+				name='DetallePublicacionLim'
+				component={DetallePublicacionLim}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			
@@ -80,6 +83,22 @@ export default function NavigationStack() {
 				component={AddLocation}
 				options={{ headerShown: false }}
 			/>
+			 <Stack.Screen
+          name='ApiPublicacion'
+          component={ApiPublicacion}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
+		 <Stack.Screen
+          name='ApiPublicacionLim'
+          component={ApiPublicacionLim}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
 		</Stack.Navigator>
 	);
 }
