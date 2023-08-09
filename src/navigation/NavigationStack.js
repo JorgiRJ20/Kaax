@@ -13,6 +13,9 @@ import CrearPublicacion from '../screen/CrearPublicacion';
 import MyLocations from '../screen/MyLocations';
 import AddLocation from '../screen/AddLocation';
 import MiPerfil from '../screen/MiPerfil';
+import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
+import ApiPublicacion from '../api/ApiPublicacion';
+import ApiPublicacionLim from '../api/ApiPublicacionLim';
 
 
 export default function NavigationStack() {
@@ -85,22 +88,6 @@ export default function NavigationStack() {
 				component={AddLocation}
 				options={{ headerShown: false }}
 			/>
-			 <Stack.Screen
-          name='ApiPublicacion'
-          component={ApiPublicacion}
-          options={{
-            title:'',
-            headerTransparent: true,
-          }}
-        />
-		 <Stack.Screen
-          name='ApiPublicacionLim'
-          component={ApiPublicacionLim}
-          options={{
-            title:'',
-            headerTransparent: true,
-          }}
-        />
 			 <Stack.Screen
           name='ApiPublicacion'
           component={ApiPublicacion}

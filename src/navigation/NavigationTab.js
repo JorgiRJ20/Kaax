@@ -6,7 +6,6 @@ import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes'
 import PublicacionesCard from '../components/PublicacionesCard';
 import NavigationOptions from './NavigationOptions';
-import ApiPublicacion from '../api/ApiPublicacion';
 import ApiPublicacionLim from './../api/ApiPublicacionLim';
 
 export default function NavigationTab() {
