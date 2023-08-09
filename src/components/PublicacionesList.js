@@ -7,21 +7,21 @@ export default function PublicacionesList(props) {
     const {publicaciones} = props;
 
   return (
-    <SafeAreaView>
+    <SafeAreaView >
 			<FlatList
 				data={publicaciones}
-				numColumns={2}
+				numColumns={1}
 				showsVerticalScrollIndicator={false}
-					keyExtractor={(publicaciones) => String(publicaciones.idPublicacion)}
-				renderItem={({ item }) => <Publicacionescard publicaciones={item} />}
-				contentContainerStyle={styles.container}
-            />
+				keyExtractor={(publicaciones) => String(publicaciones.idPublicacion)}
+				renderItem={({ item }) => <PublicacionesCard publicaciones={item} />}
+				contentContainerStyle={styles.container}/>
     </SafeAreaView>
 
   )
 }
 const styles = StyleSheet.create({
     container:{
-        paddingHorizontal:15,
+        paddingHorizontal:0,
+        marginTop:50,
     }
 })
