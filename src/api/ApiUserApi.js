@@ -5,7 +5,9 @@ import Config from 'react-native-config';
 import { URL_API } from '../utils/enviroments';
 export const PostUserApi = async (data) => {
     try {
-        const response = await axios.post(URL_API, data)
+        console.log("data",data)
+        const response = await axios.post(URL_API + "v1/auth/register", data)
+        console.log(response)
         return response;
     } catch (error) {
         console.log("error en la api",error)

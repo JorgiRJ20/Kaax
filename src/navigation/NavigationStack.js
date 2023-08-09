@@ -1,4 +1,4 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { HeaderTitle, createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import LoginForm from '../screen/LoginForm';
 import NavigationTab from './NavigationTab';
@@ -7,6 +7,14 @@ import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import LimpiezaCheck from '../screen/LimpiezaCheck'
+import PublicacionesCard from '../components/PublicacionesCard';
+import DetallePublicacion from '../components/DetallePublicacion';
+import CrearPublicacion from '../screen/CrearPublicacion';
+import MyLocations from '../screen/MyLocations';
+import AddLocation from '../screen/AddLocation';
+import ApiPublicacion from '../api/ApiPublicacion';
+import ApiPublicacionLim from '../api/ApiPublicacionLim';
+import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
 
 
 export default function NavigationStack() {
@@ -48,6 +56,49 @@ export default function NavigationStack() {
 				component={OlvidasteContrasena}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
+
+            <Stack.Screen
+				name='PublicacionesCard'
+				component={PublicacionesCard}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='DetallePublicacion'
+				component={DetallePublicacion}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='DetallePublicacionLim'
+				component={DetallePublicacionLim}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			
+			<Stack.Screen
+				name='MyLocations'
+				component={MyLocations}
+				options={{ headerTitle: 'Mis lugares de limpieza' }}
+			/>
+			<Stack.Screen
+				name='AddLocation'
+				component={AddLocation}
+				options={{ headerShown: false }}
+			/>
+			 <Stack.Screen
+          name='ApiPublicacion'
+          component={ApiPublicacion}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
+		 <Stack.Screen
+          name='ApiPublicacionLim'
+          component={ApiPublicacionLim}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
 		</Stack.Navigator>
 	);
 }

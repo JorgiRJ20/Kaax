@@ -2,9 +2,12 @@ import { View, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoginForm from '../../src/screen/LoginForm';
 import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes'
+import PublicacionesCard from '../components/PublicacionesCard';
+import NavigationOptions from './NavigationOptions';
+import ApiPublicacion from '../api/ApiPublicacion';
+import ApiPublicacionLim from './../api/ApiPublicacionLim';
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();
@@ -21,8 +24,18 @@ export default function NavigationTab() {
 				}}
 			></Tab.Screen>
 			<Tab.Screen
-				name='Notificaciones'
-				component={Notificaciones}
+				name='Publicaciones'
+				component={ApiPublicacionLim}
+				options={{
+					tabBarIcon: ({ color, size }) => (
+						<Icon color={color} size={30} />
+					),
+					headerShown: false,
+				}}
+			></Tab.Screen>
+			<Tab.Screen
+				name='Opciones'
+				component={NavigationOptions}
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<Icon color={color} size={30} />

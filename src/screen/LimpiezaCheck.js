@@ -7,18 +7,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomSheetOpinion from '../components/BottomSheetLimpiezaCheck';
 
 
-
-
 export default function Solicitud() {
-	
-	
-    
+
     return (
 		
-		<View style={{ flex: 2 }}>
+	<View style={{ flex: 2 }}>
       {/* Otros componentes de tu aplicación aquí */}
 	  <View style={styles.mainContainer}>
-			<View style={styles.containerSvg}>
+	  <View style={styles.containerSvg}>
 				<Text style={styles.title}>Tu opinión es importante</Text> 
 				<Image
 			 		source={require('../assets/kaaxCheck.png')}
@@ -35,14 +31,7 @@ export default function Solicitud() {
 			<View style={styles.ContainerStatus}>
 				<Text style={styles.name}><Icon name="calendar" size={24} style={styles.icon} /> Fecha Respuesta </Text>
 			</View>
-			
-			
-			  
-     
-    
-	    
-			
-		</View>
+			</View>
       <BottomSheetOpinion />
     </View>
 	</View>
@@ -98,7 +87,7 @@ const styles = StyleSheet.create({
 		marginBottom: 8,
 		backgroundColor:'#EEEBEB',
 		borderRadius:'10',
-		height:60,
+		height:50,
 		width:380,
 		marginTop: 2,
 		justifyContent:'center',
@@ -182,7 +171,7 @@ const styles = StyleSheet.create({
 		height: '100%',
 	},
 	containerSvg: {
-		marginTop: 0,
+		
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
@@ -193,16 +182,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
 		left:125
       },
-	  sheetContainer: {
-		backgroundColor: 'white',
-		padding: 16,
-		borderTopLeftRadius: 16,
-		borderTopRightRadius: 16,
-	  },
-	  sheetTitle: {
-		fontSize: 18,
-		fontWeight: 'bold',
-		marginBottom: 8,
-	  },
+	 
      
 })
