@@ -12,13 +12,7 @@ import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
 import MyLocations from '../screen/MyLocations';
 import AddLocation from '../screen/AddLocation';
-<<<<<<< HEAD
 import MiPerfil from '../screen/MiPerfil';
-=======
-import ApiPublicacion from '../api/ApiPublicacion';
-import ApiPublicacionLim from '../api/ApiPublicacionLim';
-import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
->>>>>>> 069b31890b8dad7fb2baa0df91596113f01cb207
 
 
 export default function NavigationStack() {
@@ -80,9 +74,7 @@ export default function NavigationStack() {
 				name='MiPerfil'
 				component={MiPerfil}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
-			/>
-			
-			
+			/>			
 			<Stack.Screen
 				name='MyLocations'
 				component={MyLocations}
@@ -93,6 +85,22 @@ export default function NavigationStack() {
 				component={AddLocation}
 				options={{ headerShown: false }}
 			/>
+			 <Stack.Screen
+          name='ApiPublicacion'
+          component={ApiPublicacion}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
+		 <Stack.Screen
+          name='ApiPublicacionLim'
+          component={ApiPublicacionLim}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
 			 <Stack.Screen
           name='ApiPublicacion'
           component={ApiPublicacion}

@@ -2,16 +2,16 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ButtonLogin({ title, onPress, style }) {
+export default function ButtonLogin({ title, handleSubmit, style }) {
 	const navigation = useNavigation();
 	const buttonStyle = [styles.button, style];
-	const handlePress = () => {
+	//const handlePress = () => {
 		// Navegar a una pantalla específica
-		navigation.navigate('Tab');
-	};
+	//	navigation.navigate('Tab');
+	//};
 
 	return (
-		<TouchableOpacity style={buttonStyle} onPress={handlePress}>
+		<TouchableOpacity style={buttonStyle} onPress={handleSubmit}>
 			<Text style={styles.buttonText}>{title}</Text>
 		</TouchableOpacity>
 	);
