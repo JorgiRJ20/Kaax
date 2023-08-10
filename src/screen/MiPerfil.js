@@ -21,7 +21,7 @@ export default function MiPerfil() {
 					<Image  style={styles.fotoPerfil}
 			 source={require('../assets/persona.jpg')}
 		 />	
-		<Text style={styles.title}>{userData.name}</Text>
+		<Text style={styles.title}>Jorge</Text>
 	  <View style={styles.starsContainer}>
         {[1, 2, 3, 4, 5].map((item) => (
           <View key={item} style={styles.starButton}>
@@ -34,8 +34,8 @@ export default function MiPerfil() {
         ))}
       </View>
       <View style={styles.input2}><FontAwesome style={styles.icono2} name='folder'></FontAwesome><Text  style={styles.inputText2}>  Trabajos</Text></View> 
-    <View style={styles.input}><FontAwesome style={styles.icono} name='phone'></FontAwesome><Text  style={styles.inputText}>  {userData.phone}</Text></View> 
-  <View style={styles.input}><FontAwesome style={styles.icono} name='envelope'></FontAwesome><Text  style={styles.inputText}>  {userData.email}</Text></View> 
+    <View style={styles.input}><FontAwesome style={styles.icono} name='phone'></FontAwesome><Text  style={styles.inputText}>  4423974814</Text></View> 
+  <View style={styles.input}><FontAwesome style={styles.icono} name='envelope'></FontAwesome><Text  style={styles.inputText}>  jorge@gmail.com</Text></View> 
  <Mycomponent></Mycomponent>
       
   </View>
