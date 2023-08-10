@@ -5,9 +5,11 @@ import Palette from '../constants/Palette';
 import ItemOption from '../components/ItemOption';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../hooks/useAuth';
 
 export default function Options() {
 
+    const { auth, logout } = useAuth();
     const navigation = useNavigation();
 	const handlePress = () => {
 		navigation.navigate('MiPerfil');
@@ -21,14 +23,14 @@ export default function Options() {
                <TouchableOpacity onPress={handlePress}>
             <View style={style.contentPerfil}>
          
-            <Image style={style.fotoPerfil}
-			 source={require('../assets/persona.jpg')}
-		     />	
+            <Image  style={style.fotoPerfil}
+			 source={{url:auth.userImage}}
+		 />	
             
         
              <View style={style.contentDatos}>
-                <Text style={style.usuario} >Daniel Torres</Text>
-                <Text style={style.correo}>Danny@gmail.com</Text>
+                <Text style={style.usuario} >{auth.name}</Text>
+                <Text style={style.correo}>{auth.email}</Text>
              </View>
             </View>
             </TouchableOpacity>

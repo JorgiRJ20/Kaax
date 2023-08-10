@@ -2,26 +2,25 @@ import React, { useState , useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image, Swiper} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 //import CardComentario from '../components/CardCoemntario'
-import Mycomponent from '../components/ComentariosCard'
+import ComentariosCard from '../components/ComentariosCard'
+import useAuth from '../hooks/useAuth';
 
 
 export default function MiPerfil() {
-	
+	const { auth, logout } = useAuth();
+
 	const [rating, setRating] = useState(4);
 
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
   };
 
-
-  
-
 	return (
 		<View style={styles.container}>
 					<Image  style={styles.fotoPerfil}
-			 source={require('../assets/persona.jpg')}
+			 source={{url:auth.userImage}}
 		 />	
-		<Text style={styles.title}>Jorge</Text>
+		<Text style={styles.title}>{auth.name}</Text>
 	  <View style={styles.starsContainer}>
         {[1, 2, 3, 4, 5].map((item) => (
           <View key={item} style={styles.starButton}>
@@ -33,15 +32,12 @@ export default function MiPerfil() {
           </View>
         ))}
       </View>
-      <View style={styles.input2}><FontAwesome style={styles.icono2} name='folder'></FontAwesome><Text  style={styles.inputText2}>  Trabajos</Text></View> 
-    <View style={styles.input}><FontAwesome style={styles.icono} name='phone'></FontAwesome><Text  style={styles.inputText}>  4423974814</Text></View> 
-  <View style={styles.input}><FontAwesome style={styles.icono} name='envelope'></FontAwesome><Text  style={styles.inputText}>  jorge@gmail.com</Text></View> 
- <Mycomponent></Mycomponent>
+      <TouchableOpacity><View style={styles.input2}><FontAwesome style={styles.icono2} name='folder'></FontAwesome><Text  style={styles.inputText2}>  Trabajos</Text></View></TouchableOpacity>
+    <View style={styles.input}><FontAwesome style={styles.icono} name='phone'></FontAwesome><Text  style={styles.inputText}>  {auth.phone}</Text></View> 
+  <View style={styles.input}><FontAwesome style={styles.icono} name='envelope'></FontAwesome><Text  style={styles.inputText}>   {auth.email}</Text></View> 
+ <ComentariosCard></ComentariosCard>
       
   </View>
-    
-  
-    
 	);
 }
 

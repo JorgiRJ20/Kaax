@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import axios from 'axios';
+import { URL_API } from '../utils/enviroments';
 
 const Card = ({ text, additionalText }) => {
   return (
@@ -11,40 +13,26 @@ const Card = ({ text, additionalText }) => {
 };
 
 const ComentariosCard = () => {
-  const cardsData = [
-    {
-      id: 1,
-      text: 'Card 1',
-      additionalText: 'Excelente servicio',
-    },
-    {
-      id: 2,
-      text: 'Card 2',
-      additionalText: 'Additional Text 2 that can also be longer without issues.',
-    },
-    {
-      id: 3,
-      text: 'Card 2',
-      additionalText: 'Additional Text 2 that can also be longer without issues.',
-    },
-    // Add more cards as needed
-  ];
+  const [comentarios, setComentarios] = useState([]);
 
-  const handleSwipeLeft = (cardId) => {
-    // Lógica cuando se desliza a la izquierda
-    console.log(`Card ${cardId} swiped left`);
-  };
+  useEffect(() => {
+    async function fetchComentarios() {
+      try {
+        const response = await axios.get(URL_API+'v1/comentarios');
+        setComentarios(response.data);
+      } catch (error) {
+        console.error('Error fetching comentarios:', error);
+      }
+    }
 
-  const handleSwipeRight = (cardId) => {
-    // Lógica cuando se desliza a la derecha
-    console.log(`Card ${cardId} swiped right`);
-  };
+    fetchComentarios();
+  }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView horizontal contentContainerStyle={styles.cardScrollView}>
-        {cardsData.map((card) => (
-          <Card key={card.id} text={card.text} additionalText={card.additionalText} />
+        {comentarios.map((comentario) => (
+          <Card key={comentario.id_comentario} text={comentario.fecha} additionalText={comentario.comentario} />
         ))}
       </ScrollView>
     </View>
@@ -75,7 +63,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
     width: 200, // Increase card width for longer text
-    minHeight: 120, // Ensure the card has a minimum height
+    minHeight: 120, // Tamaño minimo
   },
   cardText: {
     fontSize: 18,
