@@ -1,6 +1,3 @@
-import { HeaderTitle, createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
-import LoginForm from '../screen/LoginForm';
 import NavigationTab from './NavigationTab';
 import Notificaciones from '../screen/Notificaciones';
 import Solicitudes from '../screen/Solicitudes';
@@ -12,11 +9,12 @@ import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
 import MyLocations from '../screen/MyLocations';
 import AddLocation from '../screen/AddLocation';
-import MiPerfil from '../screen/MiPerfil';
-import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
 import ApiPublicacion from '../api/ApiPublicacion';
 import ApiPublicacionLim from '../api/ApiPublicacionLim';
-
+import ApiDirecciones from '../api/ApiDirecciones'
+import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
+import DetalleDirecciones from '../components/DetalleDirecciones';
+import DireccionesList from '../components/DireccionesList';
 
 export default function NavigationStack() {
 	const Stack = createStackNavigator();
@@ -74,10 +72,16 @@ export default function NavigationStack() {
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
-				name='MiPerfil'
-				component={MiPerfil}
+				name='DetalleDirecciones'
+				component={DetalleDirecciones}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
-			/>			
+			/>
+			<Stack.Screen
+				name='DireccionesList'
+				component={DireccionesList}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			
 			<Stack.Screen
 				name='MyLocations'
 				component={MyLocations}
@@ -99,6 +103,14 @@ export default function NavigationStack() {
 		 <Stack.Screen
           name='ApiPublicacionLim'
           component={ApiPublicacionLim}
+          options={{
+            title:'',
+            headerTransparent: true,
+          }}
+        />
+		<Stack.Screen
+          name='ApiDirecciones'
+          component={ApiDirecciones}
           options={{
             title:'',
             headerTransparent: true,

@@ -1,44 +1,18 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native'
-import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Palette from '../constants/Palette';
 import ItemOption from '../components/ItemOption';
 import { Entypo } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import useAuth from '../hooks/useAuth';
 
 export default function Options() {
 
-    const { auth, logout } = useAuth();
-    const navigation = useNavigation();
-	const handlePress = () => {
-		navigation.navigate('MiPerfil');
-	};
 
     const iconLocations = <Entypo name="location" size={24} color={Palette.colors.primary} />;
-  
 
     return (
         <SafeAreaView style={style.container}>
-               <TouchableOpacity onPress={handlePress}>
-            <View style={style.contentPerfil}>
-         
-            <Image  style={style.fotoPerfil}
-			 source={{url:auth.userImage}}
-		 />	
-            
-        
-             <View style={style.contentDatos}>
-                <Text style={style.usuario} >{auth.name}</Text>
-                <Text style={style.correo}>{auth.email}</Text>
-             </View>
-            </View>
-            </TouchableOpacity>
-
             <View style={style.cardContainer}>
-                <ItemOption iconComponent={iconLocations} name={'Mis lugares de limpieza'} navigateTo={"MyLocations"}/>
+                <ItemOption iconComponent={iconLocations} name={'Mis lugares de limpieza'} navigateTo={"ApiDirecciones"}/>
             </View>
-           
         </SafeAreaView>
     );
 }
@@ -46,10 +20,6 @@ export default function Options() {
 const style = StyleSheet.create({
     container: {
         flex: 1
-    },
-    contentPerfil:{
-        flexDirection:'row',
-        alignItems:'center'
     },
     cardContainer: {
         margin: 10, 
@@ -61,17 +31,5 @@ const style = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3, 
         shadowRadius: 5, 
-    },
-    contentDatos: {
-    
-    },
-    fotoPerfil:{
-		width: 110, height: 110, borderColor: '#FFF', borderWidth:7, borderRadius:180, marginEnd:15, marginStart:15
-	},
-    usuario:{
-	color: '#05668D', fontSize: 25, fontWeight:'900'
-	},
-    correo:{
-    color: '#05668D', fontSize: 18, fontWeight:'700'
-    },
+    }
 })
