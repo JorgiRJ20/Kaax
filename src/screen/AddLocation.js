@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity,Alert } from 'react-native'
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MapView, { Marker } from 'react-native-maps';
@@ -9,16 +9,62 @@ import Palette from '../constants/Palette';
 import { FontAwesome } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { URL_API } from '../utils/enviroments';
+import axios from 'axios';
 
 
 const pinPlace = require('../assets/images/markPlace.png');
 
 export default function AddLocation(props) {
 
+    let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWVnbzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2OTE2NDAxNzcsImV4cCI6MTY5MTcyNjU3N30.tHzy--e_TUDz0lu7bEGNP0vyGdFoLx8W0aFcp1WruKw";
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    //{infoOrigin.street ? infoOrigin.street : "Via sin nombre"} {infoOrigin.streetNumber ?
+    //infoOrigin.streetNumber : "Sin número"}, {infoOrigin.district}, {infoOrigin.postalCode}
+   // {infoOrigin.city}, {infoOrigin.region}. {infoOrigin.country}
+
+    const CrearDirec = async () => {
+        try {
+               await axios.post(URL_API+'v1/direcciones', {
+                nameDireccion: inputName,
+                estado : infoOrigin.region,
+                municipio: infoOrigin.city,
+                calle:infoOrigin.street,
+                colonia: infoOrigin.district,
+                numExt: infoOrigin.streetNumber,
+                numInt: 0,
+                codigoPostal: infoOrigin.postalCode,
+                latitud: origin.latitude,
+                longitud: origin.longitude,
+                user:{
+                  idUser:1
+                }
+             },config);
+         } catch (error) {
+             console.error(error);
+         }
+         Alert.alert(
+           '¡Exito!',
+           'Dirección agregada',
+           [{ text: 'Aceptar', onPress: goToDirecciones }]
+         );
+ }
+
+ 
+
+
+const goToDirecciones = () => {
+    navigation.navigate("MyLocations");
+}
+
     const navigation = useNavigation();
 
     // Datos de localización que se recibiran cuando se requiera actualizar la ubicación
-    const { dataLocation, infoLocation } = props.route.params;
+    const { dataLocation, infoLocation , infoLocalisacion} = props.route.params;
 
     const isUpdate = dataLocation ? true : false;
 
@@ -246,6 +292,10 @@ export default function AddLocation(props) {
         }else {
             // Si el input no estaba vació ya no subimos modal y podemos guardar
             console.log("GUARDAMOS IF 2")
+            if(isUpdate){
+
+            }
+            else{CrearDirec();}
         }
     }
 
