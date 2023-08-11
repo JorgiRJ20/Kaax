@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://10.13.12.244:8080/kaax/api/v1/';
+const BASE_URL = 'http://192.168.100.12:8080/kaax/api/v1/';
 
 const getSolicitudes = () => {
   return axios.get(`${BASE_URL}solicitud`)
