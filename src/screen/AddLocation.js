@@ -11,13 +11,15 @@ import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 
 const pinPlace = require('../assets/images/markPlace.png');
 
 export default function AddLocation(props) {
-
-    let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWVnbzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2OTE2NDAxNzcsImV4cCI6MTY5MTcyNjU3N30.tHzy--e_TUDz0lu7bEGNP0vyGdFoLx8W0aFcp1WruKw";
+    console.log(props.route.params)
+    const {auth} = useAuth();
+    let token = auth.token;
 
     const config = {
       headers: { Authorization: `Bearer ${token}` }
@@ -41,17 +43,18 @@ export default function AddLocation(props) {
                 latitud: origin.latitude,
                 longitud: origin.longitude,
                 user:{
-                  idUser:1
+                  idUser:27
                 }
              },config);
-         } catch (error) {
-             console.error(error);
-         }
-         Alert.alert(
+                      Alert.alert(
            '¡Exito!',
            'Dirección agregada',
            [{ text: 'Aceptar', onPress: goToDirecciones }]
          );
+         } catch (error) {
+             console.error(error);
+         }
+
  }
 
  
@@ -85,7 +88,7 @@ const goToDirecciones = () => {
         latitude: 20.5881276,
         longitude: -100.389806,
     };
-
+    console.log("console log que esta mas abajo de la constante default_location")
     const [origin, setOrigin] = useState(isUpdate ? dataLocation : default_location);
     const originRef = useRef(isUpdate ? dataLocation : default_location);
 
@@ -97,6 +100,8 @@ const goToDirecciones = () => {
     const [currentSnapPoint, setCurrentSnapPoint] = useState(0);
     const [inputName, setInputName] = useState("");
     const permissionsGranted = useRef(false);
+
+    console.log("console log que estaabajo de la definicion de variables")
     
 
     /**
@@ -190,7 +195,7 @@ const goToDirecciones = () => {
             navigation.goBack();
         }
     }
-
+    console.log("console log que esta mas abajo de la funcion geocodeLocation")
     /**
      * Función para obtener datos de la localización a partir de su latitud y longitud
      * @date 8/3/2023 - 8:40:21 PM
@@ -332,7 +337,7 @@ const goToDirecciones = () => {
     // const onMapReady = useCallback(() => {
     //     setMapReady(true);
     // }, []);
-
+    console.log("console log antes del return de la pantalla")
     return (
         <SafeAreaView style={style.container}>
             <View style={style.containerSearch}>

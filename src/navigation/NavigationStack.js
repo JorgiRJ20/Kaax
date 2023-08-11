@@ -15,6 +15,8 @@ import ApiDirecciones from '../api/ApiDirecciones'
 import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
 import DetalleDirecciones from '../components/DetalleDirecciones';
 import DireccionesList from '../components/DireccionesList';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginForm from '../screen/LoginForm';
 
 export default function NavigationStack() {
 	const Stack = createStackNavigator();
@@ -114,6 +116,13 @@ export default function NavigationStack() {
           options={{
             title:'',
             headerTransparent: true,
+          }}
+        />
+		<Stack.Screen
+          name='CrearPublicacion'
+          component={CrearPublicacion}
+          options={{
+            title:''
           }}
         />
 		</Stack.Navigator>

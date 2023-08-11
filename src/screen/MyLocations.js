@@ -15,8 +15,8 @@ const {direcciones} = props
 
         const goToDirecciones = () =>{
           navigation.navigate('AddLocation',{
-          dataLocation:{latitude:direcciones.latitud,
-          longitude:direcciones.longitud,},
+          dataLocation:{latitude:parseFloat(direcciones.latitud),
+          longitude:parseFloat(direcciones.longitud),},
           infoLocalisacion:{
           idDireccion: direcciones.idDireccion,
           nameDireccion:direcciones.nameDireccion,

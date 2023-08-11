@@ -2,6 +2,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Palette from '../constants/Palette';
 import ItemOption from '../components/ItemOption';
 import { Entypo } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import { View } from 'react-native';
 
 export default function Options() {
 

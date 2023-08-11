@@ -3,9 +3,11 @@ import React,{useEffect,useState} from 'react'
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import DireccionesList from '../components/DireccionesList';
+import useAuth from '../hooks/useAuth';
 export default function ApiDirecciones() {
     const [direcciones, setDirecciones] = useState([]);
-    let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWVnbzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2OTE2NDAxNzcsImV4cCI6MTY5MTcyNjU3N30.tHzy--e_TUDz0lu7bEGNP0vyGdFoLx8W0aFcp1WruKw";
+    const {auth} = useAuth();
+    let token = auth.token;
     
     const config = {
       headers: { Authorization: `Bearer ${token}` }

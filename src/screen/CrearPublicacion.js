@@ -3,11 +3,12 @@ import React,{useEffect,useState} from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 export default function CrearPublicacion() {
 
   const goToCrearPu = () => {
-    navigation.navigate('PublicacionesCard'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+    // navigation.navigate('PublicacionesCard'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
     };
 
   const [publicacion, setPublicacion] = useState({
@@ -39,16 +40,16 @@ export default function CrearPublicacion() {
     pago: '',
     status:'',
     user:{
-        idUser:1
+        idUser:27
     },
     direccion:{
-      idDireccion:2 
+      idDireccion:5 
     }
         });
     }, []);
 
-let token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWVnbzEyM0BnbWFpbC5jb20iLCJpYXQiOjE2OTEzODY2ODEsImV4cCI6MTY5MTQ3MzA4MX0.IWNamVrR2seSOXdHvLfnSdWm3vwZaLGY4vNmWclXuio";
-
+const { auth } = useAuth();
+let token = auth.token;
 const config = {
   headers: { Authorization: `Bearer ${token}` }
 };
