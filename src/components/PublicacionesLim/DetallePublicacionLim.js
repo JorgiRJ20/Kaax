@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function DetallePublicacionLim(props) {
     const {navigation, route:{params}} = props
-    console.log('recuperamos id',params)
+    
   
     return (
       <SafeAreaView style={styles.containerform}>

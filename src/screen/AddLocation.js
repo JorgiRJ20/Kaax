@@ -20,14 +20,12 @@ export default function AddLocation(props) {
     console.log(props.route.params)
     const {auth} = useAuth();
     let token = auth.token;
+    let idUser = auth.idUser;
 
     const config = {
       headers: { Authorization: `Bearer ${token}` }
     };
 
-    //{infoOrigin.street ? infoOrigin.street : "Via sin nombre"} {infoOrigin.streetNumber ?
-    //infoOrigin.streetNumber : "Sin número"}, {infoOrigin.district}, {infoOrigin.postalCode}
-   // {infoOrigin.city}, {infoOrigin.region}. {infoOrigin.country}
 
     const CrearDirec = async () => {
         try {
@@ -43,25 +41,28 @@ export default function AddLocation(props) {
                 latitud: origin.latitude,
                 longitud: origin.longitude,
                 user:{
-                  idUser:27
+                  idUser:idUser
                 }
              },config);
-                      Alert.alert(
-           '¡Exito!',
-           'Dirección agregada',
-           [{ text: 'Aceptar', onPress: goToDirecciones }]
-         );
+                      
          } catch (error) {
              console.error(error);
          }
+         Alert.alert(
+            '¡Exito!',
+            'Dirección Agregada ',[
+                {text: 'OK', onPress: goToDirecciones},]
+          );
 
  }
 
  
 
+ 
+
 
 const goToDirecciones = () => {
-    navigation.navigate("MyLocations");
+    navigation.navigate("ApiDirecciones");
 }
 
     const navigation = useNavigation();
@@ -98,10 +99,42 @@ const goToDirecciones = () => {
     const [searchLocation, setSearchLocation] = useState("");
     const [gettingLocation, setGettingLocation] = useState(false);
     const [currentSnapPoint, setCurrentSnapPoint] = useState(0);
-    const [inputName, setInputName] = useState("");
+    const [inputName, setInputName] = useState(isUpdate ? infoLocalisacion.nameDireccion : "");
     const permissionsGranted = useRef(false);
 
     console.log("console log que estaabajo de la definicion de variables")
+
+    //funcion para editar direccion
+ const EditarDirec = async () => {
+    try {
+           await axios.put(URL_API+'v1/direcciones/'+infoLocalisacion.idDireccion,{
+            idDireccion: infoLocalisacion.idDireccion,
+            nameDireccion: inputName,
+            estado : infoOrigin.region,
+            municipio: infoOrigin.city,
+            calle:infoOrigin.street,
+            colonia: infoOrigin.district,
+            numExt: infoOrigin.streetNumber,
+            numInt: 0,
+            codigoPostal: infoOrigin.postalCode,
+            latitud: origin.latitude,
+            longitud: origin.longitude,
+            activo: infoLocalisacion.activo,
+            user:{
+              idUser: idUser
+            }
+         },config);
+        
+     } catch (error) {
+         console.error(error);
+     }
+     Alert.alert(
+        '¡Exito!',
+        'Dirección Editada ',[
+            {text: 'OK', onPress: goToDirecciones},]
+      );
+
+}
     
 
     /**
@@ -298,9 +331,12 @@ const goToDirecciones = () => {
             // Si el input no estaba vació ya no subimos modal y podemos guardar
             console.log("GUARDAMOS IF 2")
             if(isUpdate){
-
+                EditarDirec();
+                console.log("se edito")
             }
-            else{CrearDirec();}
+            else{CrearDirec();
+            console.log("se guardo")
+            }
         }
     }
 

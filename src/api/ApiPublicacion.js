@@ -1,5 +1,6 @@
 import { View, Text, SafeAreaView} from 'react-native'
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useCallback} from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import PublicacionesLists from '../components/PublicacionesList'
@@ -14,19 +15,19 @@ const config = {
   headers: { Authorization: `Bearer ${token}` }
 };
 
-useEffect(() => {
+useFocusEffect(
+  useCallback(() => {
     const fetchData = async () => {
-        try {
-            const response = await axios.get(URL_API+'v1/publicaciones',config);
-            setPublicaciones(response.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-
-    fetchData();
-}, []);
+      try {
+          const response = await axios.get(URL_API+'v1/publicaciones',config);
+          setPublicaciones(response.data);
+      } catch (error) {
+          console.error(error);
+      }
+  };
+  fetchData();
+  }, [])
+);
 
   return (
     <View>
