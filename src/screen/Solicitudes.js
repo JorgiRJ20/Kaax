@@ -1,32 +1,56 @@
-import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import Card from '../components/SolicitudesCard';
-import { getSolicitudes } from '../api/ApiSolicitud';
+import useAuth  from '../hooks/useAuth';
+import { getPostulaciones } from '../api/ApiSolicitud';
 
-export default function Solicitudes(props) {
+export default function Solicitudes() {
+  const { auth } = useAuth();
+  const { idUser } = auth;
+  console.log('AUTHid', idUser);
+
   const [solicitudes, setSolicitudes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Llamar a la función de la API cuando el componente se monte
-    getSolicitudes()
-	.then(data => {
-        console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
-        setSolicitudes(data);
-      })
-      .catch(error => console.error(error));
-  }, []);
+    const fetchData = async () => {
+      try {
+        console.log(idUser)
+        if (idUser) {
+          const data = await getPostulaciones(idUser);
+          setSolicitudes(data);
+          console.log(data)
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error al obtener las postulaciones:', error);
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [idUser]);
+
+  
+  
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.cardContainer}>
+      {console.log('solicitudes:', solicitudes)}
         {solicitudes.map(solicitud => (
           <Card
-            key={solicitud.idPublicacion}
+            key={solicitud.idUsuarioPostulante}
             titulo={solicitud.titulo}
             descripcion={solicitud.descripcion}
-            idUsuario={solicitud.idUsuario}
-            nameUser={solicitud.nameUser}
-			precio={solicitud.precio}
+            idUsuario={solicitud.idUsuarioPublicacion}
+            nameUser={solicitud.nombreUsuarioPublicacion}
+            precio={solicitud.pago}
+            status={solicitud.status}
           />
         ))}
       </ScrollView>
@@ -35,11 +59,10 @@ export default function Solicitudes(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  
   cardContainer: {
     marginTop: 16,
     paddingHorizontal: 4,
   },
 });
+

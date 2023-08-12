@@ -1,117 +1,188 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 export default function SolicitudesCard(props) {
-	console.log(props); 
   const navigation = useNavigation();
-  const handleButtonPress = () => {
-    navigation.navigate('LimpiezaCheck'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+  
+
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleDescription = () => {
+    setExpanded(!expanded);
   };
+
+  const handleButtonPress = () => {
+    if (props.status === 'En espera') {
+      // No se permite la acción para estado 'En espera'
+      return;
+    } else if (props.status === 4) {
+      navigation.navigate('LimpiezaCheck'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+    }
+  };
+
+  let buttonColor = '';
+  switch (props.status) {
+    case 1:
+      buttonColor = '#0F94CA'; // Azul
+      break;
+    case 2:
+      buttonColor = '#08A045'; // Verde
+      break;
+    case 3:
+      buttonColor = '#E5383B'; // Rojo
+      break;
+    case 4:
+      buttonColor = '#800080'; // Morado
+      break;
+    default:
+      buttonColor = '#05668D'; // Color predeterminado
+  }
+
+  let buttonText = '';
+  let buttonDisabled = true;
+  switch (props.status) {
+    case 1:
+      buttonText = 'En espera';
+      break;
+    case 2:
+      buttonText = 'Aceptada';
+      break;
+    case 3:
+      buttonText = 'Rechazada';
+      break;
+    case 4:
+      buttonText = 'Calificar';
+      buttonDisabled = false; // Habilitar el botón
+      break;
+    default:
+      buttonText = '';
+  }
 
   return (
     <View style={styles.card}>
-      <Image
+      <View style={styles.imageContainer}>
+        
+        <Image
         source={require('../assets/departamento.jpg')}
         style={styles.image}
       />
-      <View style={styles.textContainer}>
-        {/* Título centrado */}
-        <Text style={styles.title}>{props.titulo}</Text>
-		    <Text style={styles.description}>{props.descripcion}</Text>
-        <Text style={styles.subtitle}>{props.nameUser}</Text>
-        {/* Dos textos horizontales */}
-        <View style={styles.horizontalTextContainer}>
-          <Icon name='money' style={styles.icono} />
-          <Text style={styles.price}>${props.precio}</Text>
-          <Icon name='location-arrow' style={styles.icono} />
-          <Text style={styles.horizontalText}>{props.distancia}KM</Text>
-        </View>
       </View>
-      <TouchableOpacity onPress={handleButtonPress} style={styles.button}>
-        <Text style={styles.buttonText}>{props.estado}</Text>
-      </TouchableOpacity>
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{props.titulo}</Text>
+        <Text style={styles.description}>
+          {props.descripcion.length > 50
+            ? props.descripcion.substring(0, 50) + '...'
+            : props.descripcion}
+        </Text>
+        <View style={styles.priceContainer}>
+            <Icon name='money' style={styles.icono} />
+            <Text style={styles.price}> $ {props.precio}</Text>
+        </View>
+        <TouchableOpacity
+          style={[styles.statusButton, { backgroundColor: buttonColor }]}
+          onPress={handleButtonPress}
+          disabled={buttonDisabled}
+        >
+          <Text style={styles.statusButtonText}>{buttonText}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+    width: '100%',
+    height: 200,
     flexDirection: 'row',
-    marginBottom: 10,
-	
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    borderRadius: 10, // Agrega bordes redondeados
+    backgroundColor: 'white', // Fondo blanco para la tarjeta
+    shadowColor: '#000', // Color de la sombra
+    shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
+    shadowOpacity: 0.2, // Opacidad de la sombra
+    shadowRadius: 4, // Radio de la sombra
+    elevation: 2, // Elevación para la sombra en Android
+    marginBottom: 10, // Espacio entre tarjetas
   },
-  icono: {
-    fontSize: 18,
-    color: '#05668D',
+  imageContainer: {
+    flex: 1,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
     borderRadius: 8,
-    marginRight: 4,
+  },
+  infoContainer: {
+    flex: 1,
+    padding: 10,
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-  
-    color: '#05668D',
-  },
-  subtitle: {
-    fontSize: 15,
-    textAlign: 'left',
-    marginBottom: 8,
-    left: 13,
-  },
-  price: {
-    fontSize: 15,
-    textAlign: 'left',
-    marginBottom: 8,
-    left: 13,
+    marginBottom: 5,
+    color: "#05668D"
   },
   description: {
     fontSize: 15,
-    textAlign: 'justify', // Establece el texto justificado
-    marginBottom: 8,
-    left: 10,
-    color: '#555',
+    marginBottom: 5,
   },
-  horizontalTextContainer: {
+  priceContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    left: 10,
+    alignItems: 'center',
   },
-  horizontalText: {
-    fontSize: 15,
-    color: '#555',
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'green',
+  },
+  
+  
+  statusButton: {
+    backgroundColor: 'blue',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    alignSelf: 'flex-start',
+  },
+  statusButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
+  buttonContainer: {
+    alignItems: 'center', // Centrar horizontalmente el botón
+    marginTop: 10, // Espacio adicional entre el contenido y el botón
   },
   button: {
-    backgroundColor: '#05668D',
     paddingVertical: 5,
     paddingHorizontal: 50,
     borderRadius: 40,
     alignSelf: 'flex-end',
     right: 150,
-    marginBottom: -10,
-	marginTop:120
+    marginBottom: 20,
+    marginTop: 120,
+    
   },
   buttonText: {
     color: '#fff',
     fontSize: 15,
     fontWeight: 'bold',
   },
+  icono: {
+    fontSize: 18,
+    color: '#05668D',
+  },
+  
 });
+
+
+
 
 		
 	
