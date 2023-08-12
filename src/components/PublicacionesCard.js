@@ -13,11 +13,13 @@ const goToPublicacion = () =>{
     navigation.navigate('DetallePublicacion',{idPublicacion:publicaciones.idPublicacion,
 	titulo: publicaciones.titulo,
 	descripcion: publicaciones.descripcion,
+	numCuartos: publicaciones.numCuartos,
 	pago: publicaciones.pago,
 	fechaTrabajo: publicaciones.fechaTrabajo,
 	horaTrabajo: publicaciones.horaTrabajo,
 	status: publicaciones.status,
 	user: publicaciones.user.name,
+	direccion: publicaciones.direccion.idDireccion,
 })
   }
    const goToCrearPu = () => {

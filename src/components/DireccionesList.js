@@ -36,7 +36,7 @@ export default function DireccionesList(props) {
   }
   const styles = StyleSheet.create({
       container:{
-          marginTop:50,
-          
+          marginTop:1,
+          marginVertical:10
       }
   })

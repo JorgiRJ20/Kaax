@@ -66,6 +66,7 @@ export default function DetallePublicacionLim(props) {
       }
     };
   
+    
   
     return (
       <TouchableWithoutFeedback onPress={closeBottomSheet}>

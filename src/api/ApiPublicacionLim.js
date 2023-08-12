@@ -1,5 +1,6 @@
 import { View, Text, SafeAreaView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React,{useEffect,useState,useCallback} from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import axios from "axios";
 import { URL_API } from "../utils/enviroments";
 import PublicacionesLimList from "../components/PublicacionesLim/PublicacionesLimList";
@@ -19,18 +20,19 @@ export default function ApiPublicacionLim() {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(URL_API + "v1/publicaciones", config);
-        setPublicacionesLim(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+            const response = await axios.get(URL_API+'v1/publicaciones',config);
+            setPublicacionesLim(response.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
-
     fetchData();
-  }, []);
+    }, [])
+  );
 
   const goToCrearPu = () => {
     navigation.navigate("CrearPublicacion");

@@ -1,15 +1,19 @@
 import {View, Alert,Text, StyleSheet, Button, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity,} from 'react-native'
 import React,{useEffect,useState} from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
 import { URL_API } from '../utils/enviroments';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 
 export default function CrearPublicacion() {
 
-  const goToCrearPu = () => {
-    // navigation.navigate('PublicacionesCard'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
-    };
+  const navigation = useNavigation();
+
+  const goToPubli = () => {
+    navigation.navigate('Tab');
+   };
 
   const [publicacion, setPublicacion] = useState({
     titulo: '',
@@ -40,10 +44,10 @@ export default function CrearPublicacion() {
     pago: '',
     status:'',
     user:{
-        idUser:27
+        idUser:1
     },
     direccion:{
-      idDireccion:5 
+      idDireccion:3 
     }
         });
     }, []);
@@ -55,6 +59,20 @@ const config = {
 };
 
 const CrearPub = async () => {
+  if (
+    publicacion.titulo < 1 ||
+    publicacion.descripcion.length < 1 ||
+    publicacion.numCuartos.length < 1 ||
+    publicacion.pago.length < 1 ||
+    almacenafecha == 0 ||
+    almacenaHora == 0
+  ) {
+    Alert.alert(
+      '¡ERROR!',
+      'Ingresa todos los datos'
+    );
+    return;
+  }
        try {
               await axios.post(URL_API+'v1/publicaciones', {
                 titulo: publicacion.titulo,
@@ -68,7 +86,7 @@ const CrearPub = async () => {
                     idUser:1
                 },
                 direccion:{
-                  idDireccion:2,
+                  idDireccion:3,
                 }
             },config);
         } catch (error) {
@@ -76,8 +94,8 @@ const CrearPub = async () => {
         }
         Alert.alert(
           '¡Exito!',
-          'publicación agregada',
-          [{ text: 'Aceptar', onPress: goToCrearPu }]
+          'Publicación Agregada ',[
+              {text: 'OK', onPress: goToPubli},]
         );
 }
   const [date, setDate] = useState(new Date());
@@ -218,6 +236,7 @@ const CrearPub = async () => {
         </View>*/}
         <View style={styles.container}>
             <TouchableOpacity style={styles.buttontime} onPress={showDatepicker}>
+            <Icon name="calendar" color={'#fff'} size={17}/>
 			      <Text style={styles.buttonText}>Abir calendario</Text>
             </TouchableOpacity>
             <TextInput
@@ -232,6 +251,7 @@ const CrearPub = async () => {
         
         <View style={styles.container}>
             <TouchableOpacity style={styles.buttontime} onPress={showTimepicker}>
+            <Icon name="clock-o" color={'#fff'} size={20}/>
 			      <Text style={styles.buttonText}>Abrir reloj</Text>
             </TouchableOpacity>
             <TextInput
@@ -264,12 +284,16 @@ const CrearPub = async () => {
                   marginTop: 20,
                   marginRight: 40,
                   marginLeft: 40,
+                  flexDirection:'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
                 // style={styles.btnTouchable}
                 onPress={() => {
                   CrearPub();
                 }}
               >
+                <Icon name="arrow-circle-up" color={'#fff'} size={30}/>
                 <Text style={styles.textTouchable}>Publicar</Text>
               </TouchableOpacity>
         
@@ -327,11 +351,13 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         padding: 10,
+        marginStart:6,
       },
       buttontime: {
         width: 150,
         height: 40,
         borderRadius: 20,
+        flexDirection:'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#006E90',
@@ -343,5 +369,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 14,
         fontWeight: 'bold',
+        marginStart:8,
       },
 })

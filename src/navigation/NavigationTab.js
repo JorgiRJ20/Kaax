@@ -7,6 +7,7 @@ import Solicitudes from '../screen/Solicitudes'
 import PublicacionesCard from '../components/PublicacionesCard';
 import NavigationOptions from './NavigationOptions';
 import ApiPublicacionLim from './../api/ApiPublicacionLim';
+import ApiPublicacion from '../api/ApiPublicacion';
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();

@@ -15,6 +15,7 @@ import ApiDirecciones from '../api/ApiDirecciones'
 import DetallePublicacionLim from '../components/PublicacionesLim/DetallePublicacionLim';
 import DetalleDirecciones from '../components/DetalleDirecciones';
 import DireccionesList from '../components/DireccionesList';
+import EditarPublicacion from '../screen/EditarPublicacion';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginForm from '../screen/LoginForm';
 
@@ -87,7 +88,7 @@ export default function NavigationStack() {
 			<Stack.Screen
 				name='MyLocations'
 				component={MyLocations}
-				options={{ headerTitle: 'Mis lugares de limpieza' }}
+				options={{ headerTitle: 'Mis lugares de limpieza'}}
 			/>
 			<Stack.Screen
 				name='AddLocation'
@@ -100,6 +101,7 @@ export default function NavigationStack() {
           options={{
             title:'',
             headerTransparent: true,
+			headerShown: false
           }}
         />
 		 <Stack.Screen
@@ -108,19 +110,27 @@ export default function NavigationStack() {
           options={{
             title:'',
             headerTransparent: true,
+			headerShown: false
           }}
         />
 		<Stack.Screen
           name='ApiDirecciones'
           component={ApiDirecciones}
           options={{
-            title:'',
-            headerTransparent: true,
+            title:'Mis direcciones',
+            headerTransparent: false,
           }}
         />
 		<Stack.Screen
           name='CrearPublicacion'
           component={CrearPublicacion}
+          options={{
+            title:''
+          }}
+        />
+		<Stack.Screen
+          name='EditarPublicacion'
+          component={EditarPublicacion}
           options={{
             title:''
           }}

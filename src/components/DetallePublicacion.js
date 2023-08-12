@@ -1,10 +1,69 @@
-import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity} from 'react-native'
+import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,Alert} from 'react-native'
 import React, {useEffect,useState,useCallback} from 'react'
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import useAuth from '../hooks/useAuth';
+import { URL_API } from '../utils/enviroments';
+import axios from 'axios';
 export default function DetallePublicacion(props) {
 
-  const {navigation, route:{params}} = props
-  console.log('recuperamos id',params)
+  const navigation = useNavigation();
+
+  const goToPublicaciones = () => {
+    navigation.navigate("Tab");
+}
+
+  const {route:{params}} = props
+
+  const goToEditarPub = () =>{
+  navigation.navigate('EditarPublicacion',{idPublicacion:params.idPublicacion,
+	titulo: params.titulo,
+	descripcion: params.descripcion,
+  numCuartos: params.numCuartos,
+	pago: params.pago,
+	fechaTrabajo: params.fechaTrabajo,
+	horaTrabajo: params.horaTrabajo,
+	status: params.status,
+  direccion: params.direccion
+  })}
+
+  const { auth } = useAuth();
+        
+let token = auth.token;
+let idUser = auth.idUser;
+const config = {
+  headers: { Authorization: `Bearer ${token}` }
+};
+
+
+
+const EliminarPub = async () => {
+       try {
+              await axios.put(URL_API+'v1/publicaciones/'+params.idPublicacion,{
+                idPublicacion: params.idPublicacion,
+                titulo: params.titulo,
+                descripcion:params.descripcion,
+                numCuartos:params.numCuartos,
+                pago: params.pago,
+                fechaTrabajo: params.fechaTrabajo,
+                horaTrabajo: params.horaTrabajo,
+                status: 0,
+                user:{
+                    idUser: idUser
+                },
+                direccion:{
+                  idDireccion:params.direccion,
+                }
+            },config);
+        } catch (error) {
+            console.error(error);
+        }
+        Alert.alert(
+            '¡Exito!',
+            'Publicación Eliminada ',[
+                {text: 'OK', onPress: goToPublicaciones},]
+          );
+}
 
   return (
     <SafeAreaView style={styles.containerform}>
@@ -35,8 +94,13 @@ export default function DetallePublicacion(props) {
           <Text style={styles.texto}>{params.horaTrabajo}</Text>
         </View>
     </View>
-    <TouchableOpacity style={styles.buttontime} onPress={{}}>
+    <TouchableOpacity style={styles.buttontime} onPress={goToEditarPub}>
+            <Icon name="edit" color={'#fff'} size={22}/>
 			      <Text style={styles.buttonText}>Editar publicación</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttontime} onPress={() => {EliminarPub();}}>
+            <Icon name="trash" color={'#fff'} size={20}/>
+			      <Text style={styles.buttonText}>Eliminar publicación</Text>
             </TouchableOpacity>
     
     </SafeAreaView>
@@ -90,8 +154,9 @@ const styles = StyleSheet.create({
         textAlign:'center'
       },
       buttontime: {
-        width: 190,
+        width: 220,
         height: 60,
+        flexDirection:'row',
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
@@ -104,6 +169,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
+        marginStart:10
       },
 
 })
