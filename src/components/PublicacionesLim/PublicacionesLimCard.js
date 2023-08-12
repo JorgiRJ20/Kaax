@@ -2,6 +2,7 @@ import {SafeAreaView,View, Text, Button,TouchableWithoutFeedback,Image,StyleShee
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import Palette from '../../constants/Palette';
 
 export default function PublicacionesLimCard(props) {
     const navigation = useNavigation();
@@ -20,28 +21,33 @@ export default function PublicacionesLimCard(props) {
     })
       }
       return (
-    <TouchableWithoutFeedback onPress={goToPublicacion}>
-    <SafeAreaView style={styles.containerform}>
-          <View style={styles.card}>
+        <TouchableOpacity 
+        onPress={goToPublicacion}
+          style={styles.card}
+        >
+          <View style={styles.containerImage}>
             <Image
-                source={require('../../assets/departamento.jpg')}
-                style={styles.image}
-              />
-             <View style={styles.textContainer}>
+              source={require('../../assets/departamento.jpg')}
+              style={styles.image}
+            />
+          </View>
+          <View style={styles.containerInfo}>
+            <View style={{flex: 0.7}}>
               <Text style={styles.title}>{publicacionesLim.titulo}</Text>
               <Text style={styles.subtitle}>{publicacionesLim.user.name}</Text>
-                
-                <View style={styles.horizontalTextContainer}>
-                <Icon name='money' style={styles.icono}/>
-                <Text style={styles.horizontalText}>${publicacionesLim.pago}</Text>
-                <Icon name='location-arrow' style={styles.icono}/>
-                <Text style={styles.horizontalText}>1.5KM</Text>
+            </View>
+            <View style={styles.containerContentIconInfo}>
+              <View style={styles.containerIconInfo}>
+                  <Icon name='money' style={styles.icono}/>
+                  <Text style={styles.horizontalText}>${publicacionesLim.pago}</Text>
+              </View>
+              <View style={styles.containerIconInfo}>
+                  <Icon name='location-arrow' style={styles.icono}/>
+                  <Text style={styles.horizontalText}>1.5 m</Text>
               </View>
             </View>
-            </View>
-            
-       </SafeAreaView>
-      </TouchableWithoutFeedback>
+          </View>
+        </TouchableOpacity>
       )
     }
     const styles = StyleSheet.create({
@@ -50,51 +56,68 @@ export default function PublicacionesLimCard(props) {
             justifyContent: 'center',
         },
         card: {
+            flex: 1,
             backgroundColor: '#fff',
-            borderRadius: 8,
-            padding: 20,
-            marginTop:10,
+            borderRadius: 12,
             shadowColor: '#000',
-             width: 345, 
-             height: 120,
             elevation: 10,
-            flexDirection:'row',
-            marginBottom:10,
-            alignItems:'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2, 
+            shadowRadius: 4, 
+            elevation: 8, 
+            margin: 12,
+            padding: 5
             
           },
           icono:{
             fontSize:18,
             color:'#05668D',
-            marginStart:10,
           },
           image: {
-            width: 100,
-            height: 100,
+            resizeMode: 'cover',
+            width: '100%',
+            height: 160,
             borderRadius: 8,
-            marginRight: 4,
           },
           title: {
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: 'bold',
             marginBottom: 8,
-            left:10,
-            color:'#05668D'
+            color:'#05668D',
           },
           subtitle: {
-            fontSize: 15,
+            color: '#b1b1b1',
+            fontSize: 16,
             textAlign: 'left',
             marginBottom: 8,
-            left:10
+            fontStyle: 'italic',
           },
           horizontalTextContainer: {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
-            left:10
           },
           horizontalText: {
             fontSize: 15,
-            color: '#555',
+            color: Palette.colors.black,
             marginStart:10,
+            fontWeight: 'bold'
+          },
+          containerImage: {
+            flex: 1
+          },
+          containerInfo: {
+            flex: 1, 
+            flexDirection: 'row',
+            marginTop: 4
+          },
+          containerContentIconInfo: {
+            flex: 0.3, 
+            justifyContent: 'center', 
+            alignItems: 'flex-end'
+          },
+          containerIconInfo: {
+            flexDirection: 'row',
+            marginBottom: 5
           }
         });
