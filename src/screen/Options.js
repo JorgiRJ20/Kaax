@@ -1,19 +1,29 @@
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Palette from '../constants/Palette';
 import ItemOption from '../components/ItemOption';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, AntDesign } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native';
+import useAuth from '../hooks/useAuth';
+import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
 
 export default function Options() {
 
+    const auth = useAuth();
+    const { role } = auth.auth;
+    console.log(role);
 
+    
     const iconLocations = <Entypo name="location" size={24} color={Palette.colors.primary} />;
+    const iconLogout =<AntDesign name="logout" size={24} color={Palette.colors.primary} />;
 
     return (
         <SafeAreaView style={style.container}>
             <View style={style.cardContainer}>
-                <ItemOption iconComponent={iconLocations} name={'Mis lugares de limpieza'} navigateTo={"ApiDirecciones"}/>
+                {role === ROLE_SOLICITANTE && (
+                    <ItemOption iconComponent={iconLocations} name={'Mis lugares de limpieza'} navigateTo={"ApiDirecciones"}/>
+                )}
+                <ItemOption iconComponent={iconLogout} name={'Cerrar sesión'} navigateTo={"Login"}/>
             </View>
         </SafeAreaView>
     );

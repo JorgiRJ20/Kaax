@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView } from "react-native";
 import React,{useEffect,useState,useCallback} from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import axios from "axios";
-import { URL_API } from "../utils/enviroments";
+import { URL_API, ROLE_LIMPIADOR, ROLE_SOLICITANTE } from "../utils/enviroments";
 import PublicacionesLimList from "../components/PublicacionesLim/PublicacionesLimList";
 import useAuth from "../hooks/useAuth";
 import { TouchableOpacity } from "react-native";
@@ -74,8 +74,8 @@ export default function ApiPublicacionLim() {
             const response = await axios.get(URL_API+'v1/publicaciones',config);
             const array_pubs = [];
 
-            // Verificamos que el usuario no tenga rol de limpiador para obtener distancia de ubicaciones
-            if(role_user != "ROLE_LIMPIADOR") {
+            // Verificamos que el usuario no tenga rol de solicitante para obtener distancia de ubicaciones
+            if(role_user != ROLE_SOLICITANTE) {
 
               await getUserLocation().then((result) => {
                 if(result.status) {

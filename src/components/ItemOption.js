@@ -3,14 +3,18 @@ import React from 'react'
 import Palette from '../constants/Palette';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import useAuth from '../hooks/useAuth';
 
 export default function ItemOption(props) {
 
     const { iconComponent, name, navigateTo, data } = props;
     const navigation = useNavigation();
+    const { logout } = useAuth()
 
     const handleNavigateTo = () => {
+        if(navigateTo === "Login") {
+            // logout();
+        }
         navigation.navigate(navigateTo, {
             data: data
         });
@@ -42,7 +46,8 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         paddingBottom: 6,
         borderBottomWidth: 1,
-        borderBottomColor: '#f8f8f8'
+        borderBottomColor: '#f8f8f8',
+        marginTop: 10
     },
     containerIcon: {
         flex: 0.2,
