@@ -109,7 +109,7 @@ const EliminarPub = async () => {
         style={styles.containerLineInfo}
       >
         {RenderCardDataDetail("money", "Pago", params.pago)}
-        {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance} m`) : ""}
+        {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance}`) : ""}
       </View>
       <View
         style={styles.containerLineInfo}

@@ -36,7 +36,9 @@ const calculateLocationsDistance = (latitude1, longitude1, latitude2, longitude2
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
     d = d * 1000;
-    return d.toFixed(1); //Retorna tres decimales
+    // Verificamos si los metros pueden ser convertidos a 1 kilómetro a más y asignamos km o m en cada caso
+    const finalDistance = d >= 1000 ? `${Math.round((d/1000))} km` : `${Math.round(d)} m`;
+    return finalDistance;
 }
 
 /**

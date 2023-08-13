@@ -47,7 +47,7 @@ export default function PublicacionesLimCard(props) {
               {publicacionesLim.is_location_available && (
                 <View style={styles.containerIconInfo}>
                     <Icon name='location-arrow' style={styles.icono}/>
-                    <Text style={styles.horizontalText}>{publicacionesLim.locations_distance} m</Text>
+                    <Text style={styles.horizontalText}>{publicacionesLim.locations_distance}</Text>
                 </View>
               )}
             </View>
