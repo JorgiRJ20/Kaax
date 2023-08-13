@@ -6,7 +6,7 @@ import * as Location from "expo-location";
 import BottomSheet from '@gorhom/bottom-sheet';
 import Constants from 'expo-constants';
 import Palette from '../constants/Palette';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { URL_API } from '../utils/enviroments';
@@ -377,7 +377,15 @@ const goToDirecciones = () => {
     return (
         <SafeAreaView style={style.container}>
             <View style={style.containerSearch}>
-                <View style={{flex: 0.8}}>
+                <View style={{flex: 0.2, justifyContent: 'center', alignItems: 'flex-start'}}>
+                    <TouchableOpacity 
+                        style={style.circleIcon}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <AntDesign name="close" size={24} color={Palette.colors.primary} />
+                    </TouchableOpacity>
+                </View>
+                <View style={{flex: 0.6}}>
                     <TextInput
                         placeholder='Buscar ubicación...'
                         placeholderTextColor={Palette.colors.white}
