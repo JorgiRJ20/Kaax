@@ -12,6 +12,7 @@ export default {
         black: '#000000',
         white: '#ffffff',
         primary: '#006E90',
-        secondary: '#99C24D'
+        secondary: '#99C24D',
+        outFocus: '#c9c9c9'
     },
 };
