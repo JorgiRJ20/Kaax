@@ -8,10 +8,16 @@ import useAuth from "../hooks/useAuth";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import * as Location from "expo-location";
+import { getLocationsDistance } from "../helpers/HelpersLocation";
+
+
+
 export default function ApiPublicacionLim() {
   const [publicacionesLim, setPublicacionesLim] = useState([]);
   const { auth } = useAuth();
   let token = auth.token;
+  const role_user = auth.role;
   console.log(auth);
 
   const config = {
@@ -20,12 +26,85 @@ export default function ApiPublicacionLim() {
 
   const navigation = useNavigation();
 
+
+  /**
+   * Función para obtener la ubicación actual del dispositivo del usuario
+   * @date 8/12/2023 - 4:31:47 PM
+   * @author Alessandro Guevara
+   *
+   * @async
+   * @returns {Promise resolve} - [true | false | latitude | longitude]
+   */
+  const getUserLocation = async () => {
+
+      return new Promise(async (resolve) => {
+          // Solicitamos permisos para obtener localizacion
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if(status !== 'granted') {
+              // Si el usuario no permite los permisos no mostraremos el indicador de distancia
+              console.log("PERMISOS DENEGADOS");
+              const objResp = {
+                status: false,
+              }
+              resolve(objResp);
+          }else {
+              let location = await Location.getCurrentPositionAsync({
+                  accuracy: 6
+              });
+              
+              const objResp = {
+                status: true,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+              }
+              resolve(objResp);
+          }
+      })
+
+      
+  }
+
+
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
         try {
             const response = await axios.get(URL_API+'v1/publicaciones',config);
-            setPublicacionesLim(response.data);
+            const array_pubs = [];
+
+            // Verificamos que el usuario no tenga rol de limpiador para obtener distancia de ubicaciones
+            if(role_user != "ROLE_LIMPIADOR") {
+
+              await getUserLocation().then((result) => {
+                if(result.status) {
+                  const { latitude, longitude } = result;
+                  
+                  response.data.map(async (pub) => {
+                    const latitudeLimpieza = pub.direccion.latitud;
+                    const longitudLimpieza = pub.direccion.longitud;
+
+                    // Utilizamos función para obtener distancia
+                    await getLocationsDistance(latitude, longitude, latitudeLimpieza, longitudLimpieza).then((resultM) => {
+                      // Agregamos el objeto de la publicación con dos nuevos datos: [is_location_available, locations_distance]
+                      array_pubs.push({...pub, is_location_available: result.status, locations_distance: resultM})
+                    })
+                  })
+                }else {
+                  // Agregamos el objeto de la publicación con dos nuevos datos: [is_location_available, locations_distance]
+                  response.data.map((pub) => {
+                    array_pubs.push({...pub, is_location_available: result.status, locations_distance: 0})
+                  })
+                }
+              })
+
+            }else {
+              response.data.map((pub) => {
+                array_pubs.push({...pub, is_location_available: false, locations_distance: 0})
+              })
+            }
+
+            console.log(array_pubs);
+            setPublicacionesLim(array_pubs);
         } catch (error) {
             console.error(error);
         }

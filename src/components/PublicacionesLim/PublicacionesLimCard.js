@@ -18,6 +18,8 @@ export default function PublicacionesLimCard(props) {
         horaTrabajo: publicacionesLim.horaTrabajo,
         status: publicacionesLim.status,
         user: publicacionesLim.user.name,
+        is_location_available: publicacionesLim.is_location_available,
+        locations_distance: publicacionesLim.locations_distance
     })
       }
       return (
@@ -41,10 +43,13 @@ export default function PublicacionesLimCard(props) {
                   <Icon name='money' style={styles.icono}/>
                   <Text style={styles.horizontalText}>${publicacionesLim.pago}</Text>
               </View>
-              <View style={styles.containerIconInfo}>
-                  <Icon name='location-arrow' style={styles.icono}/>
-                  <Text style={styles.horizontalText}>1.5 m</Text>
-              </View>
+              {/* Verificamos si la distancia esta disponible */}
+              {publicacionesLim.is_location_available && (
+                <View style={styles.containerIconInfo}>
+                    <Icon name='location-arrow' style={styles.icono}/>
+                    <Text style={styles.horizontalText}>{publicacionesLim.locations_distance} m</Text>
+                </View>
+              )}
             </View>
           </View>
         </TouchableOpacity>

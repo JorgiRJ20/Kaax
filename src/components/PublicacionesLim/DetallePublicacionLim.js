@@ -1,10 +1,12 @@
 import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,TouchableWithoutFeedback,TextInput,Modal} from 'react-native'
 import React, {useEffect,useState,useCallback,useRef,useMemo} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import {postularse} from '../../api/ApiPostulacion';
 import useAuth  from '../../hooks/useAuth'
 import moment from 'moment'; // Importa la biblioteca moment o date-fns
+import Palette from '../../constants/Palette';
+import { ScrollView } from 'react-native';
 
 
 
@@ -27,12 +29,31 @@ export default function DetallePublicacionLim(props) {
     }, []);
   
     const openBottomSheet = () => {
-      bottomSheetRef.current?.expand(); // Expande la hoja inferior
+      // bottomSheetRef.current?.expand(); // Expande la hoja inferior
+      setCurrentSnapPoint(0);
     };
 
     const closeBottomSheet = () => {
       bottomSheetRef.current?.close(); // Cierra la hoja inferior
     };
+
+    /**
+     * Componente para mostrar como fondo cuando el BottomSheet se muestre
+     * @date 8/12/2023 - 8:28:13 PM
+     * @author Alessandro Guevara
+     *
+     */
+    const renderBackdrop = useCallback(
+        props => (
+          <BottomSheetBackdrop
+            {...props}
+            appearsOnIndex={0}
+            disappearsOnIndex={-1}
+            opacity={0.2}
+          />
+        ),
+        []
+    );
 
     const [comment, setComment] = useState('');
 
@@ -65,37 +86,59 @@ export default function DetallePublicacionLim(props) {
         // Manejar el error si es necesario
       }
     };
+
+    /**
+     * Render de car para mostrar información de la publicación
+     * @date 8/12/2023 - 8:27:18 PM
+     * @author Alessandro Guevara
+     *
+     * @param {*} icon - nombre de icono
+     * @param {*} title - titulo de la información que se va a mostrar
+     * @param {*} subtitle - valor de la información
+     * @returns {*}
+     */
+    const RenderCardDataDetail = (icon, title, subtitle) => {
+      const flex = params.is_location_available ? 0.5 : 1;
+      return (
+        <View style={{...styles.cardInfoDetail, flex: flex}}>
+          <View style={{ alignItems: 'center' }}>
+            <View
+              style={styles.circleContainer}
+            >
+              <Icon name={icon} color={Palette.colors.primary} size={34}/>
+            </View>
+          </View>
+          
+          <View style={styles.containerTextInfoDetail}>
+            <Text style={styles.textTitleInfoDetail}>{title}</Text>
+            <Text style={styles.subTitleTextInfoDetail}>{subtitle}</Text>
+          </View>
+          
+        </View>
+      )
+    }
   
     
   
     return (
-      <TouchableWithoutFeedback onPress={closeBottomSheet}>
           <SafeAreaView style={styles.containerform}>
-            <Image source={require('../../assets/departamento.jpg')} style={styles.imagen}/>
-              <Text style={styles.title}>{params.titulo}</Text>
+            <ScrollView style={{flex: 1}}>
+                <Image source={require('../../assets/departamento.jpg')} style={styles.imagen}/>
+                <Text style={styles.title}>{params.titulo}</Text>
                 <Text style={styles.descripcion}>{params.descripcion}</Text>
-                  <View style={styles.lineacard}>
-                    <View style={styles.cards}>
-                      <Icon name="money" color={'#05668D'} size={25}/>
-                      <Text style={styles.texto}>${params.pago}</Text>
-                    </View>
-                    <View style={styles.cards}>
-                      <Icon name="arrows-h" color={'#05668D'} size={25}/>
-                      <Text style={styles.texto}>1.5KM</Text>
-                    </View>
-                  </View>
-                  <View style={styles.lineacard}>
-                    <View style={styles.cards}>
-                      <Icon name="user" color={'#05668D'} size={25}/>
-                      <Text style={styles.texto}>{params.user}</Text>            
-                    </View>
-                    <View style={styles.cards}>
-                      <Icon name="calendar" color={'#05668D'} size={25}/>
-                      <Text style={styles.texto}>{params.fechaTrabajo}</Text>
-                      <Text style={styles.texto}>{params.horaTrabajo}</Text>
-                    </View>
-                  </View>
-      
+                <View
+                  style={styles.containerLineInfo}
+                >
+                  {RenderCardDataDetail("money", "Pago", params.pago)}
+                  {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance} m`) : ""}
+                </View>
+                <View
+                  style={styles.containerLineInfo}
+                >
+                  {RenderCardDataDetail("user", "Solicitante", params.user)}
+                  {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
+                </View>
+                
                   <TouchableOpacity
                       style={styles.aceptarbtn}
                       onPress={openBottomSheet} // Abre la hoja inferior cuando se presiona el botón
@@ -108,6 +151,7 @@ export default function DetallePublicacionLim(props) {
                     index={currentSnapPoint}
                     snapPoints={snapPoints}
                     onChange={handleSheetChanges}
+                    backdropComponent={renderBackdrop}
                 >
                     <View style={styles.bottomModalContainer}>
                         <Text style={styles.texto}>Escribir un comentario:</Text>
@@ -143,8 +187,8 @@ export default function DetallePublicacionLim(props) {
                   </View>
                 </View>
               </Modal>
+              </ScrollView>
               </SafeAreaView>
-            </TouchableWithoutFeedback>
       
     )
   }
@@ -152,12 +196,9 @@ export default function DetallePublicacionLim(props) {
       containerform:{
         flex: 1, 
           backgroundColor: '#F8F9FA',
-          alignItems:'center',
-          justifyContent: 'center',
-          paddingHorizontal:15,
       },
       imagen:{
-          width: 370,
+          width: '100%',
           height: 170,
           resizeMode: 'cover',
           marginBottom: 10,
@@ -167,7 +208,8 @@ export default function DetallePublicacionLim(props) {
           fontSize: 25,
           fontWeight: 'bold',
           marginBottom: 8,
-          color:'#05668D'
+          color:'#05668D',
+          textAlign: 'center'
         },
         descripcion: {
           fontSize: 18,
@@ -176,18 +218,18 @@ export default function DetallePublicacionLim(props) {
   
         },
         lineacard:{
+          flex: 1,
          flexDirection: 'row',
          justifyContent: 'center',
          alignItems:'center',
         },
         cards:{
+          flex: 0.5,
           backgroundColor: '#fff',
           margin: 10,
           borderRadius: 15,
           alignItems: 'center',
           justifyContent: 'center',
-          width: 150,
-          height: 90,
           elevation: 10, 
           
         },
@@ -207,6 +249,7 @@ export default function DetallePublicacionLim(props) {
         width: "80%",
         borderRadius: 20,
         marginTop: 20,
+        alignSelf: 'center'
         },
         textaceptar: {
         fontSize: 20,
@@ -253,6 +296,57 @@ export default function DetallePublicacionLim(props) {
         closeButtonText:{
           color: 'white',
         },
+        circleContainer: {
+          backgroundColor: '#EEEFFD', 
+          width: 50, 
+          height: 50, 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          borderRadius: 35,
+          shadowOffset: { width: 1, height: 1 },
+          shadowColor: Palette.colors.primary,
+          shadowOpacity: 0.4,
+          shadowRadius: 2,
+          elevation: 8,
+        },
+        cardInfoDetail: {
+          flex: 0.5, 
+          marginHorizontal: 4,
+          backgroundColor: Palette.colors.white, 
+          padding: 5,
+          borderRadius: 25,
+          shadowOffset: { width: 1, height: 1 },
+          shadowColor: '#557BF1',
+          shadowOpacity: 0.4,
+          shadowRadius: 2,
+          elevation: 8,
+        },
+        containerTextInfoDetail: {
+          justifyContent: 'center',
+          alignItems: 'center', 
+          marginTop: 12
+        },
+        textTitleInfoDetail: {
+          color: Palette.colors.primary, 
+          fontWeight: 'bold',
+          fontStyle: 'normal',
+          fontSize: 15,
+          marginBottom: 2,
+          textAlign: 'center'
+        },
+        subTitleTextInfoDetail: {
+          color: Palette.colors.black, 
+          fontSize: 15, 
+          fontStyle: 'italic',
+          textAlign: 'center'
+        },
+        containerLineInfo: {
+          flex: 1,
+          flexDirection: "row",
+          alignSelf: "center",
+          marginTop: 10,
+          marginBottom: 10,
+        }
         
   
   })
