@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   
   cardContainer: {
     marginTop: 16,
-    paddingHorizontal: 4,
   },
 });
 

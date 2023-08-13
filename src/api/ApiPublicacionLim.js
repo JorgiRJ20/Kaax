@@ -10,7 +10,7 @@ import { StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import * as Location from "expo-location";
 import { getLocationsDistance } from "../helpers/HelpersLocation";
-
+import Loader from './../components/Loader';
 
 
 export default function ApiPublicacionLim() {
@@ -25,6 +25,7 @@ export default function ApiPublicacionLim() {
   };
 
   const navigation = useNavigation();
+  const [showLoader, setShowLoader] = useState(false);
 
 
   /**
@@ -69,6 +70,7 @@ export default function ApiPublicacionLim() {
     useCallback(() => {
       const fetchData = async () => {
         try {
+            setShowLoader(true);
             const response = await axios.get(URL_API+'v1/publicaciones',config);
             const array_pubs = [];
 
@@ -105,9 +107,12 @@ export default function ApiPublicacionLim() {
 
             console.log(array_pubs);
             setPublicacionesLim(array_pubs);
+            setShowLoader(false);
         } catch (error) {
             console.error(error);
+            setShowLoader(false);
         }
+
     };
     fetchData();
     }, [])
@@ -119,6 +124,7 @@ export default function ApiPublicacionLim() {
 
   return (
     <View style={styles.container}>
+      <Loader show={showLoader}/>
       <TouchableOpacity style={styles.floatingButton} onPress={goToCrearPu}>
         <Text style={styles.buttonText}>+</Text>
       </TouchableOpacity>
