@@ -6,9 +6,12 @@ import useAuth from '../hooks/useAuth';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
 import Palette from '../constants/Palette';
+import Loader from './Loader';
 export default function DetallePublicacion(props) {
 
+  const [usersPostulantes, setUsersPostulantes] = useState([]);
   const navigation = useNavigation();
+  const [showLoader, setShowLoader] = useState(false);
 
   const goToPublicaciones = () => {
     navigation.navigate("Tab");
@@ -97,8 +100,40 @@ const EliminarPub = async () => {
     )
   }
 
+  /**
+   * Función para obtener los postulantes que tiene una publicación
+   * @date 8/13/2023 - 5:28:08 PM
+   * @author Alessandro Guevara
+   *
+   * @async
+   * @returns {*}
+   */
+  const getPostulantesPublicacion = async () => {
+    try {
+        setShowLoader(true);
+        const response = await axios.get(`${URL_API}postulaciones/getPostulantes/${params.idPublicacion}`,config);
+        const array_users = [];
+        // Verificamos si hay valores
+        if(response.data.length > 0) {
+          // Recorremos la respuesta y guardamos el id del usuario que realizo la postulación
+          response.data.map((resp) => {
+            array_users.push(resp[2].idUser);
+          })
+        }
+        setUsersPostulantes(array_users);
+    } catch (error) {
+        console.error(error);
+    }
+    setShowLoader(false);
+  }
+
+  useEffect(() => {
+    getPostulantesPublicacion();
+  }, []);
+
   return (
     <SafeAreaView style={styles.containerform}>
+      <Loader show={showLoader}/>
       <ScrollView style={{flex: 1}}>
 
       
@@ -108,7 +143,7 @@ const EliminarPub = async () => {
       <View
         style={styles.containerLineInfo}
       >
-        {RenderCardDataDetail("money", "Pago", params.pago)}
+        {RenderCardDataDetail("money", "Pago", `$${params.pago}`)}
         {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance}`) : ""}
       </View>
       <View
@@ -117,16 +152,20 @@ const EliminarPub = async () => {
         {RenderCardDataDetail("user", "Solicitante", params.user)}
         {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
       </View>
-      <View style={styles.containerOptions}>
-        <TouchableOpacity style={styles.buttontime} onPress={goToEditarPub}>
-        <Icon name="edit" color={'#fff'} size={22}/>
-        <Text style={styles.buttonText}>Editar publicación</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttontime} onPress={() => {EliminarPub();}}>
-        <Icon name="trash" color={'#fff'} size={20}/>
-        <Text style={styles.buttonText}>Eliminar publicación</Text>
-        </TouchableOpacity>
-      </View>
+
+      {usersPostulantes.length === 0 && (
+        <View style={styles.containerOptions}>
+          <TouchableOpacity style={styles.buttontime} onPress={goToEditarPub}>
+          <Icon name="edit" color={'#fff'} size={22}/>
+          <Text style={styles.buttonText}>Editar publicación</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttontime} onPress={() => {EliminarPub();}}>
+          <Icon name="trash" color={'#fff'} size={20}/>
+          <Text style={styles.buttonText}>Eliminar publicación</Text>
+          </TouchableOpacity>
+        </View>
+      )} 
+      
 
             
       </ScrollView>

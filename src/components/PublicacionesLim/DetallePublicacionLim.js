@@ -7,14 +7,22 @@ import useAuth  from '../../hooks/useAuth'
 import moment from 'moment'; // Importa la biblioteca moment o date-fns
 import Palette from '../../constants/Palette';
 import { ScrollView } from 'react-native';
+import axios from 'axios';
+import { URL_API } from '../../utils/enviroments';
+import Loader from './../Loader';
 
 
 
 export default function DetallePublicacionLim(props) {
 
     const { auth } = useAuth(); // Obtén la información del usuario logueado
-    const { idUser } = auth // Obtén en ID user
-   
+    const { idUser, token } = auth; // Obtén en ID user
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+    const [usersPostulantes, setUsersPostulantes] = useState([]);
+    const [showLoader, setShowLoader] = useState(false);
+    
 
     const {navigation, route:{params}} = props
     //console.log('recuperamos id',params)
@@ -118,10 +126,42 @@ export default function DetallePublicacionLim(props) {
       )
     }
   
-    
+    /**
+   * Función para obtener los postulantes que tiene una publicación
+   * @date 8/13/2023 - 5:28:08 PM
+   * @author Alessandro Guevara
+   *
+   * @async
+   * @returns {*}
+   */
+  const getPostulantesPublicacion = async () => {
+      try {
+          setShowLoader(true);
+          const response = await axios.get(`${URL_API}postulaciones/getPostulantes/${params.idPublicacion}`,config);
+          
+          const array_users = [];
+          // Verificamos si hay valores
+          if(response.data.length > 0) {
+            // Recorremos la respuesta y guardamos el id del usuario que realizo la postulación
+            response.data.map((resp) => {
+              array_users.push(resp[2].idUser);
+            })
+          }
+          setUsersPostulantes(array_users);
+      } catch (error) {
+          console.error(error);
+      }
+      setShowLoader(false);
+
+  }
+
+  useEffect(() => {
+    getPostulantesPublicacion();
+  }, []);
   
     return (
           <SafeAreaView style={styles.containerform}>
+            <Loader show={showLoader} />
             <ScrollView style={{flex: 1}}>
                 <Image source={require('../../assets/departamento.jpg')} style={styles.imagen}/>
                 <Text style={styles.title}>{params.titulo}</Text>
@@ -129,7 +169,7 @@ export default function DetallePublicacionLim(props) {
                 <View
                   style={styles.containerLineInfo}
                 >
-                  {RenderCardDataDetail("money", "Pago", params.pago)}
+                  {RenderCardDataDetail("money", "Pago", `$${params.pago}`)}
                   {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance}`) : ""}
                 </View>
                 <View
@@ -139,12 +179,16 @@ export default function DetallePublicacionLim(props) {
                   {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
                 </View>
                 
-                  <TouchableOpacity
-                      style={styles.aceptarbtn}
-                      onPress={openBottomSheet} // Abre la hoja inferior cuando se presiona el botón
-                  >
-                    <Text style={styles.textaceptar}>Postularme</Text>
-                  </TouchableOpacity>
+                  {/* Verificamos si el usuario actual esta dentro de los usuarios postulantes de la publicación */}
+                  {usersPostulantes.includes(idUser) === false && (
+                    <TouchableOpacity
+                        style={styles.aceptarbtn}
+                        onPress={openBottomSheet} // Abre la hoja inferior cuando se presiona el botón
+                    >
+                      <Text style={styles.textaceptar}>Postularme</Text>
+                    </TouchableOpacity>
+                  )}
+                  
 
                   <BottomSheet
                     ref={bottomSheetRef}
