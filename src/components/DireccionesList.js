@@ -14,7 +14,7 @@ export default function DireccionesList(props) {
   }
 
     return (
-      <SafeAreaView >
+      <SafeAreaView style={{flex: 1}}>
 
               <FlatList
                   data={direcciones}

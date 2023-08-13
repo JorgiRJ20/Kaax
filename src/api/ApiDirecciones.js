@@ -28,7 +28,7 @@ export default function ApiDirecciones() {
       }, [])
     );
       return (
-        <View>
+        <View style={{flex: 1}}>
         <DireccionesList direcciones={direcciones}/>
         </View>
       )
