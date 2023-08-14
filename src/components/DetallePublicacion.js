@@ -16,6 +16,7 @@ export default function DetallePublicacion(props) {
 
   const {route:{params}} = props
 
+
   const goToEditarPub = () =>{
   navigation.navigate('EditarPublicacion',{idPublicacion:params.idPublicacion,
 	titulo: params.titulo,
@@ -25,7 +26,9 @@ export default function DetallePublicacion(props) {
 	fechaTrabajo: params.fechaTrabajo,
 	horaTrabajo: params.horaTrabajo,
 	status: params.status,
-  direccion: params.direccion
+  direccion: params.direccion,
+  nameDireccion: params.nameDireccion
+
   })}
 
   const { auth } = useAuth();

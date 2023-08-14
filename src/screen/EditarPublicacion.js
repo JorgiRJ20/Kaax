@@ -4,6 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { URL_API } from '../utils/enviroments';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import { SelectList } from 'react-native-dropdown-select-list'
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
 
@@ -16,6 +17,10 @@ export default function (props) {
         const navigation = useNavigation();
 
     const {route:{params}} = props
+    
+
+  const [selected, setSelected] = useState(params.direccion);
+  const [data,setData] = useState([params.titulo]);
     
 
     const [modificado, setModificado] = useState({
@@ -37,6 +42,20 @@ export default function (props) {
 
     useEffect(() => {
         cargaPublicacion()
+
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(URL_API+'v1/direcciones',config);
+            let direcciones = response.data.map((item) => {
+              return {key: item.idDireccion, value: item.nameDireccion}
+            })
+            //Set Data Variable
+            setData(direcciones)
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchData();
         return () =>
         setModificado({
         idPublicacion:'',
@@ -118,7 +137,7 @@ const EditarPub = async () => {
                     idUser: idUser
                 },
                 direccion:{
-                  idDireccion:modificado.direccion.idDireccion,
+                  idDireccion:selected,
                 }
             },config);
         } catch (error) {
@@ -162,7 +181,7 @@ const EditarPub = async () => {
             }
            else{setalmacenafecha(`${anio}-${mes}-${dia}`)}
       }
-      console.log('adadas'+ date.toLocaleString())
+      
     };
     
   
@@ -179,9 +198,7 @@ const EditarPub = async () => {
       showMode('date');
     };
   
-    const [datePickerVisible, setDatePickerVisible] = React.useState(
-      Platform.OS === 'ios' ? true : false
-    );
+    console.log('seleeeeeeet',selected)
     return (
       <ScrollView style={styles.containerScroll}>
         
@@ -219,6 +236,7 @@ const EditarPub = async () => {
               <TextInput
                 placeholder="Ingresa el numero de cuartos"
                 style={styles.inputText}
+                keyboardType="numeric"
                 autoCapitalize="none"
                 value={modificado.numCuartos+''}
                               onChangeText={(e) =>
@@ -234,6 +252,7 @@ const EditarPub = async () => {
                 placeholder="Ingresa el pago"
                 style={styles.inputText}
                 autoCapitalize="none"
+                keyboardType="numeric"
                 value={modificado.pago+''}
                               onChangeText={(e) =>
                                  setModificado({
@@ -243,30 +262,7 @@ const EditarPub = async () => {
                               }/>
           </View>
           <Text style={styles.labelS}>Ingresa el dia del trabajo</Text>
-          {/*<View style={styles.container}>
-          {show && (
-          <DateTimePicker
-            testID='dateTimePicker'
-            value={date}
-            mode={mode}
-            display='default'
-            onChange={onChange}
-          />
-        )}
-          <Button title='MOSTRAR DATEPICKER' onPress={() => showMode('date')} />
-        {datePickerVisible && (
-          <DateTimePicker
-            display='default'
-            value={new Date()}
-            onChange={(e) => {
-              Platform.OS !== 'ios' ? setDatePickerVisible(false) : null;
-              console.log(e.nativeEvent);
-              
-            }}
-          />
-        )}
-        <Text>{almacenafecha}</Text>
-          </View>*/}
+         
           <View style={styles.container}>
               <TouchableOpacity style={styles.buttontime} onPress={showDatepicker}>
                    <Icon name="calendar" color={'#fff'} size={17}/> 
@@ -305,8 +301,11 @@ const EditarPub = async () => {
             onChange={onChange}
           />
         )}
-        <Text>{almacenafecha}</Text>
-        <Text>{modificado.horaTrabajo}</Text>
+        <Text style={{...styles.labelS, marginBottom:8}}>Ingresa la direccion del trabajo</Text>
+        <View style={styles.container}>
+        <SelectList placeholder={params.nameDireccion}  save="holla" boxStyles={styles.selector} dropdownStyles={{borderColor:"#05668D"}}
+        setSelected={setSelected} data={data}  />
+        </View>
   
         <TouchableOpacity
                   style={{
@@ -349,6 +348,11 @@ const EditarPub = async () => {
        marginTop: 20,
        textAlign:'center'
       },
+      selector:{
+        height: 60,
+        width: 350,
+        borderColor: "#05668D",
+      },  
       labelS: {
           fontSize: 16,
           color: "#05668D",

@@ -16,7 +16,7 @@ export default function LoginForm(props) {
 
 	const [visible, setVisible] = React.useState(false);
 	const [message, setMessage] = React.useState("");
-  	const [statusLogin, setStatusLogin] = React.useState(false);
+  	const [statusLogin, setStatusLogin] = useState(false);
 	const showModal = () => setVisible(true);
 	const hideModal = () => setVisible(false);
 	

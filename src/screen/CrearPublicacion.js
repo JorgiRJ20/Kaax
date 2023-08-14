@@ -1,15 +1,18 @@
-import {View, Alert,Text, StyleSheet, Button, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity,} from 'react-native'
+import {View, Alert,Text, StyleSheet,Se, Button, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity,} from 'react-native'
 import React,{useEffect,useState} from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import { URL_API } from '../utils/enviroments';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SelectList } from 'react-native-dropdown-select-list'
 import axios from 'axios';
+
 import useAuth from '../hooks/useAuth';
 
 export default function CrearPublicacion() {
 
   const navigation = useNavigation();
+
 
   const goToPubli = () => {
     navigation.navigate('Tab');
@@ -36,6 +39,19 @@ export default function CrearPublicacion() {
     se inicie el state con los datos defecto
     */
     useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(URL_API+'v1/direcciones',config);
+          let direcciones = response.data.map((item) => {
+            return {key: item.idDireccion, value: item.nameDireccion}
+          })
+          //Set Data Variable
+          setData(direcciones)
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
     return () =>
     setPublicacion({
     titulo: '',
@@ -44,16 +60,18 @@ export default function CrearPublicacion() {
     pago: '',
     status:'',
     user:{
-        idUser:1
+        idUser:''
     },
     direccion:{
-      idDireccion:3 
+      idDireccion:'' 
     }
-        });
-    }, []);
+    });
+    },
+   []);
 
 const { auth } = useAuth();
 let token = auth.token;
+let idUser = auth.idUser;
 const config = {
   headers: { Authorization: `Bearer ${token}` }
 };
@@ -83,16 +101,16 @@ const CrearPub = async () => {
                 horaTrabajo:almacenaHora,
                 status:1,
                 user:{
-                    idUser:1
+                    idUser:idUser
                 },
                 direccion:{
-                  idDireccion:3,
+                  idDireccion:selected,
                 }
             },config);
         } catch (error) {
             console.error(error);
         }
-        Alert.alert(
+         Alert.alert(
           '¡Exito!',
           'Publicación Agregada ',[
               {text: 'OK', onPress: goToPubli},]
@@ -129,7 +147,7 @@ const CrearPub = async () => {
           }
          else{setalmacenafecha(`${anio}-${mes}-${dia}`)}
     }
-    console.log('adadas'+ date.toLocaleString())
+   
   };
   
 
@@ -145,10 +163,9 @@ const CrearPub = async () => {
   const showDatepicker = () => {
     showMode('date');
   };
+   
 
-  const [datePickerVisible, setDatePickerVisible] = React.useState(
-    Platform.OS === 'ios' ? true : false
-  );
+
   return (
     <ScrollView style={styles.containerScroll}>
       
@@ -187,6 +204,7 @@ const CrearPub = async () => {
               placeholder="Ingresa el numero de cuartos"
               style={styles.inputText}
               autoCapitalize="none"
+              keyboardType="numeric"
               value={publicacion.numCuartos}
 							onChangeText={(e) =>
 								setPublicacion({
@@ -201,6 +219,7 @@ const CrearPub = async () => {
               placeholder="Ingresa el pago"
               style={styles.inputText}
               autoCapitalize="none"
+              keyboardType="numeric"
               value={publicacion.pago}
 							onChangeText={(e) =>
 								setPublicacion({
@@ -210,30 +229,6 @@ const CrearPub = async () => {
 							}/>
         </View>
         <Text style={styles.labelS}>Ingresa el dia del trabajo</Text>
-        {/*<View style={styles.container}>
-        {show && (
-        <DateTimePicker
-          testID='dateTimePicker'
-          value={date}
-          mode={mode}
-          display='default'
-          onChange={onChange}
-        />
-      )}
-        <Button title='MOSTRAR DATEPICKER' onPress={() => showMode('date')} />
-      {datePickerVisible && (
-        <DateTimePicker
-          display='default'
-          value={new Date()}
-          onChange={(e) => {
-            Platform.OS !== 'ios' ? setDatePickerVisible(false) : null;
-            console.log(e.nativeEvent);
-            
-          }}
-        />
-      )}
-      <Text>{almacenafecha}</Text>
-        </View>*/}
         <View style={styles.container}>
             <TouchableOpacity style={styles.buttontime} onPress={showDatepicker}>
             <Icon name="calendar" color={'#fff'} size={17}/>
@@ -272,9 +267,14 @@ const CrearPub = async () => {
           onChange={onChange}
         />
       )}
-      <Text>{almacenafecha}</Text>
-      <Text>{publicacion.horaTrabajo}</Text>
+      
+      <Text style={{...styles.labelS, marginBottom:8}}>Ingresa la direccion del trabajo</Text>
+        <View style={styles.container}>
+        <SelectList placeholder="Elige la dirección" boxStyles={styles.selector} dropdownStyles={{borderColor:"#05668D"}}
+        setSelected={setSelected} data={data}  />
+        </View>
 
+        
       <TouchableOpacity
                 style={{
                   backgroundColor:"#05668D",
@@ -298,6 +298,7 @@ const CrearPub = async () => {
               </TouchableOpacity>
         
     </ScrollView>
+    
   )
 }
 const styles = StyleSheet.create({
@@ -316,7 +317,13 @@ const styles = StyleSheet.create({
      marginTop: 20,
      textAlign:'center'
     },
-    labelS: {
+    selector:{
+      height: 60,
+      width: 350,
+      borderColor: "#05668D",
+     
+    },
+    labelS: { 
         fontSize: 16,
         color: "#05668D",
         marginBottom: -10,
@@ -371,4 +378,34 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginStart:8,
       },
+      modal: {
+        backgroundColor: "white",
+        padding: 20,
+        margin: 20,
+        width: "80%",
+        height: "20%",
+        alignContent: "center",
+        alignSelf: "center",
+        alignItems: "center",
+        borderRadius: 20,
+        },
+      textProgress: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#05668D",
+        textAlign: "center",
+        },
+        aceptarbtn: {
+          backgroundColor: "#05668D",
+          padding: 15,
+          width: "80%",
+          borderRadius: 20,
+          marginTop: 20,
+          },
+          textaceptar: {
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "white",
+          textAlign: "center",
+          },
 })
