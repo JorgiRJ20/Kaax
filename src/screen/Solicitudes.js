@@ -7,7 +7,7 @@ import { getPostulaciones } from '../api/ApiSolicitud';
 export default function Solicitudes() {
   const { auth } = useAuth();
   const { idUser } = auth;
-  console.log('AUTHid', idUser);
+  //console.log('AUTHid', idUser);
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,15 +16,15 @@ export default function Solicitudes() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(idUser)
+        //console.log(idUser)
         if (idUser) {
           const data = await getPostulaciones(idUser);
           setSolicitudes(data);
-          console.log(data)
+          //console.log(data)
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error al obtener las postulaciones:', error);
+        //console.error('Error al obtener las postulaciones:', error);
         setError(error);
         setLoading(false);
       }

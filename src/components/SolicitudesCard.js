@@ -7,6 +7,7 @@ import Palette from '../constants/Palette';
 
 export default function SolicitudesCard(props) {
   const navigation = useNavigation();
+  console.log(props)
 
   const [expanded, setExpanded] = useState(false);
 
@@ -108,8 +109,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, 
     shadowRadius: 4, 
     elevation: 8, 
-    margin: 12,
-    padding: 5
+    margin: 10,
+    padding: 10
     
   },
   icono:{

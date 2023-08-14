@@ -17,7 +17,9 @@ import DetalleDirecciones from '../components/DetalleDirecciones';
 import DireccionesList from '../components/DireccionesList';
 import EditarPublicacion from '../screen/EditarPublicacion';
 import { createStackNavigator } from '@react-navigation/stack';
+import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import LoginForm from '../screen/LoginForm';
+import DetallePostulacion from '../screen/DetallePostulacion';
 
 export default function NavigationStack() {
 	const Stack = createStackNavigator();
@@ -40,7 +42,7 @@ export default function NavigationStack() {
 			/>
 			<Stack.Screen
 				name='Solicitudes'
-				component={Solicitudes}
+				component={SolicitudesTrabajo}
 				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
@@ -89,6 +91,11 @@ export default function NavigationStack() {
 				name='MyLocations'
 				component={MyLocations}
 				options={{ headerTitle: 'Mis lugares de limpieza'}}
+			/>
+			<Stack.Screen
+				name='DetallePostulacion'
+				component={DetallePostulacion}
+				options={{ headerTitle: 'DetPos'}}
 			/>
 			<Stack.Screen
 				name='AddLocation'

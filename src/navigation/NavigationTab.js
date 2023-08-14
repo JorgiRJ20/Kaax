@@ -8,11 +8,21 @@ import PublicacionesCard from '../components/PublicacionesCard';
 import NavigationOptions from './NavigationOptions';
 import ApiPublicacionLim from './../api/ApiPublicacionLim';
 import ApiPublicacion from '../api/ApiPublicacion';
+import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import Palette from '../constants/Palette';
+import useAuth from '../hooks/useAuth';
 
 
 export default function NavigationTab() {
 	const Tab = createBottomTabNavigator();
+
+	// Llama al hook de autenticación
+	const { auth } = useAuth(); 
+	//console.log(auth.role)
+	const userRole = auth ? auth.role : null;
+	//console.log(auth.role)
+	// Determina qué componente de solicitudes mostrar en función del rol
+	const SolicitudesComponent = userRole === "solicitante" ? SolicitudesTrabajo : Solicitudes;
 
 	return (
 		<Tab.Navigator
@@ -26,7 +36,7 @@ export default function NavigationTab() {
 		>
 			<Tab.Screen
 				name='Solicitudes'
-				component={Solicitudes}
+				component={SolicitudesComponent}
 				options={{
 					tabBarIcon: ({ focused }) => (
 						<View style={{justifyContent: 'center', alignItems: 'center'}}>
