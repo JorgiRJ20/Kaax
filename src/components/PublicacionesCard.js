@@ -20,6 +20,7 @@ const goToPublicacion = () =>{
 	status: publicaciones.status,
 	user: publicaciones.user.name,
 	direccion: publicaciones.direccion.idDireccion,
+	nameDireccion: publicaciones.direccion.nameDireccion
 })
   }
    const goToCrearPu = () => {
