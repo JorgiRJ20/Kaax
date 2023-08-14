@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
+import useAuth from '../hooks/useAuth';
 
 const Card = ({ text, additionalText }) => {
   return (
@@ -13,28 +14,45 @@ const Card = ({ text, additionalText }) => {
 };
 
 const ComentariosCard = () => {
+  const { auth } = useAuth();
   const [comentarios, setComentarios] = useState([]);
 
-  useEffect(() => {
-    async function fetchComentarios() {
-      try {
-        const response = await axios.get(URL_API+'v1/comentarios');
-        setComentarios(response.data);
-      } catch (error) {
-        console.error('Error fetching comentarios:', error);
-      }
+  const fetchComentarios = async () => {
+    try {
+      const apiUrl = `v1/comentarios/receptor/${auth.idUser}`;
+      console.log('ID de usuario:', auth.idUser);
+      const response = await axios.get(URL_API + apiUrl);
+      setComentarios(response.data);
+    } catch (error) {
+      console.error('Error fetching comentarios:', error);
+      setComentarios([]); // Vacia los comentarios
     }
+  };
 
+  useEffect(() => {
     fetchComentarios();
+    const intervalId = setInterval(fetchComentarios, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return (
     <View style={styles.container}>
-      <ScrollView horizontal contentContainerStyle={styles.cardScrollView}>
-        {comentarios.map((comentario) => (
-          <Card key={comentario.id_comentario} text={comentario.fecha} additionalText={comentario.comentario} />
-        ))}
-      </ScrollView>
+      {comentarios.length > 0 ? (
+        <ScrollView horizontal contentContainerStyle={styles.cardScrollView}>
+          {comentarios.map((comentario) => (
+            <Card
+              key={comentario.idComentario}
+              text={comentario.user.name}
+              additionalText={comentario.comentario}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        <Text style={styles.noCommentsText}>No hay comentarios disponibles</Text>
+      )}
     </View>
   );
 };
@@ -48,7 +66,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   cardScrollView: {
-    alignItems: 'center', // Alinea las cards en la parte inferior
+    alignItems: 'center',
     paddingHorizontal: 10,
     paddingBottom: 10,
   },
@@ -62,18 +80,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
-    width: 200, // Increase card width for longer text
-    minHeight: 120, // Tamaño minimo
+    width: 200,
+    minHeight: 120,
   },
   cardText: {
     fontSize: 18,
     marginBottom: 5,
     color:'#05668D',
-    fontWeight:'600'
+    fontWeight:'600',
+    textTransform: 'uppercase',
   },
   additionalText: {
     fontSize: 14,
     color: 'black',
+  },
+  noCommentsText: {
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
   },
 });
 
