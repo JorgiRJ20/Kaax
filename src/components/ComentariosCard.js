@@ -25,7 +25,7 @@ const ComentariosCard = () => {
       setComentarios(response.data);
     } catch (error) {
       console.error('Error fetching comentarios:', error);
-      setComentarios([]); // Vacía los comentarios en caso de error
+      setComentarios([]); // Vacia los comentarios
     }
   };
 

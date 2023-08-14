@@ -48,7 +48,7 @@ export default function MiPerfil() {
     <TouchableOpacity
       key={item}
       disabled // Deshabilita la interacción
-      activeOpacity={1} // Cambia la opacidad cuando está deshabilitado
+      activeOpacity={1} // Cambiar opacidad
     >
       <FontAwesome
         name={
