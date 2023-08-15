@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import useAuth from '../hooks/useAuth';
 
-const Card = ({ text, additionalText }) => {
+
+const Card = ({ text, additionalText, imageUrl }) => {
+  const { auth } = useAuth();
   return (
     <View style={styles.card}>
-      <Text style={styles.cardText}>{text}</Text>
-      <Text style={styles.additionalText}>{additionalText}</Text>
+      <Image
+        source={{ uri: imageUrl }}
+        style={styles.cardImage}
+      />
+      <View style={styles.textContainer}>
+        <Text style={styles.cardText}>{text}</Text>
+        <Text style={styles.additionalText}>{additionalText}</Text>
+      </View>
     </View>
   );
 };
@@ -31,7 +39,7 @@ const ComentariosCard = () => {
 
   useEffect(() => {
     fetchComentarios();
-    const intervalId = setInterval(fetchComentarios, 5000);
+    const intervalId = setInterval(fetchComentarios, 10000);
 
     return () => {
       clearInterval(intervalId);
@@ -47,6 +55,7 @@ const ComentariosCard = () => {
               key={comentario.idComentario}
               text={comentario.user.name}
               additionalText={comentario.comentario}
+              imageUrl={comentario.user.userImage} 
             />
           ))}
         </ScrollView>
@@ -71,6 +80,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   card: {
+    flexDirection: 'row', // Cambio en la dirección del diseño para colocar la imagen y el texto en fila
     backgroundColor: '#fff',
     borderRadius: 8,
     padding: 20,
@@ -83,11 +93,21 @@ const styles = StyleSheet.create({
     width: 200,
     minHeight: 120,
   },
+  cardImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'cover',
+    marginRight: 10, // Espacio entre la imagen y el texto
+    borderRadius:60
+  },
+  textContainer: {
+    flex: 1, // El contenedor de texto ocupa el espacio restante
+  },
   cardText: {
     fontSize: 18,
     marginBottom: 5,
-    color:'#05668D',
-    fontWeight:'600',
+    color: '#05668D',
+    fontWeight: '600',
     textTransform: 'uppercase',
   },
   additionalText: {
@@ -99,6 +119,7 @@ const styles = StyleSheet.create({
     color: 'gray',
     textAlign: 'center',
   },
+ 
 });
 
 export default ComentariosCard;
