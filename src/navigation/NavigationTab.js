@@ -22,8 +22,9 @@ export default function NavigationTab() {
 	//console.log(auth.role)
 	const userRole = auth ? auth.role : null;
 	//console.log(auth.role)
+	//console.log( ROLE_SOLICITANTE )
 	// Determina qué componente de solicitudes mostrar en función del rol
-	const SolicitudesComponent = userRole === "solicitante" ? SolicitudesTrabajo : Solicitudes;
+	const SolicitudesComponent = userRole === ROLE_SOLICITANTE ? SolicitudesTrabajo : Solicitudes;
 	const screenPublicaciones = userRole === ROLE_SOLICITANTE ? ApiPublicacion : ApiPublicacionLim;
 
 	return (

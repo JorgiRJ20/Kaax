@@ -1,81 +1,170 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getSolicitudDetalle } from '../api/ApiSolicitudDetalle';
-import useAuth from '../hooks/useAuth';
 import { format } from 'date-fns';
 import { useRoute } from '@react-navigation/native';
+import { getSolicitudDetalle, aceptarPostulacion, rechazarPostulacion } from '../api/ApiSolicitudDetalle';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 export default function DetallePostulacion() {
-    const { auth } = useAuth();
-    const { idUser } = auth;
+  const { params } = useRoute();
+  const idPostulacion = params?.idPostulacion;
 
-    const { params } = useRoute();
-    const idPostulacion = params?.idPostulacion;
-    console.log('recuperamos id',idPostulacion)
+  const navigation = useNavigation();
 
-    const formatDate = (dateString) => {
-        if (dateString) {
-            const date = new Date(dateString);
-            return format(date, 'dd-MM-yyyy'); // Formato 'dd-MM-yyyy'
+  const [modalVisible, setModalVisible] = useState(false);
+  const [accionRealizada, setAccionRealizada] = useState(''); // Puede ser 'aceptar' o 'rechazar'
+
+
+  const formatDate = (dateString) => {
+    if (dateString) {
+      const date = new Date(dateString);
+      return format(date, 'dd-MM-yyyy HH:mm');
+    }
+    return '';
+  };
+
+  const [data, setData] = useState({
+    idPostulacion: '',
+    tituloPublicacion: '',
+    nombreUsuario: '',
+    userImage: '',
+    fechaPostulacion: '',
+    comment: '',
+  });
+
+  useEffect(() => {
+    getSolicitudDetalle(idPostulacion)
+      .then((apiData) => {
+        if (apiData.length > 0) {
+          setData(apiData[0]);
         }
-        return '';
-    };
+      })
+      .catch((error) => {
+        console.error('Error al recuperar datos de la API:', error);
+      });
+  }, []);
 
-    const [data, setData] = useState({
-        idPostulacion: '',
-        tituloPublicacion: '',
-        nombreUsuario: '',
-        userImage: '',
-        fechaPostulacion: '',
-        comment: '',
-    });
+  const handleAceptar = async () => {
+    try {
+      await aceptarPostulacion(idPostulacion);
+      // Realiza acciones adicionales después de aceptar
+    } catch (error) {
+      console.error('Error al aceptar la postulación:', error);
+    }
+  };
 
-    useEffect(() => {
-        // Llamada a la función getSolicitudes y actualización del estado 'data'
-        getSolicitudDetalle(idPostulacion)
-            .then(apiData => {
-                if (apiData.length > 0) {
-                    setData(apiData[0]);
-                }
-            })
-            .catch(error => {
-                console.error('Error al recuperar datos de la API:', error);
-            });
-    }, []);
+  const handleRechazar = async () => {
+    try {
+      await rechazarPostulacion(idPostulacion);
+      // Realiza acciones adicionales después de rechazar
+    } catch (error) {
+      console.error('Error al rechazar la postulación:', error);
+    }
+  };
 
-    return (
-        <View style={{ flex: 2 }}>
-            {/* Resto de tu JSX */}
-            <View style={styles.containerSvg}>
-                <Text style={styles.title}>Responder solicitud</Text>
-                <Image
-                    source={require('../assets/kaaxCheck.png')}
-                    style={{ width: 180, height: 180, top: -60, left: 8 }}
-                />
+  return (
+    <View style={{ flex: 2 }}>
+      <View style={styles.containerSvg}>
+        <Text style={styles.title}>Responder solicitud</Text>
+        <Image
+          source={require('../assets/kaaxCheck.png')}
+          style={{ width: 180, height: 180, top: -60, left: 8 }}
+        />
 
-                <Text style={styles.subtitle}>{data.titulo}</Text>
-                <View style={styles.ContainerStatus}>
-                    <Text style={styles.name}><Icon name="user" size={24} style={styles.icon} /> {data.nombreUsuario}</Text>
-                </View>
-                <View style={styles.ContainerStatus}>
-                    <Text style={styles.name}><Icon name="calendar" size={24} style={styles.icon} /> {formatDate(data.fechaPostulacion)}</Text>
-                </View>
-                <View style={styles.ContainerStatus}>
-                    <Text style={styles.name}><Icon name="calendar" size={24} style={styles.icon} /> {data.comment}</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, { backgroundColor: '#08A045' }]}>
-                    <Text style={styles.buttonText}>Aceptar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, { backgroundColor: '#E5383B' }]}>
-                    <Text style={styles.buttonText}>Rechazar</Text>
-                </TouchableOpacity>
+        <Text style={styles.subtitle}>{data.titulo}</Text>
+        <View style={styles.ContainerStatus}>
+          <Text style={styles.name}>
+            <Icon name="user" size={24} style={styles.icon} /> {data.nombreUsuario}
+          </Text>
         </View>
-            </View>
+        <View style={styles.ContainerStatus}>
+          <Text style={styles.name}>
+            <Icon name="calendar" size={24} style={styles.icon} /> Fecha postulación: {formatDate(data.fechaPostulacion)}
+          </Text>
         </View>
-    );
+        <View style={styles.ContainerStatus}>
+          <Text style={styles.name}>
+            El usuario dice: {data.comment}
+          </Text>
+        </View>
+        <View style={styles.buttonContainer}>
+        <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#08A045' }]}
+            onPress={() => {
+            setAccionRealizada('aceptar');
+            setModalVisible(true);
+          }}
+          >
+          <Text style={styles.buttonText}>Aceptar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: '#E5383B' }]}
+          onPress={() => {
+          setAccionRealizada('rechazar');
+          setModalVisible(true);
+          }}
+          > 
+          <Text style={styles.buttonText}>Rechazar</Text>
+        </TouchableOpacity>
+
+        </View>
+      </View>
+      <Modal
+  animationType="slide"
+  transparent={true}
+  visible={modalVisible}
+  onRequestClose={() => {
+    setModalVisible(false);
+  }}
+>
+  <View style={styles.modalContainer}>
+  <Image
+      source={require('../assets/postulacion.png')}
+      style={styles.modalImage}
+    />
+    <Text style={styles.modalText}>
+      {accionRealizada === 'aceptar'
+        ? '¿Estás seguro de que deseas aceptar esta solicitud?'
+        : '¿Estás seguro de que deseas rechazar esta solicitud?'}
+    </Text>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: '#08A045' }]}
+        onPress={() => {
+          // Lógica para aceptar o rechazar la solicitud aquí
+          if (accionRealizada === 'aceptar') {
+            aceptarPostulacion(data.idPostulacion); // Llama a la función para aceptar la postulación
+          } else {
+            rechazarPostulacion(data.idPostulacion); // Llama a la función para rechazar la postulación
+          }
+          setModalVisible(false);
+          navigation.navigate('SolicitudesTrabajo');
+        }}
+      >
+        <Text style={styles.buttonText}>Confirmar</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: '#E5383B' }]}
+        onPress={() => {
+          setModalVisible(false);
+        }}
+      >
+        <Text style={styles.buttonText}>Cancelar</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
+    </View>
+  );
 }
+
+
+
 
     
     const styles = StyleSheet.create({
@@ -120,7 +209,7 @@ export default function DetallePostulacion() {
             marginBottom: 8,
             backgroundColor:'#EEEBEB',
             borderRadius:'10',
-            height:50,
+            height:70,
             width:380,
             marginTop: 2,
             justifyContent:'center',
@@ -225,6 +314,23 @@ export default function DetallePostulacion() {
             paddingVertical: 10,
             borderRadius: 8,
             marginHorizontal: 10,
+          },
+          modalContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+          },
+          modalText: {
+            fontSize: 18,
+            marginBottom: 20,
+            textAlign: 'center',
+          },
+          modalImage: {
+            width: 180, 
+            height: 180, 
+            resizeMode: 'contain', 
+            marginBottom: 20, 
           },
          
          

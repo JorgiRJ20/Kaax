@@ -21,6 +21,7 @@ import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import LoginForm from '../screen/LoginForm';
 import DetallePostulacion from '../screen/DetallePostulacion';
 
+
 export default function NavigationStack() {
 	const Stack = createStackNavigator();
 	return (
@@ -38,6 +39,11 @@ export default function NavigationStack() {
 			<Stack.Screen
 				name='Notificaciones'
 				component={Notificaciones}
+				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='SolicitudesTrabajo'
+				component={SolicitudesTrabajo}
 				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
