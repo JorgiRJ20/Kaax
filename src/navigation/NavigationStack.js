@@ -68,11 +68,13 @@ export default function NavigationStack() {
 			/>
 			<Stack.Screen
 				name='DetallePublicacion'
+				options={{title: "Detalle de publicación"}}
 				component={DetallePublicacion}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
 				name='DetallePublicacionLim'
+				options={{title: "Detalle de publicación"}}
 				component={DetallePublicacionLim}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>

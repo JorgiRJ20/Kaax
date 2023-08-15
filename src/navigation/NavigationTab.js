@@ -11,6 +11,7 @@ import ApiPublicacion from '../api/ApiPublicacion';
 import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import Palette from '../constants/Palette';
 import useAuth from '../hooks/useAuth';
+import { ROLE_SOLICITANTE } from '../utils/enviroments';
 
 
 export default function NavigationTab() {
@@ -23,6 +24,7 @@ export default function NavigationTab() {
 	//console.log(auth.role)
 	// Determina qué componente de solicitudes mostrar en función del rol
 	const SolicitudesComponent = userRole === "solicitante" ? SolicitudesTrabajo : Solicitudes;
+	const screenPublicaciones = userRole === ROLE_SOLICITANTE ? ApiPublicacion : ApiPublicacionLim;
 
 	return (
 		<Tab.Navigator
@@ -56,7 +58,7 @@ export default function NavigationTab() {
 			></Tab.Screen>
 			<Tab.Screen
 				name='Publicaciones'
-				component={ApiPublicacionLim}
+				component={screenPublicaciones}
 				options={{
 					tabBarIcon: ({ focused }) => (
 						<View style={{justifyContent: 'center', alignItems: 'center'}}>

@@ -14,6 +14,7 @@ export default function PublicacionesLimCard(props) {
         titulo: publicacionesLim.titulo,
         descripcion: publicacionesLim.descripcion,
         pago: publicacionesLim.pago,
+        numCuartos: publicacionesLim.numCuartos,
         fechaTrabajo: publicacionesLim.fechaTrabajo,
         horaTrabajo: publicacionesLim.horaTrabajo,
         status: publicacionesLim.status,

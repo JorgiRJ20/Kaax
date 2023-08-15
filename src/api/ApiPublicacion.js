@@ -5,6 +5,9 @@ import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import PublicacionesLists from '../components/PublicacionesList'
 import useAuth from '../hooks/useAuth';
+import FloatButton from '../components/FloatButton';
+import { useNavigation } from '@react-navigation/native';
+import Palette from '../constants/Palette';
 
 export default function ApiPublicacion() {
 
@@ -14,6 +17,13 @@ let token = auth.token;
 const config = {
   headers: { Authorization: `Bearer ${token}` }
 };
+
+  const navigation = useNavigation();
+
+
+  const handleNavigate = () => {
+    navigation.navigate("CrearPublicacion");
+  }
 
 useFocusEffect(
   useCallback(() => {
@@ -30,8 +40,14 @@ useFocusEffect(
 );
 
   return (
-    <View>
-    <PublicacionesLists publicaciones={publicaciones}/>
+    <View style={{flex: 1}}>
+      <PublicacionesLists publicaciones={publicaciones}/>
+      <FloatButton
+                handleNavigateTo={handleNavigate} 
+                screenCalled={'PublicacionesList'} 
+                backgroundColor={Palette.colors.primary} 
+                plusColor={Palette.colors.white}
+            />
     </View>
   )
 }

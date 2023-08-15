@@ -12,6 +12,8 @@ import useAuth from '../hooks/useAuth';
 export default function CrearPublicacion() {
 
   const navigation = useNavigation();
+  const [selected, setSelected] = useState("");
+  const [data, setData] = useState([]);
 
 
   const goToPubli = () => {
@@ -43,7 +45,7 @@ export default function CrearPublicacion() {
         try {
           const response = await axios.get(URL_API+'v1/direcciones',config);
           let direcciones = response.data.map((item) => {
-            return {key: item.idDireccion, value: item.nameDireccion}
+            return {key: item.idDireccion, value: `${item.nameDireccion} \n(${item.calle} ${item.numExt})`}
           })
           //Set Data Variable
           setData(direcciones)
@@ -271,7 +273,7 @@ const CrearPub = async () => {
       <Text style={{...styles.labelS, marginBottom:8}}>Ingresa la direccion del trabajo</Text>
         <View style={styles.container}>
         <SelectList placeholder="Elige la dirección" boxStyles={styles.selector} dropdownStyles={{borderColor:"#05668D"}}
-        setSelected={setSelected} data={data}  />
+        setSelected={setSelected} data={data} dropdownTextStyles={{fontSize: 14}}  />
         </View>
 
         

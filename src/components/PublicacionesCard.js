@@ -3,6 +3,7 @@ import {SafeAreaView,View, Text, Button,TouchableWithoutFeedback,Image,StyleShee
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import Palette from '../constants/Palette';
 export default function PublicacionesCard(props) {
 
 	const navigation = useNavigation();
@@ -27,80 +28,100 @@ const goToPublicacion = () =>{
 	navigation.navigate('CrearPublicacion'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
   };
   return (
-<TouchableWithoutFeedback onPress={goToPublicacion}>
-<SafeAreaView style={styles.containerform1}>
-	  <View style={styles.card1}>
+	<TouchableOpacity 
+	onPress={goToPublicacion}
+	  style={styles.card}
+	>
+	  <View style={styles.containerImage}>
 		<Image
-			source={require('../assets/departamento.jpg')}
-			style={styles.image1}
-		  />
-		 <View style={styles.textContainer1}>
-          <Text style={styles.title1}>{publicaciones.titulo}</Text>
-		  <Text style={styles.subtitle1}>{publicaciones.user.name}</Text>
-			
-			<View style={styles.horizontalTextContainer1}>
-			<Icon name='money' style={styles.icono1}/>
-            <Text style={styles.horizontalText1}>${publicaciones.pago}</Text>
-			<Icon name='location-arrow' style={styles.icono1}/>
-            <Text style={styles.horizontalText1}>1.5KM</Text>
-          </View>
-        </View>
+		  source={require('../assets/departamento.jpg')}
+		  style={styles.image}
+		/>
+	  </View>
+	  <View style={styles.containerInfo}>
+		<View style={{flex: 0.7}}>
+		  <Text style={styles.title}>{publicaciones.titulo}</Text>
+		  <Text style={styles.subtitle}>{publicaciones.user.name}</Text>
 		</View>
-		<Button onPress={goToCrearPu} title='ir a crear'/>
-   </SafeAreaView>
-  </TouchableWithoutFeedback>	
+		<View style={styles.containerContentIconInfo}>
+		  <View style={styles.containerIconInfo}>
+			  <Icon name='money' style={styles.icono}/>
+			  <Text style={styles.horizontalText}>${publicaciones.pago}</Text>
+		  </View>
+		  
+		</View>
+	  </View>
+	</TouchableOpacity>
   )
 }
 const styles = StyleSheet.create({
-	containerform1:{
+	containerform:{
 		alignItems:'center',
 		justifyContent: 'center',
 	},
-	card1: {
+	card: {
+		flex: 1,
 		backgroundColor: '#fff',
-		borderRadius: 8,
-		padding: 20,
-		marginTop:10,
+		borderRadius: 12,
 		shadowColor: '#000',
-		 width: 345, 
-		 height: 120,
 		elevation: 10,
-		flexDirection:'row',
-		marginBottom:10,
-		alignItems:'center',
+		shadowColor: '#000',
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2, 
+		shadowRadius: 4, 
+		elevation: 8, 
+		margin: 12,
+		padding: 5
 		
 	  },
-	  icono1:{
+	  icono:{
 		fontSize:18,
 		color:'#05668D',
-		marginStart:10
 	  },
-	  image1: {
-		width: 100,
-		height: 100,
+	  image: {
+		resizeMode: 'cover',
+		width: '100%',
+		height: 160,
 		borderRadius: 8,
-		marginRight: 4,
 	  },
-	  title1: {
-		fontSize: 18,
+	  title: {
+		fontSize: 20,
 		fontWeight: 'bold',
 		marginBottom: 8,
-		left:10,
-		color:'#05668D'
+		color:'#05668D',
 	  },
-	  subtitle1: {
-		fontSize: 15,
+	  subtitle: {
+		color: '#b1b1b1',
+		fontSize: 16,
 		textAlign: 'left',
 		marginBottom: 8,
-		left:10
+		fontStyle: 'italic',
 	  },
-	  horizontalTextContainer1: {
+	  horizontalTextContainer: {
 		flexDirection: 'row',
-		left:10
+		justifyContent: 'space-evenly',
 	  },
-	  horizontalText1: {
+	  horizontalText: {
 		fontSize: 15,
+		color: Palette.colors.black,
 		marginStart:10,
-		color: '#555',
+		fontWeight: 'bold'
+	  },
+	  containerImage: {
+		flex: 1
+	  },
+	  containerInfo: {
+		flex: 1, 
+		flexDirection: 'row',
+		marginTop: 4
+	  },
+	  containerContentIconInfo: {
+		flex: 0.3, 
+		justifyContent: 'center', 
+		alignItems: 'flex-end'
+	  },
+	  containerIconInfo: {
+		flexDirection: 'row',
+		marginBottom: 5
 	  }
 	});

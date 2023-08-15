@@ -106,7 +106,7 @@ export default function DetallePublicacionLim(props) {
      * @returns {*}
      */
     const RenderCardDataDetail = (icon, title, subtitle) => {
-      const flex = params.is_location_available ? 0.5 : 1;
+      const flex = icon != "calendar" ? 0.5 : 1;
       return (
         <View style={{...styles.cardInfoDetail, flex: flex}}>
           <View style={{ alignItems: 'center' }}>
@@ -176,6 +176,11 @@ export default function DetallePublicacionLim(props) {
                   style={styles.containerLineInfo}
                 >
                   {RenderCardDataDetail("user", "Solicitante", params.user)}
+                  {RenderCardDataDetail("home", "Número cuartos", `${params.numCuartos}`)}
+                </View>
+                <View
+                  style={styles.containerLineInfo}
+                >
                   {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
                 </View>
                 

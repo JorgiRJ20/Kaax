@@ -13,7 +13,7 @@ export default function FloatButton ( { handleNavigateTo, screenCalled, backgrou
     
     return (
         <TouchableOpacity
-            style={{...styles.button, backgroundColor: backgroundColor}}
+            style={{...styles.button, backgroundColor: backgroundColor, bottom: screenCalled === "PublicacionesList" ? 90 : 10}}
             onPress={() => handleNavigateTo()}
         >
             <AntDesign name="plus" size={24} color={plusColor} />
@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 70,
         position: 'absolute',
-        bottom: 10,
         right: 10,
         height: 70,
         borderRadius: 100,

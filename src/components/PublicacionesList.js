@@ -17,12 +17,7 @@ export default function PublicacionesList(props) {
   return (
     <SafeAreaView >
 
-            <FloatButton
-                handleNavigateTo={handleNavigate} 
-                screenCalled={'PublicacionesList'} 
-                backgroundColor={Palette.colors.primary} 
-                plusColor={Palette.colors.white}
-            />
+            
 
 			<FlatList
 				data={publicaciones}
