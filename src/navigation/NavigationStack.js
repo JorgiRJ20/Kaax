@@ -20,6 +20,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import LoginForm from '../screen/LoginForm';
 import DetallePostulacion from '../screen/DetallePostulacion';
+import MiPerfil from '../screen/MiPerfil';
 
 
 export default function NavigationStack() {
