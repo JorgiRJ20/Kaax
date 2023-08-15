@@ -3,11 +3,13 @@ import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Palette from '../constants/Palette';
+import { useRoute } from '@react-navigation/native';
 
 
 export default function SolicitudesCard(props) {
   const navigation = useNavigation();
-  console.log(props)
+  //console.log(props)
+  
 
   const [expanded, setExpanded] = useState(false);
 
@@ -20,9 +22,13 @@ export default function SolicitudesCard(props) {
       // No se permite la acción para estado 'En espera'
       return;
     } else if (props.status === 4) {
-      navigation.navigate('LimpiezaCheck'); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+      navigation.navigate('LimpiezaCheck'); 
+    } else if (props.status === 2) {
+      navigation.navigate('RespuestaAceptada', { idPostulacion: props.idPostulacion }); 
     }
   };
+  //console.log(props.status)
+  
 
   let buttonColor = '';
   switch (props.status) {
@@ -50,6 +56,7 @@ export default function SolicitudesCard(props) {
       break;
     case 2:
       buttonText = 'Aceptada';
+      buttonDisabled = false; // Habilitar el botón
       break;
     case 3:
       buttonText = 'Rechazada';
@@ -171,8 +178,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   buttonContainer: {
-    alignItems: 'center', // Centrar horizontalmente el botón
-    marginTop: 10, // Espacio adicional entre el contenido y el botón
+    alignItems: 'center', 
+    marginTop: 10, 
   },
   button: {
     paddingVertical: 5,

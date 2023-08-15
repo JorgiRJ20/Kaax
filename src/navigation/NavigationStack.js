@@ -20,6 +20,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
 import LoginForm from '../screen/LoginForm';
 import DetallePostulacion from '../screen/DetallePostulacion';
+import RespuestaAceptada from '../screen/RespuestaAceptada';
 import MiPerfil from '../screen/MiPerfil';
 
 
@@ -104,6 +105,11 @@ export default function NavigationStack() {
 			<Stack.Screen
 				name='DetallePostulacion'
 				component={DetallePostulacion}
+				options={{ headerTitle: 'DetPos'}}
+			/>
+			<Stack.Screen
+				name='RespuestaAceptada'
+				component={RespuestaAceptada}
 				options={{ headerTitle: 'DetPos'}}
 			/>
 			<Stack.Screen

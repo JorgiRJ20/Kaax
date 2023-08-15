@@ -33,11 +33,6 @@ export default function Solicitudes() {
     fetchData();
   }, [idUser]);
 
-  
-  
-
-  
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.cardContainer}>
@@ -51,6 +46,7 @@ export default function Solicitudes() {
             nameUser={solicitud.nombreUsuarioPublicacion}
             precio={solicitud.pago}
             status={solicitud.status}
+            idPostulacion={solicitud.idPostulacion}
           />
         ))}
       </ScrollView>

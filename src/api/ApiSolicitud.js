@@ -2,11 +2,11 @@ import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 
 export async function getPostulaciones(idUser) {
-  console.log('Valor de idUser:', idUser);
+  //console.log('Valor de idUser:', idUser);
   try {
     
     const response = await axios.get(URL_API +`postulaciones/usuario/${idUser}`);
-    console.log('Respuesta de la API:', response.data); // A
+    //console.log('Respuesta de la API:', response.data); // A
     const data = response.data.map(postulacion => ({
       
       titulo: postulacion[0],
@@ -18,11 +18,13 @@ export async function getPostulaciones(idUser) {
       pago: postulacion[6],
       fechaPostulacion: postulacion[7],
       status: postulacion[8],
+      idPostulacion: postulacion[9],
+      fechaTrabajo: postulacion[10]
     }));
-    console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
+    //console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
     return data;
   } catch (error) {
-    console.error('Error al obtener las postulaciones:', error);
+    //console.error('Error al obtener las postulaciones:', error);
     return [];
   }
 };

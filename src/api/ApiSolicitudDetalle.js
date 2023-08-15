@@ -43,3 +43,33 @@ export async function rechazarPostulacion(idPostulacion) {
     throw error;
   }
 }
+
+export async function getDetallePostulacion(idPostulacion) {
+  
+  try {
+    const response = await axios.get(URL_API + `postulaciones/postulaciones/${idPostulacion}/datos`);
+    const data = response.data;
+   
+    return {
+      idPostulacion: data.idPostulacion,
+      tituloPublicacion: data.titulo,
+      nombreUsuario: data.nombreUsuario,
+      fechaPostulacion: data.fechaPostulacion,
+      direccion: {
+        municipio: data.municipio,
+        calle: data.calle,
+        colonia: data.colonia,
+        codigoPostal: data.codigoPostal,
+        numExt: data.numExt,
+        numInt: data.numInt,
+      },
+      userImage: data.userImage,
+      fechaAccionado: data.fechaAccionado,
+      fechaTrabajo: data.fechaTrabajo,
+      horaTrabajo: data.horaTrabajo,
+    };
+  } catch (error) {
+    console.error('Error al obtener los detalles de la postulación:', error);
+    throw error;
+  }
+}
