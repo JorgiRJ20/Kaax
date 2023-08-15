@@ -1,4 +1,4 @@
-import {View, Text, TextInput, Button, StyleSheet, SafeAreaView,Image,StatusBar, TouchableOpacity
+import {View, Text, TextInput, Button, StyleSheet, SafeAreaView,Image,StatusBar, TouchableOpacity, ScrollView
 } from 'react-native';
 import { Modal } from 'react-native-paper';
 import React, { useContext, useState } from "react";
@@ -110,107 +110,111 @@ export default function LoginForm(props) {
 	};
 	
 	return (
-		<KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
-		<View style={{backgroundColor:"#FFF"}}>
-			<View style={styles.containerSvg}>
-				<Image
-					source={require('../assets/kaax.png')}
-					style={{ width: 350, height: 350, top: 60}}
-				/>
-	   			<Text style={styles.title}>BIENVENIDO</Text>  
-				<Formik
-					initialValues={initialValues}
-					validationSchema={validationSchema}
-					onSubmit={(values, { resetForm }) => {
-						// funcion para limpiar los campos
-						try {
-						//setVisible(true);
-						//setStatusLogin(false);
-							console.log("onSubmit", values);
-							authUser(values);
-							resetForm();
-						} catch (error) {
-						// resetForm();
-						}
-					}}
-				>
-					{({
-						handleChange,
-						handleBlur,
-						handleSubmit,
-						values,
-						errors,
-						isValid,
-					}) => (
-						<View style={styles.formContainer}>
-							<View style={styles.inputArea}>
-								<TextInput
-									placeholder='Email de usuario'
-									style={styles.input}
-									autoCapitalize='none'
-									onChangeText={handleChange("email")}
-									value={values.email}
-									onBlur={handleBlur("email")}
-									textAlignVertical="center"  
-								/>
-							</View>
-							<Text style={styles.error}>{errors.email}</Text>
-							<View style={styles.inputArea}>
-								<TextInput
-									placeholder='Contraseña'
-									style={styles.input}
-									autoCapitalize='none'
-									// secureTextEntry={true}
-									onChangeText={handleChange("password")}
-									value={values.password}
-									onBlur={handleBlur("password")}
-									textAlignVertical="center"
-									secureTextEntry={hidePass}  
-								/>
-								<TouchableOpacity onPress={ () => setHidePass(!hidePass)}>
-									{ hidePass ?
-											<Ionicons name='eye' color="#000" size={25}/>
-										:
-											<Ionicons name='eye-off' color="#000" size={25}/>
-									}
+		<ScrollView style={styles.containerScroll}>
+			<KeyboardAvoidingView behavior="position" style={styles.mainContainer}>
+				<View style={styles.containerSvg}>
+					<Image
+						source={require('../assets/kaax.png')}
+						style={{ width: 350, height: 350, top: 60}}
+					/>
+					<Text style={styles.title}>BIENVENIDO</Text>  
+					<Formik
+						initialValues={initialValues}
+						validationSchema={validationSchema}
+						onSubmit={(values, { resetForm }) => {
+							// funcion para limpiar los campos
+							try {
+							//setVisible(true);
+							//setStatusLogin(false);
+								console.log("onSubmit", values);
+								authUser(values);
+								resetForm();
+							} catch (error) {
+							// resetForm();
+							}
+						}}
+					>
+						{({
+							handleChange,
+							handleBlur,
+							handleSubmit,
+							values,
+							errors,
+							isValid,
+						}) => (
+							<View style={styles.formContainer}>
+								<View style={styles.inputArea}>
+									<TextInput
+										placeholder='Email de usuario'
+										style={styles.input}
+										autoCapitalize='none'
+										onChangeText={handleChange("email")}
+										value={values.email}
+										onBlur={handleBlur("email")}
+										textAlignVertical="center"  
+									/>
+								</View>
+								<Text style={styles.error}>{errors.email}</Text>
+								<View style={styles.inputArea}>
+									<TextInput
+										placeholder='Contraseña'
+										style={styles.input}
+										autoCapitalize='none'
+										// secureTextEntry={true}
+										onChangeText={handleChange("password")}
+										value={values.password}
+										onBlur={handleBlur("password")}
+										textAlignVertical="center"
+										secureTextEntry={hidePass}  
+									/>
+									<TouchableOpacity onPress={ () => setHidePass(!hidePass)}>
+										{ hidePass ?
+												<Ionicons name='eye' color="#000" size={25}/>
+											:
+												<Ionicons name='eye-off' color="#000" size={25}/>
+										}
+									</TouchableOpacity>
+								</View>
+								<Text style={styles.error}>{errors.password}</Text>
+								<TouchableOpacity
+									style={styles.buttonDesign}
+									// style={styles.btnTouchable}
+									onPress={handleSubmit}
+									disabled={!isValid}
+								>
+									<Text style={styles.buttonText}>Iniciar sesión</Text>
 								</TouchableOpacity>
-							</View>
-							<Text style={styles.error}>{errors.password}</Text>
-							<TouchableOpacity
-								style={styles.buttonDesign}
-								// style={styles.btnTouchable}
-								onPress={handleSubmit}
-								disabled={!isValid}
-							>
-								<Text style={styles.buttonText}>Iniciar sesión</Text>
-							</TouchableOpacity>
-							<Text style={styles.text3}>
-								¿No tienes cuenta?{' '}
-								<Text style={styles.boldText} onPress={goToCrearCuenta}>
-									Crear Cuenta
+								<Text style={styles.text3}>
+									¿No tienes cuenta?{' '}
+									<Text style={styles.boldText} onPress={goToCrearCuenta}>
+										Crear Cuenta
+									</Text>
 								</Text>
-							</Text>
+							</View>
+						)}	
+					</Formik>
+					<Modal visible={visible} contentContainerStyle={styles.modal}>
+						<View style={styles.modalResponse}>
+							<Text style={styles.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={styles.aceptarbtn}
+							onPress={() => hideModal()}
+							>
+								<Text style={styles.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
 						</View>
-					)}	
-				</Formik>
-				<Modal visible={visible} contentContainerStyle={styles.modal}>
-					<View style={styles.modalResponse}>
-						<Text style={styles.textProgress}>{message}</Text>
-						<TouchableOpacity
-						style={styles.aceptarbtn}
-						onPress={() => hideModal()}
-						>
-							<Text style={styles.textaceptar}>Aceptar</Text>
-						</TouchableOpacity>
-					</View>
-				</Modal>
-			</View>	
-		</View>
-		</KeyboardAvoidingView>
+					</Modal>
+				</View>		
+			</KeyboardAvoidingView>
+		</ScrollView>
 	);
 }
 
 const styles = StyleSheet.create({
+	containerScroll: {
+		flex: 1,
+		flexGrow: 1,
+	},
 	mainContainer: {
 		backgroundColor: '#FFF',
 		height: '100%',
@@ -223,7 +227,7 @@ const styles = StyleSheet.create({
 	text3: {
 		fontSize: 15,
 		color: '#848484',
-		marginTop: 20,
+		marginVertical: 20,
 	},
 	boldText: {
 		fontWeight: 'bold',
