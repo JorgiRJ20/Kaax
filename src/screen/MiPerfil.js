@@ -5,10 +5,15 @@ import ComentariosCard from '../components/ComentariosCard';
 import useAuth from '../hooks/useAuth';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
+import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
 
 export default function MiPerfil() {
-  const { auth } = useAuth();
+ 
   const [rating, setRating] = useState();
+    const auth = useAuth();
+    const { role } = auth.auth;
+    console.log(role);
+
 
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
@@ -16,10 +21,10 @@ export default function MiPerfil() {
 
   const fetchPromedio = async () => {
     console.log(auth);
-    if (auth.idUser) {
+    if (auth.auth.idUser) {
       try {
-        const apiUrl = `v1/calificaciones/promedio/${auth.idUser}`;
-        console.log('ID de usuario:', auth.idUser);
+        const apiUrl = `v1/calificaciones/promedio/${auth.auth.idUser}`;
+        console.log('ID de usuario:', auth.auth.idUser);
         const response = await axios.get(URL_API+apiUrl);
         setRating(response.data);
 
@@ -41,8 +46,8 @@ export default function MiPerfil() {
   }, []);
   return (
     <View style={styles.container}>
-      <Image style={styles.fotoPerfil} source={{ uri: auth.userImage }} />
-      <Text style={styles.title}>{auth.name}</Text>
+      <Image style={styles.fotoPerfil} source={{ uri: auth.auth.userImage }} />
+      <Text style={styles.title}>{auth.auth.name}</Text>
       <View style={styles.starsContainer}>
   {[1, 2, 3, 4, 5].map((item) => (
     <TouchableOpacity
@@ -64,19 +69,21 @@ export default function MiPerfil() {
     </TouchableOpacity>
   ))}
 </View>
+          {role === ROLE_LIMPIADOR && (
       <TouchableOpacity>
         <View style={styles.input2}>
           <FontAwesome style={styles.icono2} name="folder" />
           <Text style={styles.inputText2}>  Trabajos</Text>
         </View>
       </TouchableOpacity>
+            )}
       <View style={styles.input}>
         <FontAwesome style={styles.icono} name="phone" />
-        <Text style={styles.inputText}>  {auth.phone}</Text>
+        <Text style={styles.inputText}>  {auth.auth.phone}</Text>
       </View>
       <View style={styles.input}>
         <FontAwesome style={styles.icono} name="envelope" />
-        <Text style={styles.inputText}>   {auth.email}</Text>
+        <Text style={styles.inputText}>   {auth.auth.email}</Text>
       </View>
       <ComentariosCard />
     </View>
@@ -94,8 +101,8 @@ const styles = StyleSheet.create({
   fotoPerfil: {
     width: 200,
     height: 200,
-    borderColor: '#ECECEC',
-    borderWidth: 7,
+    borderColor: '#ececee',
+    borderWidth: 10,
     borderRadius: 180,
     marginTop: 50,
   },

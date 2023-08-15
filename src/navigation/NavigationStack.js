@@ -110,6 +110,12 @@ export default function NavigationStack() {
 				component={AddLocation}
 				options={{ headerShown: false }}
 			/>
+				<Stack.Screen
+				name='MiPerfil'
+				component={MiPerfil}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			
 			 <Stack.Screen
           name='ApiPublicacion'
           component={ApiPublicacion}
