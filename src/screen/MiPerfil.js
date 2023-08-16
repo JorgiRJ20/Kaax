@@ -6,8 +6,13 @@ import useAuth from '../hooks/useAuth';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
 import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
+import { useNavigation } from '@react-navigation/native';
 
 export default function MiPerfil() {
+  const navigation = useNavigation();
+    const handlePress = () => {
+	navigation.navigate('Trabajos');
+	};
  
   const [rating, setRating] = useState();
     const auth = useAuth();
@@ -70,7 +75,7 @@ export default function MiPerfil() {
   ))}
 </View>
           {role === ROLE_LIMPIADOR && (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handlePress}>
         <View style={styles.input2}>
           <FontAwesome style={styles.icono2} name="folder" />
           <Text style={styles.inputText2}>  Trabajos</Text>

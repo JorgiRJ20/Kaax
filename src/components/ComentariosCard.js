@@ -49,7 +49,7 @@ const ComentariosCard = () => {
   return (
     <View style={styles.container}>
       {comentarios.length > 0 ? (
-        <ScrollView horizontal contentContainerStyle={styles.cardScrollView}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cardScrollView}>
           {comentarios.map((comentario) => (
             <Card
               key={comentario.idComentario}

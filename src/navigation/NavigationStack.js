@@ -22,6 +22,7 @@ import LoginForm from '../screen/LoginForm';
 import DetallePostulacion from '../screen/DetallePostulacion';
 import RespuestaAceptada from '../screen/RespuestaAceptada';
 import MiPerfil from '../screen/MiPerfil';
+import Trabajos from '../screen/Trabajos';
 
 
 export default function NavigationStack() {
@@ -118,8 +119,13 @@ export default function NavigationStack() {
 				options={{ headerShown: false }}
 			/>
 				<Stack.Screen
-				name='MiPerfil'
+				name='Mi Perfil'
 				component={MiPerfil}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='Trabajos realizados'
+				component={Trabajos}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			
