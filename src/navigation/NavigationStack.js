@@ -4,6 +4,7 @@ import Solicitudes from '../screen/Solicitudes';
 import CrearCuenta from '../screen/CrearCuenta';
 import OlvidasteContrasena from '../screen/OlvidasteContrasena';
 import LimpiezaCheck from '../screen/LimpiezaCheck'
+import LimpiezaCheck1 from '../screen/LimpiezaCheck1'
 import PublicacionesCard from '../components/PublicacionesCard';
 import DetallePublicacion from '../components/DetallePublicacion';
 import CrearPublicacion from '../screen/CrearPublicacion';
@@ -62,6 +63,11 @@ export default function NavigationStack() {
 			<Stack.Screen
 				name='LimpiezaCheck'
 				component={LimpiezaCheck}
+				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
+			/>
+			<Stack.Screen
+				name='LimpiezaCheck1'
+				component={LimpiezaCheck1}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen

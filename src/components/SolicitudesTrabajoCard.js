@@ -24,7 +24,7 @@ export default function SolicitudesTrabajoCard(props) {
 		  // No se permite la acción para estado 'En espera'
 		  return;
 		} else if (props.status === 4) {
-			navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
+			navigation.navigate('LimpiezaCheck1', { idPostulacion: props.idPostulacion }); 
 		} else if (props.status === 2 && buttonText === 'Calificar') {
 			navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
 		} else if (props.status === 1) {
