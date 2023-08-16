@@ -66,18 +66,15 @@ export default function DetallePostulacion() {
   };
 
   return (
-    <View style={{ flex: 2 }}>
-      <View style={styles.containerSvg}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      
         <Text style={styles.title}>Responder solicitud</Text>
-        <Image
-          source={require('../assets/kaaxCheck.png')}
-          style={{ width: 180, height: 180, top: -60, left: 8 }}
-        />
+        <Image source={{ uri: data.userImage }} style={styles.image} />
 
-        <Text style={styles.subtitle}>{data.titulo}</Text>
+        <Text style={styles.subtitle}>Detalles de la solicitud:</Text>
         <View style={styles.ContainerStatus}>
           <Text style={styles.name}>
-            <Icon name="user" size={24} style={styles.icon} /> {data.nombreUsuario}
+            <Icon name="user" size={24} style={styles.icon} /> Nombre: {data.nombreUsuario}
           </Text>
         </View>
         <View style={styles.ContainerStatus}>
@@ -110,7 +107,7 @@ export default function DetallePostulacion() {
           <Text style={styles.buttonText}>Rechazar</Text>
         </TouchableOpacity>
 
-        </View>
+       
       </View>
       <Modal
   animationType="slide"
@@ -228,9 +225,14 @@ export default function DetallePostulacion() {
             
             
           },
-          
-        
-        
+          image:{
+            width: 150,
+            height: 150,
+            borderRadius: 90, 
+            borderWidth: 3, 
+            borderColor: '#05668D', 
+          },
+
           buttonText: {
             color: '#000',
             fontSize: 16,
@@ -273,20 +275,17 @@ export default function DetallePostulacion() {
           
           title:{
             textAlign: 'center',
-            fontSize:40,
+            fontSize:35,
             fontWeight:'bold',
-            marginTop: 5,
-            marginBottom: 45,
-            marginTop:20,
+            marginTop: -90,
+            marginBottom: 20,
             color:'#05668D'
         },
-        subtitle:{
-            textAlign: 'center',
-            fontSize:28,
-            fontWeight:'bold',
-            marginTop: -80,
-            marginBottom: 10, 
-            color:'#05668D'
+        subtitle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          marginTop: 20,
+          marginBottom: 10,
         },
         mainContainer: {
             backgroundColor: '#FFF',

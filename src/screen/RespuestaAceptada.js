@@ -67,7 +67,7 @@ export default function RespuestaAceptada() {
 }
 
 const styles = StyleSheet.create({
-    title:{
+  title:{
         textAlign: 'center',
         fontSize:35,
         fontWeight:'bold',

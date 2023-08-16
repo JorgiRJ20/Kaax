@@ -3,12 +3,13 @@ import { TouchableOpacity,View, Text, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
-
-
+import {addHours, isAfter, isBefore} from 'date-fns'
 
 export default function SolicitudesTrabajoCard(props) {
 	const navigation = useNavigation();
-	console.log(props.idPostulacion)
+	//console.log(props.idPostulacion)
+
+	let estatus = props.status;
 
 	const formatDate = (dateString) => {
 		if (dateString) {
@@ -16,89 +17,100 @@ export default function SolicitudesTrabajoCard(props) {
 		  return format(date, 'dd-MM-yyyy'); // Formato 'dd-MM-yyyy'
 		}
 		return '';
-	  };
+	};
 	
-	  const handleButtonPress = () => {
+	const handleButtonPress = () => {
 		if (props.status === 'En espera') {
 		  // No se permite la acción para estado 'En espera'
 		  return;
-		} else if (props.status === 4 || props.status === 1) {
-		  navigation.navigate('DetallePostulacion', { idPostulacion: props.idPostulacion }); // Reemplaza 'Detalles' con la ruta de la pantalla a la que deseas navegar
+		} else if (props.status === 4) {
+			navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
+		} else if (props.status === 2 && buttonText === 'Calificar') {
+			navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
+		} else if (props.status === 1) {
+			navigation.navigate('DetallePostulacion', { idPostulacion: props.idPostulacion }); 
 		}
-	  };
+	};
 	
 	  let buttonColor = '';
 	  switch (props.status) {
 		case 1:
-		  buttonColor = '#0F94CA'; // Azul
+		  buttonColor = '#0F94CA'; 
 		  break;
 		case 2:
-		  buttonColor = '#08A045'; // Verde
+		  buttonColor = '#08A045'; 
 		  break;
 		case 3:
-		  buttonColor = '#E5383B'; // Rojo
+		  buttonColor = '#E5383B'; 
 		  break;
 		case 4:
-		  buttonColor = '#800080'; // Morado
+		  buttonColor = '#800080'; 
 		  break;
 		default:
-		  buttonColor = '#05668D'; // Color predeterminado
+		  buttonColor = '#05668D'; 
 	  }
 	
-	  let buttonText = '';
-	  let buttonDisabled = true;
-	  switch (props.status) {
+	let buttonText = '';
+	let buttonDisabled = true;
+	  switch (estatus) {
 		case 1:
-		  buttonText = 'En espera';
-		  break;
+		  	buttonText = 'En espera';
+			break;
 		case 2:
-		  buttonText = 'Aceptada';
-		  break;
+    		const horaTrabajo = new Date(props.fechaTrabajo + " " + props.horaTrabajo);
+    		const limiteCalificacion = addHours(horaTrabajo, 24);
+    
+    		if (isAfter(new Date(), horaTrabajo) && isBefore(new Date(), limiteCalificacion)) {
+      			buttonText = 'Calificar';
+      			buttonColor = '#800080'; // Morado
+      			buttonDisabled = false; // Habilitar el botón durante las primeras 24 horas
+    		} else if (isAfter(new Date(), limiteCalificacion)) {
+      			buttonText = 'Finalizado';
+    		} else {
+      			buttonText = 'Aceptada';
+      			buttonDisabled = false; // Habilitar el botón
+    		}
+    		break;
 		case 3:
-		  buttonText = 'Rechazada';
-		  break;
+		  	buttonText = 'Rechazada';
+		  	break;
 		case 4:
-		  buttonText = 'Calificar';
-		  buttonDisabled = false; // Habilitar el botón
-		  break;
+		  	buttonText = 'Calificar';
+		  	buttonDisabled = false; // Habilitar el botón
+		  	break;
 		default:
-		  buttonText = '';
-	  }
+		  	buttonText = '';
+	  	}
 	  
 	  return (
-		<TouchableOpacity 
+	<TouchableOpacity 
 		  onPress={handleButtonPress}
-		  style={styles.card}
-		 
-		>
-			<View style={styles.containerImage}>
-        <Image
-          source={require('../assets/departamento.jpg')}
-          style={styles.image}
+		  style={styles.card}>
+		<View style={styles.containerImage}>
+        	<Image source={require('../assets/departamento.jpg')}
+          	style={styles.image}
         />
-      </View>
-		  <View style={styles.containerInfo}>
-        <View style={{flex: 0.7}}>
-          <Text style={styles.title}>{props.titulo}</Text>
-          <Text style={styles.subtitle}>{props.namePostulante}</Text>
-        </View>
-        <View style={styles.containerContentIconInfo}>
-          <View style={styles.containerIconInfo}>
-              <Icon name='calendar' style={styles.icono}/>
-              <Text style={styles.horizontalText}> {formatDate(props.fecha)}</Text>
-          </View>
-          <View style={styles.containerIconInfo}>
-            <View
-              style={[styles.statusButton, { backgroundColor: buttonColor }]}
-            >
-              <Text style={styles.statusButtonText}>{buttonText}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-		</TouchableOpacity>
-	  );
-	};
+      	</View>
+		<View style={styles.containerInfo}>
+        	<View style={{flex: 0.7}}>
+          		<Text style={styles.title}>{props.titulo}</Text>
+          		<Text style={styles.subtitle}>{props.namePostulante}</Text>
+        	</View>
+        	<View style={styles.containerContentIconInfo}>
+          		<View style={styles.containerIconInfo}>
+              		<Icon name='calendar' style={styles.icono}/>
+              		<Text style={styles.horizontalText}> {formatDate(props.fecha)}</Text>
+          		</View>
+          		<View style={styles.containerIconInfo}>
+            		<View style={[styles.statusButton, { backgroundColor: buttonColor }]}>
+              			<Text style={styles.statusButtonText}>{buttonText}</Text>
+            		</View>
+          		</View>
+        	</View>
+      	</View>
+	</TouchableOpacity>
+);
+};
 	
 	const styles = StyleSheet.create({
 	  card: {
@@ -169,8 +181,8 @@ export default function SolicitudesTrabajoCard(props) {
 		fontSize: 14,
 	  },
 	  buttonContainer: {
-		alignItems: 'center', // Centrar horizontalmente el botón
-		marginTop: 10, // Espacio adicional entre el contenido y el botón
+		alignItems: 'center', 
+		marginTop: 10, 
 	  },
 	  button: {
 		paddingVertical: 5,

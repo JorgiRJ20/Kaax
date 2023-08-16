@@ -25,25 +25,22 @@ export default function SolicitudesCard(props) {
   let buttonColor = '';
   switch (props.status) {
     case 1:
-      buttonColor = '#0F94CA'; // Azul
+      buttonColor = '#0F94CA'; 
       break;
     case 2:
-      buttonColor = '#08A045'; // Verde
+      buttonColor = '#08A045'; 
       break;
     case 3:
-      buttonColor = '#E5383B'; // Rojo
+      buttonColor = '#E5383B'; 
       break;
     case 4:
-      buttonColor = '#800080'; // Morado
+      buttonColor = '#800080'; 
       break;
-    case 5:
-        buttonColor = '#05668D'; // Morado
-        break;
     default:
-      buttonColor = '#05668D'; // Color predeterminado
+      buttonColor = '#05668D'; 
   }
 
-  let buttonText = '';
+let buttonText = '';
 let buttonDisabled = true;
 switch (estatus1) {
   case 1:
@@ -59,7 +56,6 @@ switch (estatus1) {
       buttonDisabled = false; // Habilitar el botón durante las primeras 24 horas
     } else if (isAfter(new Date(), limiteCalificacion)) {
       buttonText = 'Finalizado';
-      buttonColor = '#800080';
     } else {
       buttonText = 'Aceptada';
       buttonDisabled = false; // Habilitar el botón

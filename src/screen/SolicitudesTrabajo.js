@@ -49,9 +49,12 @@ export default function SolicitudesTrabajo() {
             titulo={solicitud.titulo}
             namePostulante={solicitud.nombreUsuarioPostulante}
             comment={solicitud.descripcion}
-			fecha={solicitud.fechaPostulacion}
+			      fecha={solicitud.fechaPostulacion}
             status={solicitud.status}
-			idPostulacion={solicitud.idPostulacion}
+			      idPostulacion={solicitud.idPostulacion}
+            fechaTrabajo={solicitud.fechaTrabajo}
+            horaTrabajo={solicitud.horaTrabajo}
+            userImage={solicitud.userImage}
 
 			
           />
