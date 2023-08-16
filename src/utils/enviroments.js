@@ -1,4 +1,4 @@
-export const URL_API= "http://192.168.100.12:8081/kaax/api/"
+export const URL_API= "http://192.168.100.12:8080/kaax/api/"
 export const apiKey="AIzaSyCqQrqx9H1HoSzlagGgma4sro1Xyhr1vI8"
 export const authDomain= "kaax-46ae6.firebaseapp.com"
 export const projectId= "kaax-46ae6"
