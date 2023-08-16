@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity} from 'react-native';
+import { Modal } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -8,42 +9,75 @@ import axios from 'axios';
 import moment from 'moment'; // Importa la biblioteca moment o date-fns
 import useAuth from '../hooks/useAuth'; // Importa tu hook de autenticación
 import { URL_API } from '../utils/enviroments'; // Importa la URL de tu API
-import { Alert } from 'react-native'; // Importa Alert desde react-native
+import { useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function Solicitud() {
+	const route = useRoute();
+	const params = route.params;
+	const idPostulacion = params.idPostulacion;
 
 	const { auth } = useAuth();
     const [rating, setRating] = useState(1);
     const [modalVisible, setModalVisible] = useState(false);
     const [comment, setComment] = useState('');
-    const [showCalificarButton, setShowCalificarButton] = useState(true);
+	const [postulacionData, setPostulacionData] = useState({});
+	const [idUsuario, setIdUsuario] = useState(null);
 
+	const [message, setMessage] = useState("");
+	const [visible, setVisible] = useState(false);
+	const showModal = () => setVisible(true);
+	const hideModal = () => setVisible(false);
+
+
+	const navigation = useNavigation();
+	const handlePress = () => {
+	navigation.navigate('Publicaciones');
+	};
+	useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const apiUrl = `postulaciones/postulaciones/${idPostulacion}/datos`;
+			const response = await axios.get(URL_API + apiUrl);
+			setPostulacionData(response.data);
+			setIdUsuario(response.data.idUsuario); // Guardar el idUsuario
+
+			
+			console.log('Data from API:', response.data); 
+	  
+		  } catch (error) {
+			// console.error('Error fetching data:', error);
+		  }
+		};
+	  
+		fetchData();
+	  }, []);
 
 
   // Función para manejar la selección de la calificación
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
   };
-	
-
 
 	const enviarCalificacion = async () => {
 		const fechaPostulacion = moment().format('YYYY-MM-DDTHH:mm:ss');
 		console.log('idUser:', auth.idUser);
 		console.log('rating:', rating);
 		console.log('fecha:', fechaPostulacion);
+		console.log('IdCalificado:', idUsuario);
+	
 	
 		try {
-		  const apiUrl = 'v1/calificaciones'; // Reemplaza con la ruta correcta de tu API
+		  const apiUrl = 'v1/calificaciones'; 
 		  const response = await axios.post(`${URL_API}${apiUrl}`, {
 			user: {idUser: auth.idUser},
-			idCalificado: 2, // Reemplazar con el ID real del receptor
+			idCalificado: idUsuario, // AQUI QUIERO UTILIZAR EL IDUSUARIO
 			calificacion: rating,
 			fecha: fechaPostulacion,
 		  });
 	
-		  console.log('Comentario y calificación enviados con éxito');
+		  console.log('Tu comentario y calificación enviados con éxito');
 		  setModalVisible(true);
 		} catch (error) {
 		  
@@ -57,10 +91,10 @@ export default function Solicitud() {
         console.log('fecha:', fechaPostulacion);
 
         try {
-            const apiUrl = 'v1/comentarios'; // Reemplaza con la ruta correcta de tu API
+            const apiUrl = 'v1/comentarios';
             const response = await axios.post(`${URL_API}${apiUrl}`, {
                 user: { idUser: auth.idUser },
-                idReceptor: 2, // Puedes reemplazar con el ID real del receptor
+                idReceptor: idUsuario, 
                 comentario: comment,
                 fecha: fechaPostulacion,
             });
@@ -80,7 +114,7 @@ export default function Solicitud() {
 
 	const bottomSheetRef = useRef(null);
 	// variables snapoint avaible in bottom modal
-   const snapPoints = useMemo(() => ["40%", "60%", "100%"]);
+   const snapPoints = useMemo(() => ["50%", "60%", "100%"]);
    const [currentSnapPoint, setCurrentSnapPoint] = useState(-1);
    // callbacks bottom modal
    const handleSheetChanges = useCallback((index) => {
@@ -93,8 +127,8 @@ export default function Solicitud() {
    };
 
    const closeBottomSheet = () => {
-    bottomSheetRef.current?.close(); // Cierra la hoja inferior
-	};
+	bottomSheetRef.current?.close();
+  };
 
    const renderBackdrop = useCallback(
 	props => (
@@ -109,19 +143,25 @@ export default function Solicitud() {
 );
 
 const enviarCalificacionYComentario = async () => {
-
 	if (!comment) {
-		// Si el campo de comentario está vacío, mostrar una alerta
-		Alert.alert('Upps!!', 'Para brindar una mejor experiencia, ayudanos con una breve reseña!');
+		setMessage("Para brindar una mejor experiencia, ayúdanos con una breve reseña!");
+		showModal();
 		return;
 	}
-	
-	enviarCalificacion();
-	enviarComentario();
-	
-	closeBottomSheet();
-	Alert.alert('Tu comentario ha sido enviado!');
-	
+
+	await enviarCalificacion();
+	await enviarComentario();
+
+	setTimeout(() => {
+		setMessage("Tu reseña ya ha sido enviada!");
+		showModal();
+		// Aquí puedes cerrar el modal después de 1 segundo
+		setTimeout(() => {
+			hideModal();
+			// También puedes cerrar la hoja inferior si es necesario
+			closeBottomSheet();
+		}, 1000);
+	}, 500);
 };
 
 
@@ -133,23 +173,22 @@ const enviarCalificacionYComentario = async () => {
 		<View style={{marginTop:20}}>
 				<Text style={styles.title}>¡Tu opinión es importante!</Text> 
 		</View>
-				<View style={styles.containerFoto}>
+				<View>
 				<Image
-			 		source={require('../assets/persona.jpg')}
-			 		style={{ width: 180, height: 180, borderRadius:130, borderWidth:7, borderColor:'#05668D'}}
+			 		source={{ uri: postulacionData.userImage }}
+			 		style={{ width: 200, height: 200, borderRadius:130, borderWidth:10, borderColor:'#05668D'}}
 		 		/>
 				</View>
+				
 		 		<View style={{marginTop:20}}>
-			<View style={styles.ContainerStatus}>
-				<Text style={styles.name}><Icon name="user" size={24}  style={styles.icon} /> Nombre de usuario </Text>
+				 <View style={styles.ContainerStatus}>
+				<Text style={styles.name}><Icon name="briefcase" size={24} style={styles.icon} /> {postulacionData.titulo}</Text>
+				</View>
+				<View style={styles.ContainerStatus}>
+				<Text style={styles.name}><Icon name="user" size={24} style={styles.icon} /> {postulacionData.nombreUsuario}</Text>
+				</View>
 			</View>
-			<View style={styles.ContainerStatus}>
-				<Text style={styles.name}><Icon name="calendar" size={24} style={styles.icon} /> Fecha solicitud </Text>
-			</View>
-			<View style={styles.ContainerStatus}>
-				<Text style={styles.name}><Icon name="calendar" size={24} style={styles.icon} /> Fecha Respuesta </Text>
-			</View>
-			</View>
+			
 			</View>
 			
 			<TouchableOpacity
@@ -196,7 +235,24 @@ const enviarCalificacionYComentario = async () => {
 						>
                             <Text style={styles.textaceptar}>Enviar</Text>
                         </TouchableOpacity>
-                    </View>
+						
+						<Modal visible={visible} contentContainerStyle={styles.modal}>
+						<View style={styles.modalResponse}>
+						<Image
+							source={require('../assets/departamento.jpg')} // Reemplaza con la URL de tu imagen
+							style={{ width: 80, height: 80, borderRadius:130}}
+						/>
+							<Text style={styles.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={styles.aceptarbtn}
+							onPress={() => hideModal()}
+							>
+								<Text style={styles.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
+						</View>
+					</Modal>
+
+				    </View>
                 </BottomSheet>
       
     </View>
@@ -230,9 +286,12 @@ const styles = StyleSheet.create({
 		marginTop:2,
 	  },
 	  name: {
-		marginTop: 0,
 		fontSize: 20,
 		textAlign: 'center',
+		textTransform: 'uppercase',
+		marginStart:0,
+		color: '#8EA604',
+		fontWeight:'800'
 	  },
 	  descripcion: {
 		fontSize: 16,
@@ -263,10 +322,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 2,
 		flexDirection: 'row',
 		alignItems: 'right',
-		padding: 75,
-		
-        
-		
+		padding: 75,	
 	  },
 	  
 	
@@ -388,5 +444,23 @@ const styles = StyleSheet.create({
 				color: 'white',
 				textAlign: 'center',
 			},
+			modal: {
+				alignContent: "center",
+				alignSelf: "center",
+				alignItems: "center",
+				flex: 1,
+				width: "90%",
+				flexDirection:'row'
+			},
+			modalResponse: {
+				textAlign: "center",
+				backgroundColor: "white",
+				alignItems: "center",
+				padding: 20,
+				borderRadius: 20,
+			},
+			textProgress:{
+				marginTop:5
+			}
      
 })

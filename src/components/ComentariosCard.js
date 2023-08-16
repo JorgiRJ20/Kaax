@@ -5,8 +5,27 @@ import { URL_API } from '../utils/enviroments';
 import useAuth from '../hooks/useAuth';
 
 
-const Card = ({ text, additionalText, imageUrl }) => {
-  const { auth } = useAuth();
+const Card = ({ text, additionalText, imageUrl, fecha}) => {
+  
+  const calculateTimePassed = (timestamp) => {
+    const currentDate = new Date();
+    const commentDate = new Date(timestamp);
+    const timeDiff = Math.abs(currentDate - commentDate);
+
+    const yearsPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 365));
+    const monthsPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 30));
+    const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (yearsPassed >= 1) {
+      return `Hace ${yearsPassed} año${yearsPassed !== 1 ? 's' : ''}`;
+    } else if (monthsPassed >= 1) {
+      return `Hace ${monthsPassed} mes${monthsPassed !== 1 ? 'es' : ''}`;
+    } else {
+      return `Hace ${daysPassed} día${daysPassed !== 1 ? 's' : ''}`;
+    }
+  };
+
+ 
   return (
     <View style={styles.card}>
       <Image
@@ -14,6 +33,7 @@ const Card = ({ text, additionalText, imageUrl }) => {
         style={styles.cardImage}
       />
       <View style={styles.textContainer}>
+        <Text style={styles.fecha}>{calculateTimePassed(fecha)}</Text>
         <Text style={styles.cardText}>{text}</Text>
         <Text style={styles.additionalText}>{additionalText}</Text>
       </View>
@@ -24,6 +44,8 @@ const Card = ({ text, additionalText, imageUrl }) => {
 const ComentariosCard = () => {
   const { auth } = useAuth();
   const [comentarios, setComentarios] = useState([]);
+
+
 
   const fetchComentarios = async () => {
     try {
@@ -53,6 +75,7 @@ const ComentariosCard = () => {
           {comentarios.map((comentario) => (
             <Card
               key={comentario.idComentario}
+              fecha={comentario.fecha}
               text={comentario.user.name}
               additionalText={comentario.comentario}
               imageUrl={comentario.user.userImage} 
@@ -110,6 +133,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textTransform: 'uppercase',
   },
+  fecha: {
+    fontSize: 7,
+    marginBottom: 5,
+    color: '#05668D',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+  },
   additionalText: {
     fontSize: 14,
     color: 'black',
@@ -118,6 +148,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
     textAlign: 'center',
+  },
+  date: {
+    fontSize: 10,
+    color: 'gray',
+
   },
  
 });
