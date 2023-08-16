@@ -50,7 +50,7 @@ export default function DetallePostulacion() {
   const handleAceptar = async () => {
     try {
       await aceptarPostulacion(idPostulacion);
-      // Realiza acciones adicionales después de aceptar
+     
     } catch (error) {
       console.error('Error al aceptar la postulación:', error);
     }
@@ -59,7 +59,7 @@ export default function DetallePostulacion() {
   const handleRechazar = async () => {
     try {
       await rechazarPostulacion(idPostulacion);
-      // Realiza acciones adicionales después de rechazar
+     
     } catch (error) {
       console.error('Error al rechazar la postulación:', error);
     }
@@ -110,53 +110,52 @@ export default function DetallePostulacion() {
        
       </View>
       <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(false);
-  }}
->
-  <View style={styles.modalContainer}>
-  <Image
-      source={require('../assets/postulacion.png')}
-      style={styles.modalImage}
-    />
-    <Text style={styles.modalText}>
-      {accionRealizada === 'aceptar'
-        ? '¿Estás seguro de que deseas aceptar esta solicitud?'
-        : '¿Estás seguro de que deseas rechazar esta solicitud?'}
-    </Text>
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: '#08A045' }]}
-        onPress={() => {
-          // Lógica para aceptar o rechazar la solicitud aquí
-          if (accionRealizada === 'aceptar') {
-            aceptarPostulacion(data.idPostulacion); // Llama a la función para aceptar la postulación
-          } else {
-            rechazarPostulacion(data.idPostulacion); // Llama a la función para rechazar la postulación
-          }
-          setModalVisible(false);
-          navigation.navigate('SolicitudesTrabajo');
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+        setModalVisible(false);
         }}
       >
-        <Text style={styles.buttonText}>Confirmar</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: '#E5383B' }]}
-        onPress={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Text style={styles.buttonText}>Cancelar</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.modalContainer}>
+      <Image
+        source={require('../assets/postulacion.png')}
+        style={styles.modalImage}
+      />
+        <Text style={styles.modalText}>
+          {accionRealizada === 'aceptar'
+            ? '¿Estás seguro de que deseas aceptar esta solicitud?'
+            : '¿Estás seguro de que deseas rechazar esta solicitud?'}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#08A045' }]}
+            onPress={() => {
+          
+            if (accionRealizada === 'aceptar') {
+              aceptarPostulacion(data.idPostulacion); 
+            } else {
+              rechazarPostulacion(data.idPostulacion); 
+            }
+              setModalVisible(false);
+              navigation.navigate('Tab');
+              
+            }}
+            >
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#E5383B' }]}
+            onPress={() => {
+            setModalVisible(false);
+            }}
+            >
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   </View>
-</Modal>
-
-    </View>
   );
 }
 

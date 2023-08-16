@@ -1,14 +1,13 @@
-import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import Card from '../components/SolicitudesTrabajoCard'
+import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
+import Loader from '../components/Loader'; // Asegúrate de importar el componente Loader desde la ubicación correcta
+import Card from '../components/SolicitudesTrabajoCard';
 import useAuth from '../hooks/useAuth';
 import { getSolicitudes } from '../api/ApiSolicitudTrabajo';
 
-
 export default function SolicitudesTrabajo() {
-	const { auth } = useAuth();
-    const { idUser } = auth;
-  //console.log('AUTHid', idUser);
+  const { auth } = useAuth();
+  const { idUser } = auth;
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,15 +16,12 @@ export default function SolicitudesTrabajo() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        //console.log(idUser)
         if (idUser) {
           const data = await getSolicitudes(idUser);
           setSolicitudes(data);
-          //console.log(data)
           setLoading(false);
         }
       } catch (error) {
-        //console.error('Error al obtener las postulaciones:', error);
         setError(error);
         setLoading(false);
       }
@@ -34,29 +30,22 @@ export default function SolicitudesTrabajo() {
     fetchData();
   }, [idUser]);
 
-  
-  
-
-  
-
   return (
     <SafeAreaView style={styles.container}>
+      <Loader show={loading} /> 
       <ScrollView contentContainerStyle={styles.cardContainer}>
-      {console.log('solicitudes:', solicitudes)}
         {solicitudes.map(solicitud => (
           <Card
             key={solicitud.idPublicacion}
             titulo={solicitud.titulo}
             namePostulante={solicitud.nombreUsuarioPostulante}
             comment={solicitud.descripcion}
-			      fecha={solicitud.fechaPostulacion}
+            fecha={solicitud.fechaPostulacion}
             status={solicitud.status}
-			      idPostulacion={solicitud.idPostulacion}
+            idPostulacion={solicitud.idPostulacion}
             fechaTrabajo={solicitud.fechaTrabajo}
             horaTrabajo={solicitud.horaTrabajo}
             userImage={solicitud.userImage}
-
-			
           />
         ))}
       </ScrollView>
@@ -65,11 +54,15 @@ export default function SolicitudesTrabajo() {
 }
 
 const styles = StyleSheet.create({
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   cardContainer: {
     marginTop: 16,
   },
 });
+
 
 	
 	
