@@ -119,12 +119,12 @@ export default function NavigationStack() {
 				options={{ headerShown: false }}
 			/>
 				<Stack.Screen
-				name='Mi Perfil'
+				name='MiPerfil'
 				component={MiPerfil}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
-				name='Trabajos realizados'
+				name='Trabajos'
 				component={Trabajos}
 				//options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
