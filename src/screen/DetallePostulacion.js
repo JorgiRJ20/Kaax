@@ -50,7 +50,7 @@ export default function DetallePostulacion() {
   const handleAceptar = async () => {
     try {
       await aceptarPostulacion(idPostulacion);
-      // Realiza acciones adicionales después de aceptar
+     
     } catch (error) {
       console.error('Error al aceptar la postulación:', error);
     }
@@ -59,25 +59,22 @@ export default function DetallePostulacion() {
   const handleRechazar = async () => {
     try {
       await rechazarPostulacion(idPostulacion);
-      // Realiza acciones adicionales después de rechazar
+     
     } catch (error) {
       console.error('Error al rechazar la postulación:', error);
     }
   };
 
   return (
-    <View style={{ flex: 2 }}>
-      <View style={styles.containerSvg}>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      
         <Text style={styles.title}>Responder solicitud</Text>
-        <Image
-          source={require('../assets/kaaxCheck.png')}
-          style={{ width: 180, height: 180, top: -60, left: 8 }}
-        />
+        <Image source={{ uri: data.userImage }} style={styles.image} />
 
-        <Text style={styles.subtitle}>{data.titulo}</Text>
+        <Text style={styles.subtitle}>Detalles de la solicitud:</Text>
         <View style={styles.ContainerStatus}>
           <Text style={styles.name}>
-            <Icon name="user" size={24} style={styles.icon} /> {data.nombreUsuario}
+            <Icon name="user" size={24} style={styles.icon} /> Nombre: {data.nombreUsuario}
           </Text>
         </View>
         <View style={styles.ContainerStatus}>
@@ -110,56 +107,55 @@ export default function DetallePostulacion() {
           <Text style={styles.buttonText}>Rechazar</Text>
         </TouchableOpacity>
 
-        </View>
+       
       </View>
       <Modal
-  animationType="slide"
-  transparent={true}
-  visible={modalVisible}
-  onRequestClose={() => {
-    setModalVisible(false);
-  }}
->
-  <View style={styles.modalContainer}>
-  <Image
-      source={require('../assets/postulacion.png')}
-      style={styles.modalImage}
-    />
-    <Text style={styles.modalText}>
-      {accionRealizada === 'aceptar'
-        ? '¿Estás seguro de que deseas aceptar esta solicitud?'
-        : '¿Estás seguro de que deseas rechazar esta solicitud?'}
-    </Text>
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: '#08A045' }]}
-        onPress={() => {
-          // Lógica para aceptar o rechazar la solicitud aquí
-          if (accionRealizada === 'aceptar') {
-            aceptarPostulacion(data.idPostulacion); // Llama a la función para aceptar la postulación
-          } else {
-            rechazarPostulacion(data.idPostulacion); // Llama a la función para rechazar la postulación
-          }
-          setModalVisible(false);
-          navigation.navigate('SolicitudesTrabajo');
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+        setModalVisible(false);
         }}
       >
-        <Text style={styles.buttonText}>Confirmar</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: '#E5383B' }]}
-        onPress={() => {
-          setModalVisible(false);
-        }}
-      >
-        <Text style={styles.buttonText}>Cancelar</Text>
-      </TouchableOpacity>
-    </View>
+      <View style={styles.modalContainer}>
+      <Image
+        source={require('../assets/postulacion.png')}
+        style={styles.modalImage}
+      />
+        <Text style={styles.modalText}>
+          {accionRealizada === 'aceptar'
+            ? '¿Estás seguro de que deseas aceptar esta solicitud?'
+            : '¿Estás seguro de que deseas rechazar esta solicitud?'}
+        </Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#08A045' }]}
+            onPress={() => {
+          
+            if (accionRealizada === 'aceptar') {
+              aceptarPostulacion(data.idPostulacion); 
+            } else {
+              rechazarPostulacion(data.idPostulacion); 
+            }
+              setModalVisible(false);
+              navigation.navigate('Tab');
+              
+            }}
+            >
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: '#E5383B' }]}
+            onPress={() => {
+            setModalVisible(false);
+            }}
+            >
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
   </View>
-</Modal>
-
-    </View>
   );
 }
 
@@ -228,9 +224,14 @@ export default function DetallePostulacion() {
             
             
           },
-          
-        
-        
+          image:{
+            width: 150,
+            height: 150,
+            borderRadius: 90, 
+            borderWidth: 3, 
+            borderColor: '#05668D', 
+          },
+
           buttonText: {
             color: '#000',
             fontSize: 16,
@@ -273,20 +274,17 @@ export default function DetallePostulacion() {
           
           title:{
             textAlign: 'center',
-            fontSize:40,
+            fontSize:35,
             fontWeight:'bold',
-            marginTop: 5,
-            marginBottom: 45,
-            marginTop:20,
+            marginTop: -90,
+            marginBottom: 20,
             color:'#05668D'
         },
-        subtitle:{
-            textAlign: 'center',
-            fontSize:28,
-            fontWeight:'bold',
-            marginTop: -80,
-            marginBottom: 10, 
-            color:'#05668D'
+        subtitle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          marginTop: 20,
+          marginBottom: 10,
         },
         mainContainer: {
             backgroundColor: '#FFF',

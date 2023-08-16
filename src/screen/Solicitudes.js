@@ -1,42 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
 import Card from '../components/SolicitudesCard';
-import useAuth  from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import { getPostulaciones } from '../api/ApiSolicitud';
+import Loader from '../components/Loader';
 
 export default function Solicitudes() {
   const { auth } = useAuth();
   const { idUser } = auth;
-  //console.log('AUTHid', idUser);
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        //console.log(idUser)
-        if (idUser) {
-          const data = await getPostulaciones(idUser);
-          setSolicitudes(data);
-          //console.log(data)
-          setLoading(false);
-        }
-      } catch (error) {
-        //console.error('Error al obtener las postulaciones:', error);
-        setError(error);
-        setLoading(false);
+  const fetchData = async () => {
+    try {
+      if (idUser) {
+        setLoading(true); 
+        const data = await getPostulaciones(idUser);
+        setSolicitudes(data);
+        setLoading(false)
       }
-    };
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [idUser]);
 
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchData();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.cardContainer}>
-      {console.log('solicitudes:', solicitudes)}
+      <ScrollView
+        contentContainerStyle={styles.cardContainer}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
+      >
         {solicitudes.map(solicitud => (
           <Card
             key={solicitud.idUsuarioPostulante}
@@ -57,9 +62,13 @@ export default function Solicitudes() {
 }
 
 const styles = StyleSheet.create({
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   cardContainer: {
     marginTop: 16,
   },
 });
+
 

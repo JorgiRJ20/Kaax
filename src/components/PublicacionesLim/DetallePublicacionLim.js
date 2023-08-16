@@ -10,6 +10,8 @@ import { ScrollView } from 'react-native';
 import axios from 'axios';
 import { URL_API } from '../../utils/enviroments';
 import Loader from './../Loader';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 
@@ -24,7 +26,11 @@ export default function DetallePublicacionLim(props) {
     const [showLoader, setShowLoader] = useState(false);
     
 
-    const {navigation, route:{params}} = props
+    const {route:{params}} = props
+    const navigation = useNavigation();
+    const goToSolicitudes = () => {
+    navigation.navigate('Tab');
+     };
     //console.log('recuperamos id',params)
      // ref bottom modal
     const bottomSheetRef = useRef(null);
@@ -71,10 +77,7 @@ export default function DetallePublicacionLim(props) {
     //Modal de respuesta al dar clic en "enviar"
     const [modalVisible, setModalVisible] = useState(false);
 
-    const closeModal = () => {
-      setModalVisible(false);
-      navigation.navigate('Solicitudes'); // Navega a la pantalla "Mis solicitudes"
-    };
+    
 
     //Para enviar comentario al postularme 
     const enviarComentario = async () => {
@@ -230,7 +233,7 @@ export default function DetallePublicacionLim(props) {
                 <View style={styles.modalContainer}>
                   <View style={styles.modalContent}>
                     <Text style={styles.modalText}>¡Postulación enviada con éxito!</Text>
-                      <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+                      <TouchableOpacity style={styles.modalButton} onPress={goToSolicitudes}>
                         <Text style={styles.closeButtonText}>Cerrar</Text>
                       </TouchableOpacity>
                   </View>

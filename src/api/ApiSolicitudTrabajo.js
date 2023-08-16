@@ -17,6 +17,9 @@ export async function getSolicitudes(idUser) {
       status: postulacion[5],
       fechaPostulacion: postulacion[6],
       idPostulacion: postulacion[7],
+      fechaTrabajo: postulacion[8],
+      horaTrabajo: postulacion[9],
+      userImage: postulacion[10],
     
 
     }));
