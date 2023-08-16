@@ -315,6 +315,9 @@ const savePublicacion = async (url) => {
 
   } catch (error) {
     console.error(error);
+    Alert.alert("Error!", "Ocurrió un error al crear la publicacion", [
+      { text: "OK", onPress: goToPubli },
+    ]);
   }
 };
 
@@ -371,6 +374,7 @@ const savePublicacion = async (url) => {
   const [imagenesUrl, setImagenesUrl] = useState([]); // Array de URLs de las imágenes subidas
   const handleUploadImages = async (idPublic) => {
     try {
+      console.log(idPublic, "id de la publicacion")
       if (selectedImages.length > 0) {
         // Iterar sobre las imágenes seleccionadas y subirlas una por una
         for (const image of selectedImages) {
@@ -399,10 +403,8 @@ const savePublicacion = async (url) => {
                   .then((downloadURL) => {
                     console.log("File available at", downloadURL);
                     // Aquí puedes hacer algo con la URL de descarga si es necesario
-                    setArrayImagenes(prevImagenesUrl => [
-                      ...prevImagenesUrl,
-                      { url: downloadURL, idPubli: idPublic },
-                    ]);
+                    console.log({ url: downloadURL, idPubli: idPublic }, "array nuevo");
+                    arrayImagenes.push({ imagenUrl: downloadURL, publicacion: { idPublicacion :idPublic} });
                     resolve();
                   })
                   .catch((error) => {
@@ -428,27 +430,60 @@ const savePublicacion = async (url) => {
     }
   };
 
+  // const saveImagenesBD = async () => {
+  //   console.log(setArrayImagenes, "imagenes url")
+  //   try {
+  //     const response = await axios.post(
+  //       URL_API + "v1/imagenes",
+  //       setArrayImagenes,
+  //       config
+  //     );
+  //     if (response) {
+  //       setVisible(false);
+  //       Alert.alert("¡Exito!", "Publicación Agregada ", [
+  //         { text: "OK", onPress: goToPubli },
+  //       ]);
+  //     }
+  //   } catch (error) {
+  //     setVisible(false);
+  //     Alert.alert("Error!", "Error al guardar las imagenes de la zona de limpieza ", [
+  //       { text: "OK", onPress: goToPubli },
+  //     ]);
+  //   }
+  // };
+
   const saveImagenesBD = async () => {
-    console.log(setArrayImagenes, "imagenes url")
+    console.log(arrayImagenes, "imagenes url");
+  console.log(config.headers.Authorization)
     try {
-      const response = await axios.post(
-        URL_API + "v1/imagenes",
-        setArrayImagenes,
-        config
-      );
-      if (response) {
-        setVisible(false);
-        Alert.alert("¡Exito!", "Publicación Agregada ", [
-          { text: "OK", onPress: goToPubli },
-        ]);
+      for (const imagen of arrayImagenes) {
+        console.log(imagen, "imagenddddddddddddddddddddddddddddddd")
+        saveImagen(imagen);
       }
-    } catch (error) {
+  
       setVisible(false);
-      Alert.alert("Error!", "Error al guardar las imagenes de la zona de limpieza ", [
+      Alert.alert("¡Éxito!", "Publicación registrada con exito", [
+        { text: "OK", onPress: goToPubli },
+      ]);
+    } catch (error) {
+      console.log(error, "Ocurrió un error al guardar las imágenes")
+      setVisible(false);
+      Alert.alert("Error!", "Ocurrió un error al guardar las imágenes", [
         { text: "OK", onPress: goToPubli },
       ]);
     }
   };
+
+  const saveImagen = async (imagen) => {
+    try {
+      const response = await axios.post(URL_API + "imagenes", imagen, config);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error al guardar imagen:", error);
+      // Puedes manejar el error aquí
+    }
+  };
+
 
   return (
     <ScrollView style={styles.containerScroll}>
