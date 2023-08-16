@@ -44,11 +44,15 @@ export default function CrearPublicacion() {
       const fetchData = async () => {
         try {
           const response = await axios.get(URL_API+'v1/direcciones',config);
-          let direcciones = response.data.map((item) => {
-            return {key: item.idDireccion, value: `${item.nameDireccion} \n(${item.calle} ${item.numExt})`}
+          let direccionesFil = [];
+          response.data.map((item) => {
+            if(item.user.idUser == idUser){
+              const objUbi = { key: item.idDireccion, value: `${item.nameDireccion} \n(${item.calle} ${item.numExt})`};
+              direccionesFil.push(objUbi);
+            }
           })
           //Set Data Variable
-          setData(direcciones)
+          setData(direccionesFil)
         } catch (error) {
           console.log(error);
         }
@@ -166,6 +170,7 @@ const CrearPub = async () => {
     showMode('date');
   };
    
+console.log('selectoooor',data)
 
 
   return (
