@@ -47,6 +47,8 @@ export default function Solicitudes() {
             precio={solicitud.pago}
             status={solicitud.status}
             idPostulacion={solicitud.idPostulacion}
+            fechaTrabajo={solicitud.fechaTrabajo}
+            horaTrabajo={solicitud.horaTrabajo}
           />
         ))}
       </ScrollView>

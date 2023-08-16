@@ -19,7 +19,8 @@ export async function getPostulaciones(idUser) {
       fechaPostulacion: postulacion[7],
       status: postulacion[8],
       idPostulacion: postulacion[9],
-      fechaTrabajo: postulacion[10]
+      fechaTrabajo: postulacion[10],
+      horaTrabajo: postulacion[11]
     }));
     //console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
     return data;

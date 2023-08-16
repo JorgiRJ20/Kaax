@@ -4,12 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Palette from '../constants/Palette';
 import { useRoute } from '@react-navigation/native';
-
+import {addHours, isAfter, isBefore} from 'date-fns'
+ 
 
 export default function SolicitudesCard(props) {
   const navigation = useNavigation();
   //console.log(props)
-  
+  let estatus1 = props.status;
 
   const [expanded, setExpanded] = useState(false);
 
@@ -17,16 +18,7 @@ export default function SolicitudesCard(props) {
     setExpanded(!expanded);
   };
 
-  const handleButtonPress = () => {
-    if (props.status === 'En espera') {
-      // No se permite la acción para estado 'En espera'
-      return;
-    } else if (props.status === 4) {
-      navigation.navigate('LimpiezaCheck'); 
-    } else if (props.status === 2) {
-      navigation.navigate('RespuestaAceptada', { idPostulacion: props.idPostulacion }); 
-    }
-  };
+  
   //console.log(props.status)
   
 
@@ -44,30 +36,59 @@ export default function SolicitudesCard(props) {
     case 4:
       buttonColor = '#800080'; // Morado
       break;
+    case 5:
+        buttonColor = '#05668D'; // Morado
+        break;
     default:
       buttonColor = '#05668D'; // Color predeterminado
   }
 
   let buttonText = '';
-  let buttonDisabled = true;
-  switch (props.status) {
-    case 1:
-      buttonText = 'En espera';
-      break;
-    case 2:
+let buttonDisabled = true;
+switch (estatus1) {
+  case 1:
+    buttonText = 'En espera';
+    break;
+  case 2:
+    const horaTrabajo = new Date(props.fechaTrabajo + " " + props.horaTrabajo);
+    const limiteCalificacion = addHours(horaTrabajo, 24);
+    
+    if (isAfter(new Date(), horaTrabajo) && isBefore(new Date(), limiteCalificacion)) {
+      buttonText = 'Calificar';
+      buttonColor = '#800080'; // Morado
+      buttonDisabled = false; // Habilitar el botón durante las primeras 24 horas
+    } else if (isAfter(new Date(), limiteCalificacion)) {
+      buttonText = 'Finalizado';
+      buttonColor = '#800080';
+    } else {
       buttonText = 'Aceptada';
       buttonDisabled = false; // Habilitar el botón
-      break;
-    case 3:
-      buttonText = 'Rechazada';
-      break;
-    case 4:
-      buttonText = 'Calificar';
-      buttonDisabled = false; // Habilitar el botón
-      break;
-    default:
-      buttonText = '';
+    }
+    break;  
+  case 3:
+    buttonText = 'Rechazada';
+    break;
+  case 4:
+    buttonText = 'Calificar';
+    buttonDisabled = false; // Habilitar el botón
+    break;
+  default:
+    buttonText = '';
+}
+
+const handleButtonPress = () => {
+  if (props.status === 'En espera') {
+    // No se permite la acción para estado 'En espera'
+    return;
+  } else if (props.status === 4) {
+    navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
+  } else if (props.status === 2 && buttonText === 'Calificar') {
+    navigation.navigate('LimpiezaCheck', { idPostulacion: props.idPostulacion }); 
+  } else if (props.status === 2) {
+    navigation.navigate('RespuestaAceptada', { idPostulacion: props.idPostulacion }); 
   }
+};
+
 
   return (
     <TouchableOpacity 
