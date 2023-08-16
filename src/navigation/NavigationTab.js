@@ -9,6 +9,7 @@ import NavigationOptions from './NavigationOptions';
 import ApiPublicacionLim from './../api/ApiPublicacionLim';
 import ApiPublicacion from '../api/ApiPublicacion';
 import SolicitudesTrabajo from '../screen/SolicitudesTrabajo';
+import ApiDirecciones from '../api/ApiDirecciones';
 import Palette from '../constants/Palette';
 import useAuth from '../hooks/useAuth';
 import { ROLE_SOLICITANTE } from '../utils/enviroments';

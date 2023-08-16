@@ -82,6 +82,7 @@ export default function ApiPublicacionLim() {
                   const { latitude, longitude } = result;
                   
                   response.data.map(async (pub) => {
+                    if(pub.status == 1){
                     const latitudeLimpieza = pub.direccion.latitud;
                     const longitudLimpieza = pub.direccion.longitud;
 
@@ -90,18 +91,24 @@ export default function ApiPublicacionLim() {
                       // Agregamos el objeto de la publicación con dos nuevos datos: [is_location_available, locations_distance]
                       array_pubs.push({...pub, is_location_available: result.status, locations_distance: resultM})
                     })
-                  })
+                  
+                  }
+                })
                 }else {
                   // Agregamos el objeto de la publicación con dos nuevos datos: [is_location_available, locations_distance]
                   response.data.map((pub) => {
-                    array_pubs.push({...pub, is_location_available: result.status, locations_distance: 0})
+                    if(pub.status == 1){
+                      array_pubs.push({...pub, is_location_available: result.status, locations_distance: 0})
+                  }  
                   })
                 }
               })
 
             }else {
               response.data.map((pub) => {
+                if(pub.status == 1){
                 array_pubs.push({...pub, is_location_available: false, locations_distance: 0})
+                }
               })
             }
 

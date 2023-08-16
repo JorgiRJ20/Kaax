@@ -5,11 +5,15 @@ import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import DireccionesList from '../components/DireccionesList';
 import useAuth from '../hooks/useAuth';
+import Loader from './../components/Loader';
 export default function ApiDirecciones() {
+
     const [direcciones, setDirecciones] = useState([]);
+    const [showLoader, setShowLoader] = useState(false);
+    
     const {auth} = useAuth();
     let token = auth.token;
-    
+    let idUser = auth.idUser;
     const config = {
       headers: { Authorization: `Bearer ${token}` }
     };
@@ -17,11 +21,19 @@ export default function ApiDirecciones() {
       useCallback(() => {
         const fetchData = async () => {
           try {
+            setShowLoader(true);
             const response = await axios.get(URL_API+'v1/direcciones',config);
-            setDirecciones(response.data);
-            console.log(response.data)
+            let direccionesFilterer = [];
+            response.data.map((item) => {
+              if(item.user.idUser == idUser){
+                direccionesFilterer.push(item)
+              }
+            })
+            setDirecciones(direccionesFilterer);
+            setShowLoader(false);
         } catch (error) {
             console.error(error);
+            setShowLoader(false);
         }
       };
       fetchData();
@@ -29,6 +41,7 @@ export default function ApiDirecciones() {
     );
       return (
         <View style={{flex: 1}}>
+          <Loader show={showLoader}/>
         <DireccionesList direcciones={direcciones}/>
         </View>
       )
