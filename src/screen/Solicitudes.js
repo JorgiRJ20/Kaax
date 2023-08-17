@@ -54,7 +54,7 @@ export default function Solicitudes() {
         <ScrollView contentContainerStyle={styles.cardContainer}>
           {solicitudes.map((solicitud) => (
             <Card
-              key={solicitud.idUsuarioPostulante}
+              key={`${solicitud.idUsuarioPostulante}_${Math.random()}_${new Date().getTime()}`}
               titulo={solicitud.titulo}
               descripcion={solicitud.descripcion}
               idUsuario={solicitud.idUsuarioPublicacion}
