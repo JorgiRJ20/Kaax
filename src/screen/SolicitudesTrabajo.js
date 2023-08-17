@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import Loader from '../components/Loader'; // Asegúrate de importar el componente Loader desde la ubicación correcta
+import Loader from '../components/Loader'; 
 import Card from '../components/SolicitudesTrabajoCard';
 import useAuth from '../hooks/useAuth';
 import { getSolicitudes } from '../api/ApiSolicitudTrabajo';
@@ -90,7 +90,7 @@ export default function SolicitudesTrabajo() {
     },
     emptyText: {
       fontSize: 18,
-      color: '#888', // Cambia el color del texto aquí
+      color: '#888', 
     },
   });
 

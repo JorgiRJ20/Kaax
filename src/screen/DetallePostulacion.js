@@ -117,8 +117,8 @@ export default function DetallePostulacion() {
             <Icon name="calendar" size={24} style={styles.icon} /> Fecha postulación: {formatDate(data.fechaPostulacion)}
           </Text>
         </View>
-        <View style={styles.ContainerStatus}>
-          <Text style={styles.name}>
+        <View style={styles.ContainerComment}>
+          <Text style={[styles.comment, styles.commentText]}>
             El usuario dice: {data.comment}
           </Text>
         </View>
@@ -225,6 +225,11 @@ export default function DetallePostulacion() {
             fontSize: 20,
             textAlign: 'center',
           },
+          comment: {
+            marginTop: 0,
+            fontSize: 15,
+            textAlign: 'center',
+          },
           descripcion: {
             fontSize: 16,
             color: '#333',
@@ -240,7 +245,17 @@ export default function DetallePostulacion() {
             marginBottom: 8,
             backgroundColor:'#EEEBEB',
             borderRadius: 10,
-            height:70,
+            height:50,
+            width:380,
+            marginTop: 2,
+            justifyContent:'center',
+            
+          },
+          ContainerComment: {
+            marginBottom: 8,
+            backgroundColor:'#EEEBEB',
+            borderRadius: 10,
+            height:130,
             width:380,
             marginTop: 2,
             justifyContent:'center',
@@ -364,6 +379,10 @@ export default function DetallePostulacion() {
             height: 180, 
             resizeMode: 'contain', 
             marginBottom: 20, 
+          },
+          commentText: {
+            lineHeight: 14, 
+            textAlign: 'center', 
           },
          
          

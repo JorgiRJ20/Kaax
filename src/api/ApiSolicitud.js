@@ -10,7 +10,7 @@ export async function getPostulaciones(idUser,config) {
   try {
     
     const response = await axios.get(URL_API +`postulaciones/usuario/${idUser}`,config);
-    //console.log('Respuesta de la API:', response.data); // A
+    //console.log('Respuesta de la API:', response.data); 
     const data = response.data.map(postulacion => ({
       
       titulo: postulacion[0],
@@ -27,7 +27,7 @@ export async function getPostulaciones(idUser,config) {
       horaTrabajo: postulacion[11],
       imagenUrl: postulacion[12]
     }));
-    //console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
+    //console.log('Datos de la API:', data); 
     return data;
   } catch (error) {
     //console.error('Error al obtener las postulaciones:', error);

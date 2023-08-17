@@ -54,7 +54,7 @@ export default function NavigationStack() {
 			/>
 			<Stack.Screen
 				name='Solicitudes'
-				component={SolicitudesTrabajo}
+				component={Solicitudes}
 				options={{ headerShown: false }} // Opcional: ocultar la barra de navegación en el TabNavigator
 			/>
 			<Stack.Screen
@@ -114,12 +114,12 @@ export default function NavigationStack() {
 			<Stack.Screen
 				name='DetallePostulacion'
 				component={DetallePostulacion}
-				options={{ headerTitle: 'DetPos'}}
+				options={{ headerTitle: 'Detalle postulacion'}}
 			/>
 			<Stack.Screen
 				name='RespuestaAceptada'
 				component={RespuestaAceptada}
-				options={{ headerTitle: 'DetPos'}}
+				options={{ headerTitle: 'Respuesta aceptada'}}
 			/>
 			<Stack.Screen
 				name='AddLocation'
