@@ -45,28 +45,35 @@ export default function Solicitudes() {
     fetchData();
   };
 
+  
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.cardContainer}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
-      >
-        {solicitudes.map(solicitud => (
-          <Card
-            key={solicitud.idUsuarioPostulante}
-            titulo={solicitud.titulo}
-            descripcion={solicitud.descripcion}
-            idUsuario={solicitud.idUsuarioPublicacion}
-            nameUser={solicitud.nombreUsuarioPublicacion}
-            precio={solicitud.pago}
-            status={solicitud.status}
-            idPostulacion={solicitud.idPostulacion}
-            fechaTrabajo={solicitud.fechaTrabajo}
-            horaTrabajo={solicitud.horaTrabajo}
-            imagenUrl={solicitud.imagenUrl}
-          />
-        ))}
-      </ScrollView>
+      {solicitudes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No hay solicitudes por el momento.</Text>
+      </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.cardContainer}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
+        >
+          {solicitudes.map(solicitud => (
+            <Card
+              key={solicitud.idUsuarioPostulante}
+              titulo={solicitud.titulo}
+              descripcion={solicitud.descripcion}
+              idUsuario={solicitud.idUsuarioPublicacion}
+              nameUser={solicitud.nombreUsuarioPublicacion}
+              precio={solicitud.pago}
+              status={solicitud.status}
+              idPostulacion={solicitud.idPostulacion}
+              fechaTrabajo={solicitud.fechaTrabajo}
+              horaTrabajo={solicitud.horaTrabajo}
+              imagenUrl={solicitud.imagenUrl}
+            />
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
@@ -78,6 +85,15 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginTop: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#888', 
   },
 });
 
