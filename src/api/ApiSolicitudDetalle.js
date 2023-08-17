@@ -14,8 +14,10 @@ export async function getSolicitudDetalle(idPostulacion,config) {
       nombreUsuario: detalle[2],
       idLimpiador:detalle[3],
       userImage: detalle[4],
-      fechaPostulacion: detalle[5],
-      comment: detalle[6],
+      email: detalle[5],
+      phone: detalle[6],
+      fechaPostulacion: detalle[7],
+      comment: detalle[8],
     }));
     //console.log('Datos de la API:', data);
     return data;
