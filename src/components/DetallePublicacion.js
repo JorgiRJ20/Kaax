@@ -423,7 +423,6 @@ const styles = StyleSheet.create({
       },
       containerOptions: {
         alignItems: 'center'
-<<<<<<< HEAD
       },  
       slide: {
         height: 200,
@@ -448,7 +447,6 @@ const styles = StyleSheet.create({
           height: 250,
           width: width,
           resizeMode: 'cover',
-=======
       },
       modal: {
         alignContent: "center",
@@ -482,7 +480,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 20,
         borderRadius: 20,
->>>>>>> selector
       },
 
 })
