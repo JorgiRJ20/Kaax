@@ -359,20 +359,33 @@ const savePublicacion = async (url) => {
     );
     setSelectedImages(newSelectedImages);
   };
+
+  const handleShowImage = (url) => {
+    navigation.navigate("ShowImages", {
+        arrayImages: selectedImages,
+        indexShow: 1,
+        howShow: 'onlyImage',
+        uriUrl: url,
+    });
+  }
+
   useEffect(() => {
     console.log(imagenesUrl, "imagenes url");
   }, [imagenesUrl]);
 
   const renderItem = ({ item, index }) => (
-    <View style={{ marginHorizontal: 10 }}>
-      <Image source={{ uri: item.uri }} style={{ width: 150, height: 150 }} />
+    <TouchableOpacity 
+      style={{ marginHorizontal: 10, borderRadius: 15 }} 
+      onPress={() => handleShowImage(item.uri)}
+    >
+      <Image source={{ uri: item.uri }} style={{ width: 150, height: 150, borderRadius: 15 }} />
       <TouchableOpacity
         onPress={() => handleRemoveImage(item.uri)}
         style={{ marginTop: 5, alignItems: "center" }}
       >
         <Icon name="trash" color={"#ba181b"} size={35} />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
   // funcion para subir las imagenes a firebase y obtener la url
   const [imagenesUrl, setImagenesUrl] = useState([]); // Array de URLs de las imágenes subidas
@@ -633,10 +646,13 @@ const savePublicacion = async (url) => {
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         {imageUri ? (
           <>
-            <Image
-              source={{ uri: imageUri }}
-              style={{ width: 250, height: 200, borderRadius: 20 }}
-            />
+            <TouchableOpacity onPress={() => handleShowImage(imageUri)}>
+
+              <Image
+                source={{ uri: imageUri }}
+                style={{ width: 250, height: 200, borderRadius: 15 }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => removeImage()}
               style={{ marginTop: 5, alignItems: "center" }}
@@ -675,6 +691,7 @@ const savePublicacion = async (url) => {
           keyExtractor={(item) => item.uri}
           horizontal
           contentContainerStyle={{ paddingVertical: 10 }}
+          showsHorizontalScrollIndicator={false}
         />
         <TouchableOpacity onPress={handleChooseImages}>
           <Icon name="image" color={"#05668D"} size={50} />
