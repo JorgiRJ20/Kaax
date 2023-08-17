@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView } from "react-native";
+import { View, Text } from "react-native";
 import React,{useEffect,useState,useCallback} from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import axios from "axios";
@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/core";
 import * as Location from "expo-location";
 import { getLocationsDistance } from "../helpers/HelpersLocation";
 import Loader from './../components/Loader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function ApiPublicacionLim() {
@@ -130,13 +131,13 @@ export default function ApiPublicacionLim() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Loader show={showLoader}/>
       <TouchableOpacity style={styles.floatingButton} onPress={goToCrearPu}>
         <Text style={styles.buttonText}>+</Text>
       </TouchableOpacity>
       <PublicacionesLimList publicacionesLim={publicacionesLim} />
-    </View>
+    </SafeAreaView>
   );
 }
 

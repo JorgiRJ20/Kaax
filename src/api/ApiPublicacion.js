@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView} from 'react-native'
+import { View, Text} from 'react-native'
 import React,{useEffect,useState,useCallback} from 'react'
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import FloatButton from '../components/FloatButton';
 import { useNavigation } from '@react-navigation/native';
 import Palette from '../constants/Palette';
 import Loader from './../components/Loader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function ApiPublicacion() {
@@ -56,7 +57,7 @@ useFocusEffect(
 );
 
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
        <Loader show={showLoader}/>
       <PublicacionesLists publicaciones={publicaciones}/>
       <FloatButton
@@ -65,6 +66,6 @@ useFocusEffect(
                 backgroundColor={Palette.colors.primary} 
                 plusColor={Palette.colors.white}
             />
-    </View>
+    </SafeAreaView>
   )
 }

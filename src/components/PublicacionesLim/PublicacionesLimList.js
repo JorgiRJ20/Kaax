@@ -6,7 +6,7 @@ export default function PublicacionesLimList(props) {
     const {publicacionesLim} = props;
 
     return (
-      <SafeAreaView >
+      <View >
               <FlatList
                   data={publicacionesLim}
                   numColumns={1}
@@ -17,13 +17,12 @@ export default function PublicacionesLimList(props) {
                   ListFooterComponent={<View style={{marginBottom: 200}}></View>}
 
               />
-      </SafeAreaView>
+      </View>
   
     )
   }
   const styles = StyleSheet.create({
       container:{
           paddingHorizontal:0,
-          marginTop:50,
       }
   })

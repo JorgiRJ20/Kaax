@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Loader from '../components/Loader'; // Asegúrate de importar el componente Loader desde la ubicación correcta
 import Card from '../components/SolicitudesTrabajoCard';
 import useAuth from '../hooks/useAuth';
 import { getSolicitudes } from '../api/ApiSolicitudTrabajo';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SolicitudesTrabajo() {
   const { auth } = useAuth();

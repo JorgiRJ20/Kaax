@@ -15,7 +15,7 @@ export default function PublicacionesList(props) {
   }
 
   return (
-    <SafeAreaView >
+    <View >
 
             
 
@@ -28,7 +28,7 @@ export default function PublicacionesList(props) {
 				contentContainerStyle={styles.container}
         ListFooterComponent={<View style={{marginBottom: 200}}></View>}
         />
-    </SafeAreaView>
+    </View>
 
   )
 }
