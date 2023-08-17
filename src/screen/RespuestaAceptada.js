@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { getDetallePostulacion } from '../api/ApiSolicitudDetalle';
 import useAuth from '../hooks/useAuth';
 
 export default function RespuestaAceptada() {
+  const navigation = useNavigation();
   const { auth } = useAuth();
   const { idUser } = auth;
   //console.log(auth.token)
@@ -36,7 +37,16 @@ export default function RespuestaAceptada() {
       });
   }, []);
  
-  
+  const goPerfilDetail = () => {
+    navigation.navigate("MiPerfil", {
+      userId: detallePostulacion1.idUser,
+      userName: detallePostulacion.nombreUsuario,
+      userPhone: detallePostulacion.phoneSolicitante,
+      userEmail: detallePostulacion.emailSolicitante,
+      userPhoto: detallePostulacion.userImage
+    })
+    
+  }
   
   //console.log(detallePostulacion)
 
@@ -45,7 +55,11 @@ export default function RespuestaAceptada() {
       {detallePostulacion ? (
         <>
           <Text style={styles.title}>Tu solicitud ha sido aceptada. ¡Felicidades!</Text>
-          <Image source={{ uri: detallePostulacion.userImage }} style={styles.image} />
+          <TouchableOpacity
+            onPress={() => goPerfilDetail()}
+          >
+            <Image source={{ uri: detallePostulacion.userImage }} style={styles.image} />
+          </TouchableOpacity>
 
           <Text style={styles.subtitle}>Detalles de la postulación:</Text>
           <View style={styles.ContainerStatus}>

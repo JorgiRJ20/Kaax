@@ -55,7 +55,6 @@ export default function Solicitudes() {
           contentContainerStyle={styles.cardContainer}
         >
           {solicitudes.map((solicitud) => (
-            <>
             <Card
               key={`${solicitud.idUsuarioPostulante}_${Math.random()}_${new Date().getTime()}`}
               titulo={solicitud.titulo}
@@ -69,21 +68,6 @@ export default function Solicitudes() {
               horaTrabajo={solicitud.horaTrabajo}
               imagenUrl={solicitud.imagenUrl}
             />
-            <Card
-              key={solicitud.idUsuarioPostulante}
-              titulo={solicitud.titulo}
-              descripcion={solicitud.descripcion}
-              idUsuario={solicitud.idUsuarioPublicacion}
-              nameUser={solicitud.nombreUsuarioPublicacion}
-              precio={solicitud.pago}
-              status={solicitud.status}
-              idPostulacion={solicitud.idPostulacion}
-              fechaTrabajo={solicitud.fechaTrabajo}
-              horaTrabajo={solicitud.horaTrabajo}
-              imagenUrl={solicitud.imagenUrl}
-            />
-            </>
-
           ))}
         </ScrollView>
       )}
