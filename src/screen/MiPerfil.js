@@ -10,8 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function MiPerfil(props) {
 
-  const {userId, userEmail, userName, userPhone} = props.route.params
-
+  const {userId, userEmail, userName, userPhone, userPhoto} = props.route.params
   const navigation = useNavigation();
     const handlePress = () => {
 	navigation.navigate('Trabajos');

@@ -9,6 +9,7 @@ export default function PublicacionesCard(props) {
 	const navigation = useNavigation();
 
 const {publicaciones} = props
+console.log(publicaciones)
 
 const goToPublicacion = () =>{
     navigation.navigate('DetallePublicacion',{idPublicacion:publicaciones.idPublicacion,
@@ -25,6 +26,7 @@ const goToPublicacion = () =>{
 	userId: publicaciones.user.idUser,
 	userPhone: publicaciones.user.phone,
 	userEmail: publicaciones.user.email,
+	userPhoto: publicaciones.user.userImage,
 	
 })
   }

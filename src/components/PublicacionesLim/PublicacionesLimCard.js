@@ -24,6 +24,8 @@ export default function PublicacionesLimCard(props) {
         userId: publicacionesLim.user.idUser,
         userPhone: publicacionesLim.user.phone,
         userEmail: publicacionesLim.user.email,
+	      userPhoto: publicacionesLim.user.userImage,
+
     })
       }
       return (

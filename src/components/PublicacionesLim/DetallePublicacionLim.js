@@ -243,7 +243,8 @@ export default function DetallePublicacionLim(props) {
       userId: params.userId,
       userName: params.user,
       userPhone: params.userPhone,
-      userEmail: params.userEmail
+      userEmail: params.userEmail,
+      userPhoto: params.userPhoto
     })
     
   }

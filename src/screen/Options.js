@@ -11,14 +11,14 @@ import { useNavigation } from '@react-navigation/native';
 export default function Options() {
     const navigation = useNavigation();
     const auth = useAuth();
-    const { role, idUser, name, phone, email } = auth.auth;
-
+    const { role, idUser, name, phone, email, userImage } = auth.auth;
     const handlePress = () => {
         navigation.navigate('MiPerfil', {
             userId: idUser,
             userName: name,
             userPhone: phone,
-            userEmail: email
+            userEmail: email,
+            userPhoto: userImage
         });
 	};
 
