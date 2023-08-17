@@ -25,7 +25,9 @@ export default function PublicacionesList(props) {
 				showsVerticalScrollIndicator={false}
 				keyExtractor={(publicaciones) => String(publicaciones.idPublicacion)}
 				renderItem={({ item }) => <PublicacionesCard publicaciones={item} />}
-				contentContainerStyle={styles.container}/>
+				contentContainerStyle={styles.container}
+        ListFooterComponent={<View style={{marginBottom: 200}}></View>}
+        />
     </SafeAreaView>
 
   )

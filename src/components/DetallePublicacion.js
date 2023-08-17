@@ -48,10 +48,11 @@ export default function DetallePublicacion(props) {
       console.log(response.data)
       response.data.map((item) => {
           if(item.publicacion.idPublicacion == params.idPublicacion){
-              imagenesFilterer.push(item.imagenUrl)
+            console.log({idImage: item.idImagen, urlImage: item.imagenUrl})
+              imagenesFilterer.push({idImage: item.idImagen, urlImage: item.imagenUrl})
           }
       })
-      setImages(imagenesFilterer);
+      setImagesDetail(imagenesFilterer);
       console.log(imagenesFilterer, "imagenesFilterer")
   
     } catch (error) {
@@ -72,13 +73,7 @@ const config = {
 };
   const [indexCarousel, setIndexCarousel] = useState(0);
   const flatListRef = useRef(null);
-  const [imagesDetail, setImagesDetail] = useState([
-    { id_local_img: 1, urlImage: "url_aqui"},
-    { id_local_img: 2, urlImage: "url_aqui"},
-    { id_local_img: 3, urlImage: "url_aqui"},
-    { id_local_img: 4, urlImage: "url_aqui"},
-    { id_local_img: 5, urlImage: "url_aqui"},
-  ]);
+  const [imagesDetail, setImagesDetail] = useState([]);
 
 
 const EliminarPub = async () => {
@@ -174,7 +169,7 @@ const EliminarPub = async () => {
 
   const handleShowImage = (url) => {
     navigation.navigate("ShowImages", {
-        arrayImages: selectedImages,
+        arrayImages: imagesDetail,
         indexShow: 1,
         howShow: 'onlyImage',
         uriUrl: url,
@@ -186,17 +181,16 @@ const EliminarPub = async () => {
       <View style={styles.containerItemCarousel}>
 
         <TouchableOpacity
-            onPress={() => handleShowImage(item.urlImg)}
+            onPress={() => handleShowImage(item.urlImage)}
             activeOpacity={1}
         >
           <View style={{position: 'absolute', zIndex: 1000, right: 5, top: 5, backgroundColor: 'rgba(000, 000, 000, 0.2)', borderRadius: 50, paddingHorizontal: 4}}>
             <Text style={{color: Palette.colors.white}}>{(indexCarousel+1)}/{imagesDetail.length}</Text>
           </View>
           <Image
-            // source={{
-            //   uri: item.urlImg,
-            // }}
-            source={require('../assets/departamento.jpg')}
+            source={{
+              uri: item.urlImage,
+            }}
             style={styles.imageItemCarousel}
           />
         </TouchableOpacity>
@@ -224,10 +218,13 @@ const EliminarPub = async () => {
   };
 
   const goPerfilDetail = () => {
-    // navigation.navigate("MiPerfil", {
-    //   id_user: 1
-    // })
-    console.log("PRESSSS");
+    navigation.navigate("MiPerfil", {
+      userId: params.userId,
+      userName: params.user,
+      userPhone: params.userPhone,
+      userEmail: params.userEmail
+    })
+    
   }
  
 
@@ -258,7 +255,7 @@ const EliminarPub = async () => {
             showsHorizontalScrollIndicator={false}
             renderItem={(item) => CarouselCardItem(item)}
             data={imagesDetail}
-            keyExtractor={(item) => item.id_local_img}
+            keyExtractor={(item) => item.idImage}
             decelerationRate={"fast"}
             snapToInterval={width}
             onScroll={handleScroll}

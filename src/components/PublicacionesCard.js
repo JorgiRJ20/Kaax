@@ -22,6 +22,9 @@ const goToPublicacion = () =>{
 	user: publicaciones.user.name,
 	direccion: publicaciones.direccion.idDireccion,
 	nameDireccion: publicaciones.direccion.nameDireccion,
+	userId: publicaciones.user.idUser,
+	userPhone: publicaciones.user.phone,
+	userEmail: publicaciones.user.email,
 	
 })
   }

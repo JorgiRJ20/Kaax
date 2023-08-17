@@ -14,6 +14,8 @@ export default function PublicacionesLimList(props) {
                   keyExtractor={(publicacionesLim) => String(publicacionesLim.idPublicacion)}
                   renderItem={({ item }) => <PublicacionesLimCard publicacionesLim={item} />}
                   contentContainerStyle={styles.container}
+                  ListFooterComponent={<View style={{marginBottom: 200}}></View>}
+
               />
       </SafeAreaView>
   

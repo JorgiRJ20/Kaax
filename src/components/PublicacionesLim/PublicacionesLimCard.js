@@ -20,7 +20,10 @@ export default function PublicacionesLimCard(props) {
         status: publicacionesLim.status,
         user: publicacionesLim.user.name,
         is_location_available: publicacionesLim.is_location_available,
-        locations_distance: publicacionesLim.locations_distance
+        locations_distance: publicacionesLim.locations_distance,
+        userId: publicacionesLim.user.idUser,
+        userPhone: publicacionesLim.user.phone,
+        userEmail: publicacionesLim.user.email,
     })
       }
       return (
@@ -30,7 +33,7 @@ export default function PublicacionesLimCard(props) {
         >
           <View style={styles.containerImage}>
             <Image
-              source={require('../../assets/departamento.jpg')}
+              source={{uri: publicacionesLim.imagenUrl}}
               style={styles.image}
             />
           </View>

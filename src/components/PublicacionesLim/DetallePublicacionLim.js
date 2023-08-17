@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,TouchableWithoutFeedback,TextInput,Modal} from 'react-native'
+import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,TouchableWithoutFeedback,TextInput,Modal, Dimensions, FlatList} from 'react-native'
 import React, {useEffect,useState,useCallback,useRef,useMemo} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -12,6 +12,7 @@ import { URL_API } from '../../utils/enviroments';
 import Loader from './../Loader';
 import { useNavigation } from '@react-navigation/native';
 
+const { width, height } = Dimensions.get('screen');
 
 
 
@@ -50,6 +51,10 @@ export default function DetallePublicacionLim(props) {
     const closeBottomSheet = () => {
       bottomSheetRef.current?.close(); // Cierra la hoja inferior
     };
+
+    const [indexCarousel, setIndexCarousel] = useState(0);
+    const flatListRef = useRef(null);
+    const [imagesDetail, setImagesDetail] = useState([]);
 
     /**
      * Componente para mostrar como fondo cuando el BottomSheet se muestre
@@ -108,10 +113,15 @@ export default function DetallePublicacionLim(props) {
      * @param {*} subtitle - valor de la información
      * @returns {*}
      */
-    const RenderCardDataDetail = (icon, title, subtitle) => {
+    const RenderCardDataDetail = ({icon, title, subtitle, isPress, handlePress}) => {
       const flex = icon != "calendar" ? 0.5 : 1;
       return (
-        <View style={{...styles.cardInfoDetail, flex: flex}}>
+        <TouchableOpacity 
+          style={{...styles.cardInfoDetail, flex: flex}}
+          disabled={!isPress}
+          onPress={handlePress}
+          activeOpacity={0.5}
+        >
           <View style={{ alignItems: 'center' }}>
             <View
               style={styles.circleContainer}
@@ -125,7 +135,7 @@ export default function DetallePublicacionLim(props) {
             <Text style={styles.subTitleTextInfoDetail}>{subtitle}</Text>
           </View>
           
-        </View>
+        </TouchableOpacity>
       )
     }
   
@@ -158,33 +168,131 @@ export default function DetallePublicacionLim(props) {
 
   }
 
+  const getImagenes  = async () => {
+    try {
+      
+      const response = await axios.get(URL_API+'imagenes',config);
+      let imagenesFilterer = [];
+      console.log(response.data)
+      response.data.map((item) => {
+          if(item.publicacion.idPublicacion == params.idPublicacion){
+            console.log({idImage: item.idImagen, urlImage: item.imagenUrl})
+              imagenesFilterer.push({idImage: item.idImagen, urlImage: item.imagenUrl})
+          }
+      })
+      setImagesDetail(imagenesFilterer);
+      console.log(imagenesFilterer, "imagenesFilterer")
+  
+    } catch (error) {
+      console.error(error, "error asdasdasd");
+    }
+  }
+
+  const handleShowImage = (url) => {
+    navigation.navigate("ShowImages", {
+        arrayImages: imagesDetail,
+        indexShow: 1,
+        howShow: 'onlyImage',
+        uriUrl: url,
+    });
+  }
+
+  const CarouselCardItem = ({ item, indexCar }) => {
+    return (
+      <View style={styles.containerItemCarousel}>
+
+        <TouchableOpacity
+            onPress={() => handleShowImage(item.urlImage)}
+            activeOpacity={1}
+        >
+          <View style={{position: 'absolute', zIndex: 1000, right: 5, top: 5, backgroundColor: 'rgba(000, 000, 000, 0.2)', borderRadius: 50, paddingHorizontal: 4}}>
+            <Text style={{color: Palette.colors.white}}>{(indexCarousel+1)}/{imagesDetail.length}</Text>
+          </View>
+          <Image
+            source={{
+              uri: item.urlImage,
+            }}
+            style={styles.imageItemCarousel}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  /**
+   * Función para obtener la cantidad de pixeles que se han recorrido scrolleando
+   * y poder calcular en que indice esta el scroll dividiendo el ancho del componente
+   * con la cantidad de pixeles recorridos
+   * @date 8/16/2023 - 10:22:18 PM
+   * @author Alessandro Guevara
+   *
+   * @param {*} event
+   */
+  const handleScroll = (event) => {
+    // Obtenemos cuantos pixeles se han scrolleado en x (Horizontal)
+    const offsetY = event.nativeEvent.contentOffset.x;
+    // Ancho de nuestro componente en el flatlist
+    const itemHeight = width-5;
+    // Dividimos para obtener el scroll
+    const indexScroll = (Math.floor(offsetY / itemHeight)) < 0 ? 0  :  (Math.floor(offsetY / itemHeight));
+    setIndexCarousel(indexScroll);
+  };
+
+  const goPerfilDetail = () => {
+    navigation.navigate("MiPerfil", {
+      userId: params.userId,
+      userName: params.user,
+      userPhone: params.userPhone,
+      userEmail: params.userEmail
+    })
+    
+  }
+
   useEffect(() => {
     getPostulantesPublicacion();
+    getImagenes();
   }, []);
   
     return (
           <SafeAreaView style={styles.containerform}>
             <Loader show={showLoader} />
             <ScrollView style={{flex: 1}}>
-                <Image source={require('../../assets/departamento.jpg')} style={styles.imagen}/>
+                <View style={{ marginLeft: 0}}>
+                  <FlatList 
+                      style={{margin:0, padding: 0, left: 0}}
+                      ref={flatListRef}
+                      horizontal={true}
+                      bounces={true}
+                      showsHorizontalScrollIndicator={false}
+                      renderItem={(item) => CarouselCardItem(item)}
+                      data={imagesDetail}
+                      keyExtractor={(item) => item.idImage}
+                      decelerationRate={"fast"}
+                      snapToInterval={width}
+                      onScroll={handleScroll}
+                      
+                  />
+                </View>
                 <Text style={styles.title}>{params.titulo}</Text>
                 <Text style={styles.descripcion}>{params.descripcion}</Text>
                 <View
                   style={styles.containerLineInfo}
                 >
-                  {RenderCardDataDetail("money", "Pago", `$${params.pago}`)}
-                  {params.is_location_available ? RenderCardDataDetail("arrows-h", "Distancia", `${params.locations_distance}`) : ""}
+                  <RenderCardDataDetail icon={"money"} title={"Pago"} subtitle={`$${params.pago}`} isPress={false}/>
+                  <RenderCardDataDetail icon={"home"} title={"cuartos"} subtitle={`${params.numCuartos}`} isPress={false}/>
                 </View>
                 <View
                   style={styles.containerLineInfo}
                 >
-                  {RenderCardDataDetail("user", "Solicitante", params.user)}
-                  {RenderCardDataDetail("home", "Número cuartos", `${params.numCuartos}`)}
+                  <RenderCardDataDetail icon={"user"} title={"Solicitante"} subtitle={params.user} isPress={true} handlePress={goPerfilDetail}/>
+                  {params.is_location_available && (
+                    <RenderCardDataDetail icon={"arrows-h"} title={"Distancia"} subtitle={`${params.locations_distance}`} isPress={false}/>
+                  )}
                 </View>
                 <View
                   style={styles.containerLineInfo}
                 >
-                  {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
+                  <RenderCardDataDetail icon={"calendar"} title={"Fecha de limpieza"} subtitle={`${params.fechaTrabajo} ${params.horaTrabajo}`} isPress={false} />
                 </View>
                 
                   {/* Verificamos si el usuario actual esta dentro de los usuarios postulantes de la publicación */}
@@ -398,7 +506,20 @@ export default function DetallePublicacionLim(props) {
           alignSelf: "center",
           marginTop: 10,
           marginBottom: 10,
-        }
+        },
+        containerItemCarousel: {
+            width: width, 
+            shadowOffset: { width: 1, height: 1 },
+            shadowColor: 'black',
+            shadowOpacity: 0.4,
+            shadowRadius: 1,
+            elevation: 8,
+        },
+        imageItemCarousel: {
+            height: 250,
+            width: width,
+            resizeMode: 'cover',
+        },
         
   
   })
