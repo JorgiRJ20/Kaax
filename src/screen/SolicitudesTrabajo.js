@@ -8,6 +8,13 @@ import { getSolicitudes } from '../api/ApiSolicitudTrabajo';
 export default function SolicitudesTrabajo() {
   const { auth } = useAuth();
   const { idUser } = auth;
+  let token = auth.token;
+  //const role_user = auth.role;
+  console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +24,7 @@ export default function SolicitudesTrabajo() {
     const fetchData = async () => {
       try {
         if (idUser) {
-          const data = await getSolicitudes(idUser);
+          const data = await getSolicitudes(idUser,config);
           setSolicitudes(data);
           setLoading(false);
         }
@@ -46,6 +53,7 @@ export default function SolicitudesTrabajo() {
             fechaTrabajo={solicitud.fechaTrabajo}
             horaTrabajo={solicitud.horaTrabajo}
             userImage={solicitud.userImage}
+            imagenUrl={solicitud.imagenUrl}
           />
         ))}
       </ScrollView>

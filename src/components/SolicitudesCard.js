@@ -94,9 +94,10 @@ const handleButtonPress = () => {
     >
       <View style={styles.containerImage}>
         <Image
-          source={require('../assets/departamento.jpg')}
+          source={{ uri: props.imagenUrl }}
           style={styles.image}
         />
+
       </View>
       <View style={styles.containerInfo}>
         <View style={{flex: 0.7}}>

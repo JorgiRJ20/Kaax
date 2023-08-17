@@ -8,6 +8,14 @@ import Loader from '../components/Loader';
 export default function Solicitudes() {
   const { auth } = useAuth();
   const { idUser } = auth;
+  //console.log(auth.token)
+  let token = auth.token;
+  //const role_user = auth.role;
+  //console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,8 +24,9 @@ export default function Solicitudes() {
   const fetchData = async () => {
     try {
       if (idUser) {
+        //console.log(idUser)
         setLoading(true); 
-        const data = await getPostulaciones(idUser);
+        const data = await getPostulaciones(idUser,config);
         setSolicitudes(data);
         setLoading(false)
       }
@@ -54,6 +63,7 @@ export default function Solicitudes() {
             idPostulacion={solicitud.idPostulacion}
             fechaTrabajo={solicitud.fechaTrabajo}
             horaTrabajo={solicitud.horaTrabajo}
+            imagenUrl={solicitud.imagenUrl}
           />
         ))}
       </ScrollView>
