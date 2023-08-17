@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
+import { Modal } from 'react-native-paper';
 
 
 const pinPlace = require('../assets/images/markPlace.png');
@@ -48,16 +49,17 @@ export default function AddLocation(props) {
          } catch (error) {
              console.error(error);
          }
-         Alert.alert(
-            '¡Exito!',
-            'Dirección Agregada ',[
-                {text: 'OK', onPress: goToDirecciones},]
-          );
+         setMessage("Dirección Agregada");
+         showModal();
+         //goToDirecciones();
 
  }
 
  
-
+ const [message, setMessage] = React.useState("");
+ const [visibleMod, setVisibleMod] = React.useState(false);
+ const showModal = () => setVisibleMod(true);
+ const hideModal = () => setVisibleMod(false);
  
 
 
@@ -129,11 +131,8 @@ const goToDirecciones = () => {
      } catch (error) {
          console.error(error);
      }
-     Alert.alert(
-        '¡Exito!',
-        'Dirección Editada ',[
-            {text: 'OK', onPress: goToDirecciones},]
-      );
+     setMessage("Dirección Editada");
+     showModal();
 
 }
     
@@ -328,6 +327,8 @@ const goToDirecciones = () => {
 
             // Si no entro a el if se guardan los datos
             console.log("Pedimos que complete el campo")
+            setMessage("Pedimos que asigne un nombre");
+            showModal();
         }else {
             // Si el input no estaba vació ya no subimos modal y podemos guardar
             console.log("GUARDAMOS IF 2")
@@ -476,6 +477,23 @@ const goToDirecciones = () => {
                     
                 </View>
             </BottomSheet>
+            <Modal visible={visibleMod} contentContainerStyle={style.modal}>
+						<View style={style.modalResponse}>
+							<Text style={style.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={style.aceptarbtn}
+							onPress={() => {
+                                if (message === 'Pedimos que asigne un nombre') {
+                                  hideModal();
+                                } else {
+                                  goToDirecciones(); 
+                                }
+                              }}
+							>
+								<Text style={style.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
+						</View>
+					</Modal>
         </SafeAreaView>
     )
 }
@@ -556,6 +574,39 @@ const style = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: Palette.colors.primary
     },
+    modal: {
+        alignContent: "center",
+        alignSelf: "center",
+        alignItems: "center",
+        flex: 1,
+        width: "100%",
+      },
+      textProgress: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#05668D",
+        textAlign: "center",
+      },
+      aceptarbtn: {
+        backgroundColor: "#05668D",
+        padding: 15,
+        width: "80%",
+        borderRadius: 20,
+        marginTop: 20,
+      },
+      textaceptar: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+        textAlign: "center",
+      },
+      modalResponse: {
+        textAlign: "center",
+        backgroundColor: "white",
+        alignItems: "center",
+        padding: 20,
+        borderRadius: 20,
+      },
 
 })
 
