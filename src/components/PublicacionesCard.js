@@ -21,7 +21,8 @@ const goToPublicacion = () =>{
 	status: publicaciones.status,
 	user: publicaciones.user.name,
 	direccion: publicaciones.direccion.idDireccion,
-	nameDireccion: publicaciones.direccion.nameDireccion
+	nameDireccion: publicaciones.direccion.nameDireccion,
+	
 })
   }
    const goToCrearPu = () => {
@@ -34,7 +35,7 @@ const goToPublicacion = () =>{
 	>
 	  <View style={styles.containerImage}>
 		<Image
-		  source={require('../assets/departamento.jpg')}
+		  source={{ uri: publicaciones.imagenUrl }}
 		  style={styles.image}
 		/>
 	  </View>
