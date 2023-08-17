@@ -75,9 +75,6 @@ export default function NavigationTab() {
 										
 									}}
 								/>
-							
-							
-							<Text style={{...styles.textTab, top: -16, color: focused ? Palette.colors.primary : Palette.colors.outFocus}}>Publicaciones</Text>
 						</View>
 					),
 					headerShown: false,
