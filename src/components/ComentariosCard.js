@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import useAuth from '../hooks/useAuth';
-import MiPerfil from "../screen/MiPerfil";
 
 
 const Card = ({ text, additionalText, imageUrl, fecha}) => {
@@ -46,24 +45,24 @@ const Card = ({ text, additionalText, imageUrl, fecha}) => {
 const ComentariosCard = ({ userId, userRole, userToken }) => {
   const [comentarios, setComentarios] = useState([]);
 
-
-  let token = userToken;
+  const { auth } = useAuth();
+  let token = auth.token;
+ // console.log("el token" ,auth.token);
 
   const config = {
-    headers: { Authorization: `Bearer ${userToken}` },
+    headers: { Authorization: `Bearer ${token}` },
   };
 
-
   const fetchComentarios = async () => {
+
     if (userId) {
     try {
-      const apiUrl = `v1/comentarios/receptor/${userId}`;
-      console.log('ID de usuario:', userId);
-      const response = await axios.get(URL_API+apiUrl, config);
+      const apiUrl = `v1/comentarios/receptor/`;
+     // console.log('ID de usuario:', userId);
+      const response = await axios.get(URL_API+apiUrl + userId, config);
       setComentarios(response.data);
+
     } catch (error) {
-    
-     
     }
   }
   };

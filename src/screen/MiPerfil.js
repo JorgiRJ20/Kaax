@@ -8,27 +8,27 @@ import axios from 'axios';
 import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
 import { useNavigation } from '@react-navigation/native';
 
-
 export default function MiPerfil(props) {
 
   const {userId, userEmail, userName, userPhone, userPhoto} = props.route.params
   const navigation = useNavigation();
- // console.log("userId, userEmail, userName, userPhone, userPhoto")
- // console.log(userId, userEmail, userName, userPhone, userPhoto)
+  console.log("userId, userEmail, userName, userPhone, userPhoto")
+  console.log(userId, userEmail, userName, userPhone, userPhoto)
     const handlePress = () => {
 	navigation.navigate('Trabajos');
 	};
- 
+
   const [rating, setRating] = useState();
     const auth = useAuth();
     const { role } = auth.auth;
- //   console.log(role);
+    console.log(role);
 
   let token = auth.auth.token;
   const role_user = auth.role;
- // console.log(auth);
+  console.log(auth);
 
-  
+  const user_id = auth.auth.idUser;
+
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -38,15 +38,16 @@ export default function MiPerfil(props) {
   };
 
   const fetchPromedio = async () => {
+    console.log(auth);
     if (userId) {
       try {
         const apiUrl = `v1/calificaciones/promedio/${userId}`;
-        console.log('ID de usuario:', userId);
+        console.log('ID de usuario:', auth.auth.idUser);
         const response = await axios.get(URL_API+apiUrl, config);
         setRating(response.data);
 
-       // console.log(response.data);
-      //  console.log(config);
+        console.log(response.data);
+        console.log(config);
       } catch (error) {
       //  console.error('Error al obtener el promedio:', error);
       }
@@ -87,7 +88,7 @@ export default function MiPerfil(props) {
     </TouchableOpacity>
   ))}
 </View>
-          {role === ROLE_LIMPIADOR && (
+      {user_id === userId && role === ROLE_LIMPIADOR && (
       <TouchableOpacity onPress={handlePress}>
         <View style={styles.input2}>
           <FontAwesome style={styles.icono2} name="folder" />
@@ -103,11 +104,10 @@ export default function MiPerfil(props) {
         <FontAwesome style={styles.icono} name="envelope" />
         <Text style={styles.inputText}>   {userEmail}</Text>
       </View>
-      <ComentariosCard userId={userId} userRole={role} userToken={token} />
+      <ComentariosCard userId={userId}/>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 20,
     fontWeight: 'bold',
-    
+
   },
   icono: {
     color: '#05668D',
@@ -180,5 +180,4 @@ const styles = StyleSheet.create({
   starsContainer: {
     flexDirection: 'row',
   },
-}
-);
+});
