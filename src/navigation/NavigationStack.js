@@ -25,6 +25,7 @@ import RespuestaAceptada from '../screen/RespuestaAceptada';
 import MiPerfil from '../screen/MiPerfil';
 import Trabajos from '../screen/Trabajos';
 import ShowImages from '../components/ShowImages';
+import ShowLocation from '../screen/ShowLocation';
 
 
 export default function NavigationStack() {
@@ -184,6 +185,11 @@ export default function NavigationStack() {
 				headerShown: false,
 				title: 'Ver imágenes',
 			}}
+		/>
+		<Stack.Screen
+			name='ShowLocation'
+			component={ShowLocation}
+			options={{ headerShown: false }}
 		/>
 		</Stack.Navigator>
 	);

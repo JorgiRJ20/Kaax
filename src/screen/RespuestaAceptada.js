@@ -47,6 +47,15 @@ export default function RespuestaAceptada() {
     })
     
   }
+
+  const handleShowLocation = () => {
+    navigation.navigate("ShowLocation" , {
+      dataLocation: {
+        latitude: 20.5881276,
+        longitude: -100.389806, 
+      }
+    })
+  }
   
   //console.log(detallePostulacion)
 
@@ -80,10 +89,14 @@ export default function RespuestaAceptada() {
             </Text>
           </View>
           <View style={styles.ContainerStatus}>
-            <Text style={styles.name}>
-              Dirección: {detallePostulacion.direccion.calle}, {detallePostulacion.direccion.colonia},{' '}
-              {detallePostulacion.direccion.municipio}, CP: {detallePostulacion.direccion.codigoPostal}
-            </Text>
+            <TouchableOpacity
+              onPress={() => handleShowLocation()}
+            >
+              <Text style={styles.name}>
+                Dirección: {detallePostulacion.direccion.calle}, {detallePostulacion.direccion.colonia},{' '}
+                {detallePostulacion.direccion.municipio}, CP: {detallePostulacion.direccion.codigoPostal}
+              </Text>
+            </TouchableOpacity>
           </View>         
         </>
       ) : (
