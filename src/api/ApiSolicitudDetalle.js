@@ -64,6 +64,7 @@ export async function getDetallePostulacion(idPostulacion,config) {
       tituloPublicacion: data.titulo,
       nombreUsuario: data.nombreUsuario,
       fechaPostulacion: data.fechaPostulacion,
+      idUsuario: data.idUsuario,
       emailSolicitante: data.emailSolicitante,
       phoneSolicitante: data.phoneSolicitante,
       direccion: {
@@ -73,6 +74,8 @@ export async function getDetallePostulacion(idPostulacion,config) {
         codigoPostal: data.codigoPostal,
         numExt: data.numExt,
         numInt: data.numInt,
+        latitud: data.latitud,
+        longitud: data.longitud,
       },
       userImage: data.userImage,
       fechaAccionado: data.fechaAccionado,

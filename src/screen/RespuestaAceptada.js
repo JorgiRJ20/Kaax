@@ -39,7 +39,7 @@ export default function RespuestaAceptada() {
  
   const goPerfilDetail = () => {
     navigation.navigate("MiPerfil", {
-      userId: detallePostulacion1.idUser,
+      userId: detallePostulacion.idUsuario,
       userName: detallePostulacion.nombreUsuario,
       userPhone: detallePostulacion.phoneSolicitante,
       userEmail: detallePostulacion.emailSolicitante,
@@ -51,8 +51,8 @@ export default function RespuestaAceptada() {
   const handleShowLocation = () => {
     navigation.navigate("ShowLocation" , {
       dataLocation: {
-        latitude: 20.5881276,
-        longitude: -100.389806, 
+        latitude: parseFloat(detallePostulacion.direccion.latitud),
+        longitude: parseFloat(detallePostulacion.direccion.longitud), 
       }
     })
   }
