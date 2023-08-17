@@ -9,7 +9,6 @@ const TrabajosScreen = () => {
   const { auth } = useAuth();
   const [trabajosData, setTrabajosData] = useState([]);
 
-
   let token = auth.token;
   const role_user = auth.role;
   console.log(auth);
@@ -18,29 +17,24 @@ const TrabajosScreen = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-
   useEffect(() => {
     fetchTrabajosData();
     const interval = setInterval(fetchTrabajosData, 10000); // Actualizar cada 10 segundos
     return () => clearInterval(interval);
   }, []);
 
-
-
   const fetchTrabajosData = async () => {
     if (auth.idUser) {
-    try {
-      const apiUrl = `postulaciones/publicacion/status/${auth.idUser}`;
-      const response = await axios.get(URL_API+apiUrl, config);
-      setTrabajosData(response.data);
-    } catch (error) {
-     // console.error('Error al obtener los trabajos:', error);
+      try {
+        const apiUrl = `postulaciones/publicacion/status/${auth.idUser}`;
+        const response = await axios.get(URL_API + apiUrl, config);
+        setTrabajosData(response.data);
+      } catch (error) {
+        // console.error('Error al obtener los trabajos:', error);
+      }
     }
-  }
   };
 
-
-  
   const calculateDaysPassed = (workDate) => {
     const currentDate = new Date();
     const workDateParsed = parseISO(workDate);
@@ -48,28 +42,45 @@ const TrabajosScreen = () => {
     return daysPassed;
   };
 
+  const numeroDeTrabajos = trabajosData.length;
+
+console.log(numeroDeTrabajos)
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>HISTORIAL</Text>
-      {trabajosData.map((trabajo, index) => (
-        <View key={index} style={styles.card}>
-          <Image
-            source={require('../assets/departamento.jpg')} // Reemplaza con la URL de tu imagen
-            style={styles.image}
-          />
-          <View style={styles.cardContent}>
-            <Text style={styles.title}>{trabajo[0]}</Text>
-            <Text style={styles.description}>{trabajo[1]}</Text>
-            <Text style={styles.info}>Contratante: {trabajo[5]}</Text>
-            <Text style={styles.info}>Pago: ${trabajo[6]}</Text>
-            <Text style={styles.info}>Realizado hace {calculateDaysPassed(trabajo[10])} días</Text>
-          </View>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Completado</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-    </View>
+      <View style={styles.container}>
+        {trabajosData.length === 0 ? (
+            <View style={styles.messageContainer}>
+              <Text style={styles.message}>NO CUENTAS CON UN HISTORIAL</Text>
+              <Text style={styles.message}>Busca oportunidades de trabajo</Text>
+              <Text style={styles.message}>para comenzar a generar tu historial</Text>
+              <Image  style={styles.fotoPerfil}
+                      source={require('../assets/job-search.png')}
+              />
+            </View>
+        ) : (
+            trabajosData.map((trabajo, index) => (
+                <View key={index} style={styles.card}>
+                  <Text style={styles.header}>HISTORIAL</Text>
+                  <Image
+                      source={{ uri: trabajo[6] }} // Reemplaza con la URL de tu imagen
+                      style={styles.image}
+                  />
+                  <View style={styles.cardContent}>
+                    <Text style={styles.title}>{trabajo[0]}</Text>
+                    <Text style={styles.description}>{trabajo[1]}</Text>
+                    <Text style={styles.info}>Contratante: {trabajo[5]}</Text>
+                    <Text style={styles.info}>Pago: ${trabajo[6]}</Text>
+                    <Text style={styles.info}>
+                      Realizado hace {calculateDaysPassed(trabajo[10])} días
+                    </Text>
+                  </View>
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Completado</Text>
+                  </TouchableOpacity>
+                </View>
+            ))
+        )}
+      </View>
   );
 };
 
@@ -77,8 +88,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F0F0F0',
-    alignItems:'center'
+    backgroundColor: '#FFF',
+    alignItems: 'center',
   },
   header: {
     fontSize: 25,
@@ -135,6 +146,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  messageContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  message: {
+    fontSize: 16,
+    color: '#777',
+  },
+  fotoPerfil: {
+    width: 150,
+    height: 150,
+    marginTop: 50,
   },
 });
 

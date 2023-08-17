@@ -8,12 +8,13 @@ import axios from 'axios';
 import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
 import { useNavigation } from '@react-navigation/native';
 
+
 export default function MiPerfil(props) {
 
   const {userId, userEmail, userName, userPhone, userPhoto} = props.route.params
   const navigation = useNavigation();
-  console.log("userId, userEmail, userName, userPhone, userPhoto")
-  console.log(userId, userEmail, userName, userPhone, userPhoto)
+ // console.log("userId, userEmail, userName, userPhone, userPhoto")
+ // console.log(userId, userEmail, userName, userPhone, userPhoto)
     const handlePress = () => {
 	navigation.navigate('Trabajos');
 	};
@@ -21,11 +22,11 @@ export default function MiPerfil(props) {
   const [rating, setRating] = useState();
     const auth = useAuth();
     const { role } = auth.auth;
-    console.log(role);
+ //   console.log(role);
 
   let token = auth.auth.token;
   const role_user = auth.role;
-  console.log(auth);
+ // console.log(auth);
 
   
   const config = {
@@ -37,16 +38,15 @@ export default function MiPerfil(props) {
   };
 
   const fetchPromedio = async () => {
-    console.log(auth);
-    if (auth.auth.idUser) {
+    if (userId) {
       try {
-        const apiUrl = `v1/calificaciones/promedio/${auth.auth.idUser}`;
-        console.log('ID de usuario:', auth.auth.idUser);
+        const apiUrl = `v1/calificaciones/promedio/${userId}`;
+        console.log('ID de usuario:', userId);
         const response = await axios.get(URL_API+apiUrl, config);
         setRating(response.data);
 
-        console.log(response.data);
-        console.log(config);
+       // console.log(response.data);
+      //  console.log(config);
       } catch (error) {
       //  console.error('Error al obtener el promedio:', error);
       }
@@ -64,8 +64,8 @@ export default function MiPerfil(props) {
   }, []);
   return (
     <View style={styles.container}>
-      <Image style={styles.fotoPerfil} source={{ uri: auth.auth.userImage }} />
-      <Text style={styles.title}>{auth.auth.name}</Text>
+      <Image style={styles.fotoPerfil} source={{ uri: userPhoto }} />
+      <Text style={styles.title}>{userName}</Text>
       <View style={styles.starsContainer}>
   {[1, 2, 3, 4, 5].map((item) => (
     <TouchableOpacity
@@ -97,16 +97,17 @@ export default function MiPerfil(props) {
             )}
       <View style={styles.input}>
         <FontAwesome style={styles.icono} name="phone" />
-        <Text style={styles.inputText}>  {auth.auth.phone}</Text>
+        <Text style={styles.inputText}>  {userPhone}</Text>
       </View>
       <View style={styles.input}>
         <FontAwesome style={styles.icono} name="envelope" />
-        <Text style={styles.inputText}>   {auth.auth.email}</Text>
+        <Text style={styles.inputText}>   {userEmail}</Text>
       </View>
-      <ComentariosCard />
+      <ComentariosCard userId={userId} userRole={role} userToken={token} />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -179,4 +180,5 @@ const styles = StyleSheet.create({
   starsContainer: {
     flexDirection: 'row',
   },
-});
+}
+);

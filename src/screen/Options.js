@@ -81,7 +81,7 @@ const style = StyleSheet.create({
       TitlePerfil:{
         textTransform: 'uppercase', 
         color: '#05668D',
-        fontSize: 30,
+        fontSize: 23,
         fontWeight: 'bold',
       },
       TitleCorreo:{

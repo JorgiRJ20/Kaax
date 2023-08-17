@@ -3,22 +3,10 @@ import { View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 import useAuth from '../hooks/useAuth';
-
+import MiPerfil from "../screen/MiPerfil";
 
 
 const Card = ({ text, additionalText, imageUrl, fecha}) => {
-
-
-  const { auth } = useAuth();
- 
-  let token = auth.token;
-  const role_user = auth.role;
-  console.log(auth);
-
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   
   const calculateTimePassed = (timestamp) => {
     const currentDate = new Date();
@@ -54,25 +42,23 @@ const Card = ({ text, additionalText, imageUrl, fecha}) => {
   );
 };
 
-const ComentariosCard = () => {
-  const { auth } = useAuth();
+
+const ComentariosCard = ({ userId, userRole, userToken }) => {
   const [comentarios, setComentarios] = useState([]);
 
 
-  let token = auth.token;
-  const role_user = auth.role;
-  console.log(auth);
+  let token = userToken;
 
   const config = {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${userToken}` },
   };
 
 
   const fetchComentarios = async () => {
-    if (auth.idUser) {
+    if (userId) {
     try {
-      const apiUrl = `v1/comentarios/receptor/${auth.idUser}`;
-      console.log('ID de usuario:', auth.idUser);
+      const apiUrl = `v1/comentarios/receptor/${userId}`;
+      console.log('ID de usuario:', userId);
       const response = await axios.get(URL_API+apiUrl, config);
       setComentarios(response.data);
     } catch (error) {
