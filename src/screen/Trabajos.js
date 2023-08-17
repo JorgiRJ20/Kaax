@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import { URL_API } from '../utils/enviroments';
@@ -47,6 +47,7 @@ const TrabajosScreen = () => {
 console.log(numeroDeTrabajos)
 
   return (
+
       <View style={styles.container}>
         {trabajosData.length === 0 ? (
             <View style={styles.messageContainer}>
@@ -59,10 +60,11 @@ console.log(numeroDeTrabajos)
             </View>
         ) : (
             trabajosData.map((trabajo, index) => (
+
                 <View key={index} style={styles.card}>
-                  <Text style={styles.header}>HISTORIAL</Text>
+
                   <Image
-                      source={{ uri: trabajo[6] }} // Reemplaza con la URL de tu imagen
+                      source={{ uri: trabajo[11] }} // Reemplaza con la URL de tu imagen
                       style={styles.image}
                   />
                   <View style={styles.cardContent}>
@@ -81,6 +83,7 @@ console.log(numeroDeTrabajos)
             ))
         )}
       </View>
+
   );
 };
 
@@ -90,6 +93,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#FFF',
     alignItems: 'center',
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   header: {
     fontSize: 25,
