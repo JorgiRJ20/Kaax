@@ -62,7 +62,8 @@ export default function AddLocation(props) {
 
 
 const goToDirecciones = () => {
-    navigation.navigate("ApiDirecciones");
+    //navigation.navigate("ApiDirecciones");
+    navigation.goBack();
 }
 
     const navigation = useNavigation();

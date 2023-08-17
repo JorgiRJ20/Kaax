@@ -182,6 +182,10 @@ export default function CrearPublicacion() {
     showMode("time");
   };
 
+  const handleNavigateLocations = () => {
+    navigation.navigate("AddLocation",{});
+  }
+
   const showDatepicker = () => {
     showMode("date");
   };
@@ -557,19 +561,37 @@ const savePublicacion = async (url) => {
         />
       )}
 
-      <Text style={{ ...styles.labelS, marginBottom: 8 }}>
-        Ingresa la direccion del trabajo
-      </Text>
-      <View style={styles.container}>
-        <SelectList
-          placeholder="Elige la dirección"
-          boxStyles={styles.selector}
-          dropdownStyles={{ borderColor: "#05668D" }}
-          setSelected={setSelected}
-          data={data}
-          dropdownTextStyles={{ fontSize: 14 }}
-        />
-      </View>
+      {data.length > 0 && (
+        <>
+        <Text style={{ ...styles.labelS, marginBottom: 8 }}>
+          Ingresa la direccion del trabajo
+        </Text>
+        <View style={styles.container}>
+          <SelectList
+            placeholder="Elige la dirección"
+            boxStyles={styles.selector}
+            dropdownStyles={{ borderColor: "#05668D" }}
+            setSelected={setSelected}
+            data={data}
+            dropdownTextStyles={{ fontSize: 14 }}
+          />
+        </View>
+        </>
+      )}
+
+      {data.length === 0 && (
+        <View>
+        <Text style={{ ...styles.labelS, marginBottom: 8, color: "#ba181b" }}>
+          Sin lugares de limpieza registrados
+          
+        </Text>
+          <TouchableOpacity style={styles.buttonGoLocations} onPress={handleNavigateLocations}>
+            <Icon name="location-arrow" color={"#fff"} size={20} />
+            <Text style={styles.buttonText}>Registrar nuevo lugar de limpieza</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      
       <Text style={{ ...styles.labelS, marginBottom: 8 }}>
         Ingresa la foto de portada
       </Text>
@@ -725,6 +747,20 @@ const styles = StyleSheet.create({
     color: "#090808",
     marginTop: 15,
     alignItems: "center",
+  },
+  buttonGoLocations: {
+    width: 280,
+    height: 40,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#006E90",
+    color: "#090808",
+    marginTop: 15,
+    alignItems: "center",
+    alignSelf: 'center',
+    paddingHorizontal: 5
   },
   buttonText: {
     color: "#fff",
