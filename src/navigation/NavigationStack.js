@@ -157,7 +157,7 @@ export default function NavigationStack() {
           name='ApiDirecciones'
           component={ApiDirecciones}
           options={{
-            title:'Mis direcciones',
+            title:'Mis lugares de limpieza',
             headerTransparent: false,
           }}
         />
