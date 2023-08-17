@@ -212,7 +212,6 @@ export default function CrearPublicacion() {
     showMode("date");
   };
 
-  console.log("selectoooor", data);
 
   // funcion anterior para subir una imagen
   const handleChooseImage = async () => {
@@ -246,7 +245,7 @@ export default function CrearPublicacion() {
         console.error("Error al leer el archivo:", error);
       }
     } else {
-      console.log(result);
+      console.log("No se ha seleccionado ninguna imagen");
     }
   };
   // Función para subir la imagen a Firebase Storage y actualizar el enlace en el servidor
@@ -286,10 +285,8 @@ export default function CrearPublicacion() {
             // Manejar subida exitosa en la finalización
             // Por ejemplo, obtener la URL de descarga: https://firebasestorage.googleapis.com/...
             getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log("File available at", downloadURL);
 
               // Actualizar la URL de la imagen en tu estado
-              console.log('URL de la imagen:', downloadURL)
               setImageUri(downloadURL);
               // Llamar a handleregister con la nueva imagen
               savePublicacion(downloadURL);
@@ -312,7 +309,6 @@ export default function CrearPublicacion() {
   };
 
 const savePublicacion = async (url) => {
-  console.log(url, "url de la imagen");
   try {
     const response = await axios.post(
       URL_API + "v1/publicaciones",
@@ -334,7 +330,6 @@ const savePublicacion = async (url) => {
       },
       config
     );
-    console.log(response.data)
     if(response){
       handleUploadImages(response.data);
     }
@@ -356,28 +351,48 @@ const savePublicacion = async (url) => {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const results = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
+      allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
-      allowsEditing: false,
     });
-
-    if (!result.canceled) {
-      const newImages = result.assets.map((asset) => ({
-        uri: asset.uri,
-        blob: null, // You can fetch the blob if needed, similar to your previous implementation
-        name: asset.fileName,
-      }));
-
-      setSelectedImages([...selectedImages, ...newImages]);
-      console.log(selectedImages);
+  
+    if (!results.canceled) {
+      const selectedImages = results.assets;
+  
+      const imageInfoArray = [];
+  
+      try {
+        for (const image of selectedImages) {
+          const fileUri = image.uri;
+          const fileName = fileUri.substring(fileUri.lastIndexOf("/") + 1);
+  
+          // Obtener los datos del archivo como un blob utilizando fetch
+          const fileResponse = await fetch(fileUri);
+          const fileBlob = await fileResponse.blob();
+  
+          const imageInfo = {
+            name: fileName,
+            blob: fileBlob,
+            uri: fileUri,
+          };
+  
+          imageInfoArray.push(imageInfo);
+        }
+  
+        // Actualizar el estado con el array de información de imágenes
+        setSelectedImages(imageInfoArray);
+      } catch (error) {
+        console.error("Error al leer los archivos:", error);
+      }
+    } else {
+      console.log("Selection cancelled");
     }
   };
-
+  
   const handleRemoveImage = (imageUri) => {
-    console.log(imageUri);
     const newSelectedImages = selectedImages.filter(
       (image) => image.uri !== imageUri
     );
@@ -394,7 +409,6 @@ const savePublicacion = async (url) => {
   }
 
   useEffect(() => {
-    console.log(imagenesUrl, "imagenes url");
   }, [imagenesUrl]);
 
   const renderItem = ({ item, index }) => (
@@ -415,18 +429,15 @@ const savePublicacion = async (url) => {
   const [imagenesUrl, setImagenesUrl] = useState([]); // Array de URLs de las imágenes subidas
   const handleUploadImages = async (idPublic) => {
     try {
-      console.log(idPublic, "id de la publicacion")
       if (selectedImages.length > 0) {
         // Iterar sobre las imágenes seleccionadas y subirlas una por una
-        for (const image of selectedImages) {
-          const fileBlob = await fetch(image.uri).then((response) =>
-            response.blob()
-          );
+        for (let image of selectedImages) {
+   
 
-          const filePath = `usuarios/${image.name}`;
-          const storageRef = ref(storage, filePath);
+          let filePath = `usuarios/${image.name}`;
+          let storageRef = ref(storage, filePath);
 
-          const uploadTask = uploadBytesResumable(storageRef, fileBlob);
+          let uploadTask = uploadBytesResumable(storageRef, image.blob);
 
           await new Promise((resolve, reject) => {
             console.log("Subiendo imagen...");
@@ -442,7 +453,6 @@ const savePublicacion = async (url) => {
               () => {
                 getDownloadURL(uploadTask.snapshot.ref)
                   .then((downloadURL) => {
-                    console.log("File available at", downloadURL);
                     // Aquí puedes hacer algo con la URL de descarga si es necesario
                     console.log({ url: downloadURL, idPubli: idPublic }, "array nuevo");
                     arrayImagenes.push({ imagenUrl: downloadURL, publicacion: { idPublicacion :idPublic} });
@@ -469,36 +479,14 @@ const savePublicacion = async (url) => {
     } catch (error) {
       console.error("Error al subir las imágenes:", error);
     }
+
   };
 
-  // const saveImagenesBD = async () => {
-  //   console.log(setArrayImagenes, "imagenes url")
-  //   try {
-  //     const response = await axios.post(
-  //       URL_API + "v1/imagenes",
-  //       setArrayImagenes,
-  //       config
-  //     );
-  //     if (response) {
-  //       setVisible(false);
-  //       Alert.alert("¡Exito!", "Publicación Agregada ", [
-  //         { text: "OK", onPress: goToPubli },
-  //       ]);
-  //     }
-  //   } catch (error) {
-  //     setVisible(false);
-  //     Alert.alert("Error!", "Error al guardar las imagenes de la zona de limpieza ", [
-  //       { text: "OK", onPress: goToPubli },
-  //     ]);
-  //   }
-  // };
+
 
   const saveImagenesBD = async () => {
-    console.log(arrayImagenes, "imagenes url");
-  console.log(config.headers.Authorization)
     try {
       for (const imagen of arrayImagenes) {
-        console.log(imagen, "imagenddddddddddddddddddddddddddddddd")
         saveImagen(imagen);
       }
   

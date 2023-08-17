@@ -19,7 +19,6 @@ export default function ApiPublicacionLim() {
   const { auth } = useAuth();
   let token = auth.token;
   const role_user = auth.role;
-  console.log(auth);
 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -113,7 +112,6 @@ export default function ApiPublicacionLim() {
               })
             }
 
-            console.log(array_pubs);
             setPublicacionesLim(array_pubs);
             setShowLoader(false);
         } catch (error) {

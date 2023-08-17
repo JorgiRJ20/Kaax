@@ -9,7 +9,6 @@ export default function PublicacionesCard(props) {
 	const navigation = useNavigation();
 
 const {publicaciones} = props
-console.log(publicaciones)
 
 const goToPublicacion = () =>{
     navigation.navigate('DetallePublicacion',{idPublicacion:publicaciones.idPublicacion,
