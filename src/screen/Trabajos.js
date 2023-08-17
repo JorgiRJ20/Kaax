@@ -9,17 +9,29 @@ const TrabajosScreen = () => {
   const { auth } = useAuth();
   const [trabajosData, setTrabajosData] = useState([]);
 
+
+  let token = auth.token;
+  const role_user = auth.role;
+  console.log(auth);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+
   useEffect(() => {
     fetchTrabajosData();
     const interval = setInterval(fetchTrabajosData, 10000); // Actualizar cada 10 segundos
     return () => clearInterval(interval);
   }, []);
 
+
+
   const fetchTrabajosData = async () => {
     if (auth.idUser) {
     try {
       const apiUrl = `postulaciones/publicacion/status/${auth.idUser}`;
-      const response = await axios.get(URL_API+apiUrl);
+      const response = await axios.get(URL_API+apiUrl, config);
       setTrabajosData(response.data);
     } catch (error) {
      // console.error('Error al obtener los trabajos:', error);
@@ -27,6 +39,8 @@ const TrabajosScreen = () => {
   }
   };
 
+
+  
   const calculateDaysPassed = (workDate) => {
     const currentDate = new Date();
     const workDateParsed = parseISO(workDate);

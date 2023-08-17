@@ -21,6 +21,17 @@ export default function Solicitud(props) {
 	const idPostulacion = params.idPostulacion;
 
 	const { auth } = useAuth();
+
+
+	let token = auth.token;
+	const role_user = auth.role;
+	console.log(auth);
+  
+	const config = {
+	  headers: { Authorization: `Bearer ${token}` },
+	};
+
+	
     const [rating, setRating] = useState(1);
     const [modalVisible, setModalVisible] = useState(false);
     const [comment, setComment] = useState('');
@@ -46,7 +57,7 @@ export default function Solicitud(props) {
 		const fetchData = async () => {
 		  try {
 			const apiUrl = `postulaciones/postulacion/${idPostulacion}`;
-			const response = await axios.get(URL_API + apiUrl);
+			const response = await axios.get(URL_API + apiUrl, config);
 			setPostulacionData(response.data);
 			setIdUsuario(response.data[0][3]);
 			setTituloApi(response.data[0][1]);
@@ -85,7 +96,7 @@ export default function Solicitud(props) {
 			idCalificado: idUsuario, // AQUI QUIERO UTILIZAR EL IDUSUARIO
 			calificacion: rating,
 			fecha: fechaPostulacion,
-		  });
+		  }, config);
 	
 		  console.log('Tu comentario y calificación enviados con éxito');
 		  setModalVisible(true);
@@ -107,7 +118,7 @@ export default function Solicitud(props) {
                 idReceptor: idUsuario, 
                 comentario: comment,
                 fecha: fechaPostulacion,
-            });
+            }, config);
 
             // Limpiar el campo de comentario y cerrar la hoja inferior
             setComment('');
