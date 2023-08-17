@@ -54,7 +54,8 @@ export default function CrearCuenta(props) {
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required(true)
-      .min(3, "El nombre debe tener al menos 3 caracteres"),
+      .min(3, "El nombre debe tener al menos 3 caracteres")
+      .matches(/^[A-Za-z]+$/, "Solo se permiten letras en el nombre"),
     email: Yup.string().required(true).email("Ingresa un correo válido"),
     password: Yup.string()
       .required(true)
@@ -78,17 +79,18 @@ export default function CrearCuenta(props) {
     phone: Yup.string()
       .required(true)
       .min(10, "El número debe tener al menos 10 caracteres")
-      .max(10, "El número debe tener maximo 10 caracteres"),
+      .max(10, "El número debe tener maximo 10 caracteres")
+      .matches(/^[0-9]+$/, "El telefono solo debe contener números"),
     role: Yup.string().required(true),
   });
 
   const initialValues = {
-    name: "jorge",
-    email: "jorge@gmail.com",
-    password: "ASD34%aaaa",
-    phone: "4191377583",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
     role: null,
-    userImage: "../assets/images/perfil.png",
+    userImage: "",
     status: true,
   };
 
