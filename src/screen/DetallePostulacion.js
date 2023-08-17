@@ -5,10 +5,23 @@ import { format } from 'date-fns';
 import { useRoute } from '@react-navigation/native';
 import { getSolicitudDetalle, aceptarPostulacion, rechazarPostulacion } from '../api/ApiSolicitudDetalle';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../hooks/useAuth';
 
 
 
 export default function DetallePostulacion() {
+
+  const { auth } = useAuth();
+  const { idUser } = auth;
+  //console.log(auth.token)
+  let token = auth.token;
+  //const role_user = auth.role;
+  //console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` }
+  };
+
   const { params } = useRoute();
   const idPostulacion = params?.idPostulacion;
 
@@ -30,13 +43,15 @@ export default function DetallePostulacion() {
     idPostulacion: '',
     tituloPublicacion: '',
     nombreUsuario: '',
+    idLimpiador:'',
     userImage: '',
     fechaPostulacion: '',
     comment: '',
   });
 
+
   useEffect(() => {
-    getSolicitudDetalle(idPostulacion)
+    getSolicitudDetalle(idPostulacion,config)
       .then((apiData) => {
         if (apiData.length > 0) {
           setData(apiData[0]);
@@ -48,9 +63,10 @@ export default function DetallePostulacion() {
   }, []);
 
   const handleAceptar = async () => {
+    
     try {
       await aceptarPostulacion(idPostulacion);
-     
+   
     } catch (error) {
       console.error('Error al aceptar la postulación:', error);
     }
@@ -133,9 +149,9 @@ export default function DetallePostulacion() {
             onPress={() => {
           
             if (accionRealizada === 'aceptar') {
-              aceptarPostulacion(data.idPostulacion); 
+              aceptarPostulacion(data.idPostulacion, config); 
             } else {
-              rechazarPostulacion(data.idPostulacion); 
+              rechazarPostulacion(data.idPostulacion, config); 
             }
               setModalVisible(false);
               navigation.navigate('Tab');

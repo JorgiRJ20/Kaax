@@ -7,7 +7,11 @@ import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
 import Palette from '../constants/Palette';
 import Loader from './Loader';
+import Swiper from 'react-native-swiper';
+
 export default function DetallePublicacion(props) {
+
+  const [images, setImages] = useState([]);
 
   const [usersPostulantes, setUsersPostulantes] = useState([]);
   const navigation = useNavigation();
@@ -34,8 +38,31 @@ export default function DetallePublicacion(props) {
 
   })}
 
+  const getImagenes  = async () => {
+    try {
+      
+      const response = await axios.get(URL_API+'imagenes',config);
+      let imagenesFilterer = [];
+      console.log(response.data)
+      response.data.map((item) => {
+          if(item.publicacion.idPublicacion == params.idPublicacion){
+              imagenesFilterer.push(item.imagenUrl)
+          }
+      })
+      setImages(imagenesFilterer);
+      console.log(imagenesFilterer, "imagenesFilterer")
+  
+    } catch (error) {
+      console.error(error, "error asdasdasd");
+    }
+  }
+
+  useEffect(() => {
+    getImagenes();
+  }, []);
+
   const { auth } = useAuth();
-        
+        console.log(getImagenes)
 let token = auth.token;
 let idUser = auth.idUser;
 const config = {
@@ -140,7 +167,14 @@ const EliminarPub = async () => {
       <ScrollView style={{flex: 1}}>
 
       
-      <Image source={require('../assets/departamento.jpg')} style={styles.imagen}/>
+      {/* <Image source={require('../assets/departamento.jpg')} style={styles.imagen}/> */}
+      <Swiper style={styles.wrapper} showsButtons={false} loop autoplay={true}>
+      {images.map((imageUrl, index) => (
+        <View key={index} style={styles.slide}>
+          <Image source={{ uri: imageUrl }} style={styles.image} />
+        </View>
+      ))}
+    </Swiper>
       <Text style={styles.title}>{params.titulo}</Text>
       <Text style={styles.descripcion}>{params.descripcion}</Text>
       <View
@@ -292,6 +326,17 @@ const styles = StyleSheet.create({
       },
       containerOptions: {
         alignItems: 'center'
-      }
+      },  
+      slide: {
+        height: 200,
+        width: '100%',
+      },
+      image: {
+        width: '100%',
+        height: '100%',
+      },
+      wrapper: {
+        height: 200,
+      },
 
 })

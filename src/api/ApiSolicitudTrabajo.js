@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 
-export async function getSolicitudes(idUser) {
+
+export async function getSolicitudes(idUser,config) {
   console.log('Valor de idUser:', idUser);
-  try {
-    
-    const response = await axios.get(URL_API +`postulaciones/publicacion/${idUser}`);
+  console.log('Valor de token:', config);
+  
+  try {  
+    const response = await axios.get(URL_API +`postulaciones/publicacion/${idUser}`, config);
     console.log('Respuesta de la API:', response.data); // A
     const data = response.data.map(postulacion => ({
       
@@ -20,9 +22,11 @@ export async function getSolicitudes(idUser) {
       fechaTrabajo: postulacion[8],
       horaTrabajo: postulacion[9],
       userImage: postulacion[10],
+      imagenUrl: postulacion[11]
     
 
     }));
+    console.log(response.data);
     console.log('Datos de la API:', data); // Agrega este console.log para verificar los datos obtenidos
     return data;
   } catch (error) {

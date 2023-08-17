@@ -8,6 +8,14 @@ import Loader from '../components/Loader';
 export default function Solicitudes() {
   const { auth } = useAuth();
   const { idUser } = auth;
+  //console.log(auth.token)
+  let token = auth.token;
+  //const role_user = auth.role;
+  //console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,8 +24,9 @@ export default function Solicitudes() {
   const fetchData = async () => {
     try {
       if (idUser) {
+        //console.log(idUser)
         setLoading(true); 
-        const data = await getPostulaciones(idUser);
+        const data = await getPostulaciones(idUser,config);
         setSolicitudes(data);
         setLoading(false)
       }
@@ -36,27 +45,35 @@ export default function Solicitudes() {
     fetchData();
   };
 
+  
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.cardContainer}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
-      >
-        {solicitudes.map(solicitud => (
-          <Card
-            key={solicitud.idUsuarioPostulante}
-            titulo={solicitud.titulo}
-            descripcion={solicitud.descripcion}
-            idUsuario={solicitud.idUsuarioPublicacion}
-            nameUser={solicitud.nombreUsuarioPublicacion}
-            precio={solicitud.pago}
-            status={solicitud.status}
-            idPostulacion={solicitud.idPostulacion}
-            fechaTrabajo={solicitud.fechaTrabajo}
-            horaTrabajo={solicitud.horaTrabajo}
-          />
-        ))}
-      </ScrollView>
+      {solicitudes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No hay solicitudes por el momento.</Text>
+      </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.cardContainer}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
+        >
+          {solicitudes.map(solicitud => (
+            <Card
+              key={solicitud.idUsuarioPostulante}
+              titulo={solicitud.titulo}
+              descripcion={solicitud.descripcion}
+              idUsuario={solicitud.idUsuarioPublicacion}
+              nameUser={solicitud.nombreUsuarioPublicacion}
+              precio={solicitud.pago}
+              status={solicitud.status}
+              idPostulacion={solicitud.idPostulacion}
+              fechaTrabajo={solicitud.fechaTrabajo}
+              horaTrabajo={solicitud.horaTrabajo}
+              imagenUrl={solicitud.imagenUrl}
+            />
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
@@ -68,6 +85,15 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginTop: 16,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#888', 
   },
 });
 

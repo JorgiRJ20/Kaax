@@ -2,7 +2,7 @@ import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 
 
-export async function postularse(idUser, idPublicacion, comment,fechaPostulacion,status) {
+export async function postularse(idUser, idPublicacion, comment,fechaPostulacion,status,config) {
   try {
     
    const requestData = {
@@ -14,7 +14,7 @@ export async function postularse(idUser, idPublicacion, comment,fechaPostulacion
     };
     
 
-    const response = await axios.post(URL_API + "postulaciones/v1/postulaciones", requestData)
+    const response = await axios.post(URL_API + "postulaciones/v1/postulaciones", requestData,config)
 
     return response.data;
   } catch (error) {

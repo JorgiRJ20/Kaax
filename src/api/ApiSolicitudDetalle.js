@@ -1,20 +1,23 @@
 import axios from 'axios';
 import { URL_API } from '../utils/enviroments';
 
-export async function getSolicitudDetalle(idPostulacion) {
-  console.log('Valor de postulacion:', idPostulacion);
+//API Para ver el detalle de las solicitudes que me han llegado y aceptar o rechazar esa solicitud
+
+export async function getSolicitudDetalle(idPostulacion,config) {
+  console.log('Valor de postulacion:', config);
   try {
-    const response = await axios.get(URL_API + `postulaciones/postulacion/${idPostulacion}`);
+    const response = await axios.get(URL_API + `postulaciones/postulacion/${idPostulacion}`,config);
     console.log('Respuesta de la API:', response.data);
     const data = response.data.map(detalle => ({
       idPostulacion: detalle[0],
       tituloPublicacion: detalle[1],
       nombreUsuario: detalle[2],
-      userImage: detalle[3],
-      fechaPostulacion: detalle[4],
-      comment: detalle[5],
+      idLimpiador:detalle[3],
+      userImage: detalle[4],
+      fechaPostulacion: detalle[5],
+      comment: detalle[6],
     }));
-    console.log('Datos de la API:', data);
+    //console.log('Datos de la API:', data);
     return data;
   } catch (error) {
     console.error('Error al obtener las postulaciones:', error);
@@ -22,10 +25,13 @@ export async function getSolicitudDetalle(idPostulacion) {
   }
 }
 
-export async function aceptarPostulacion(idPostulacion) {
+export async function aceptarPostulacion(idPostulacion,config) {
+  //console.log('idPos',idPostulacion)
+  //console.log('conf',config)
+
   try {
-    const response = await axios.post(URL_API + `postulaciones/${idPostulacion}/aceptar`);
-    console.log('acp:', response.data);
+    const response = await axios.post(URL_API + `postulaciones/${idPostulacion}/aceptar`,{},config);
+    //console.log('acp:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error al aceptar la postulación:', error);
@@ -33,10 +39,10 @@ export async function aceptarPostulacion(idPostulacion) {
   }
 }
 
-export async function rechazarPostulacion(idPostulacion) {
+export async function rechazarPostulacion(idPostulacion,config) {
   try {
-    const response = await axios.post(URL_API + `postulaciones/${idPostulacion}/rechazar`);
-    console.log('rech:', response.data);
+    const response = await axios.post(URL_API + `postulaciones/${idPostulacion}/rechazar`,{},config);
+    //console.log(URL_API + `postulaciones/${idPostulacion}/rechazar`);
     return response.data;
   } catch (error) {
     console.error('Error al rechazar la postulación:', error);
@@ -44,10 +50,11 @@ export async function rechazarPostulacion(idPostulacion) {
   }
 }
 
-export async function getDetallePostulacion(idPostulacion) {
+//Funcion para mostrar informacion a rol:Limpiador cuando la respuesta fue aceptada
+export async function getDetallePostulacion(idPostulacion,config) {
   
   try {
-    const response = await axios.get(URL_API + `postulaciones/postulaciones/${idPostulacion}/datos`);
+    const response = await axios.get(URL_API + `postulaciones/postulaciones/${idPostulacion}/datos`,config);
     const data = response.data;
    
     return {
