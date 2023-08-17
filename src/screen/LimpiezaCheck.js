@@ -30,6 +30,14 @@ export default function Solicitud() {
 	const showModal = () => setVisible(true);
 	const hideModal = () => setVisible(false);
 
+	let token = auth.token;
+	const role_user = auth.role;
+	console.log(auth);
+  
+	const config = {
+	  headers: { Authorization: `Bearer ${token}` },
+	};
+  
 
 	const navigation = useNavigation();
 	const handlePress = () => {
@@ -39,7 +47,7 @@ export default function Solicitud() {
 		const fetchData = async () => {
 		  try {
 			const apiUrl = `postulaciones/postulaciones/${idPostulacion}/datos`;
-			const response = await axios.get(URL_API + apiUrl);
+			const response = await axios.get(URL_API + apiUrl, config);
 			setPostulacionData(response.data);
 			setIdUsuario(response.data.idUsuario); // Guardar el idUsuario
 
@@ -75,7 +83,7 @@ export default function Solicitud() {
 			idCalificado: idUsuario, // AQUI QUIERO UTILIZAR EL IDUSUARIO
 			calificacion: rating,
 			fecha: fechaPostulacion,
-		  });
+		  }, config);
 	
 		  console.log('Tu comentario y calificación enviados con éxito');
 		  setModalVisible(true);
@@ -97,7 +105,7 @@ export default function Solicitud() {
                 idReceptor: idUsuario, 
                 comentario: comment,
                 fecha: fechaPostulacion,
-            });
+            }, config);
 
             // Limpiar el campo de comentario y cerrar la hoja inferior
             setComment('');

@@ -4,10 +4,20 @@ import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import { URL_API } from '../utils/enviroments';
 import { differenceInDays, parseISO } from 'date-fns';
+import { config } from 'dotenv';
 
 const TrabajosScreen = () => {
-  const { auth } = useAuth();
+ 
   const [trabajosData, setTrabajosData] = useState([]);
+  const { auth } = useAuth();
+  let token = auth.token;
+  const role_user = auth.role;
+  console.log(auth);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
 
   useEffect(() => {
     fetchTrabajosData();
@@ -19,7 +29,7 @@ const TrabajosScreen = () => {
     if (auth.idUser) {
     try {
       const apiUrl = `postulaciones/publicacion/status/${auth.idUser}`;
-      const response = await axios.get(URL_API+apiUrl);
+      const response = await axios.get(URL_API+apiUrl, config);
       setTrabajosData(response.data);
     } catch (error) {
      // console.error('Error al obtener los trabajos:', error);
