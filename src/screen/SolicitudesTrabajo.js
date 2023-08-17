@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
 import Loader from '../components/Loader'; // Asegúrate de importar el componente Loader desde la ubicación correcta
 import Card from '../components/SolicitudesTrabajoCard';
 import useAuth from '../hooks/useAuth';
@@ -36,6 +36,11 @@ export default function SolicitudesTrabajo() {
 
     fetchData();
   }, [idUser]);
+
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchData();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
