@@ -5,7 +5,20 @@ import { URL_API } from '../utils/enviroments';
 import useAuth from '../hooks/useAuth';
 
 
+
 const Card = ({ text, additionalText, imageUrl, fecha}) => {
+
+
+  const { auth } = useAuth();
+ 
+  let token = auth.token;
+  const role_user = auth.role;
+  console.log(auth);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
   
   const calculateTimePassed = (timestamp) => {
     const currentDate = new Date();
@@ -46,17 +59,27 @@ const ComentariosCard = () => {
   const [comentarios, setComentarios] = useState([]);
 
 
+  let token = auth.token;
+  const role_user = auth.role;
+  console.log(auth);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
 
   const fetchComentarios = async () => {
+    if (auth.idUser) {
     try {
       const apiUrl = `v1/comentarios/receptor/${auth.idUser}`;
       console.log('ID de usuario:', auth.idUser);
-      const response = await axios.get(URL_API + apiUrl);
+      const response = await axios.get(URL_API+apiUrl, config);
       setComentarios(response.data);
     } catch (error) {
-      console.error('Error fetching comentarios:', error);
-      setComentarios([]); // Vacia los comentarios
+    
+     
     }
+  }
   };
 
   useEffect(() => {

@@ -19,6 +19,14 @@ export default function MiPerfil() {
     const { role } = auth.auth;
     console.log(role);
 
+  let token = auth.auth.token;
+  const role_user = auth.role;
+  console.log(auth);
+
+  
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
@@ -30,12 +38,13 @@ export default function MiPerfil() {
       try {
         const apiUrl = `v1/calificaciones/promedio/${auth.auth.idUser}`;
         console.log('ID de usuario:', auth.auth.idUser);
-        const response = await axios.get(URL_API+apiUrl);
+        const response = await axios.get(URL_API+apiUrl, config);
         setRating(response.data);
 
         console.log(response.data);
+        console.log(config);
       } catch (error) {
-        console.error('Error al obtener el promedio:', error);
+      //  console.error('Error al obtener el promedio:', error);
       }
     }
   };
