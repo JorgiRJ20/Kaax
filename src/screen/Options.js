@@ -10,12 +10,17 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Options() {
     const navigation = useNavigation();
-    const handlePress = () => {
-	navigation.navigate('MiPerfil');
-	};
     const auth = useAuth();
-    const { role } = auth.auth;
-    console.log(role);
+    const { role, idUser, name, phone, email } = auth.auth;
+
+    const handlePress = () => {
+        navigation.navigate('MiPerfil', {
+            userId: idUser,
+            userName: name,
+            userPhone: phone,
+            userEmail: email
+        });
+	};
 
     
     const iconLocations = <Entypo name="location" size={24} color={Palette.colors.primary} />;

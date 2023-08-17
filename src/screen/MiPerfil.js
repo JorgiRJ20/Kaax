@@ -8,7 +8,10 @@ import axios from 'axios';
 import { ROLE_LIMPIADOR, ROLE_SOLICITANTE } from '../utils/enviroments';
 import { useNavigation } from '@react-navigation/native';
 
-export default function MiPerfil() {
+export default function MiPerfil(props) {
+
+  const {userId, userEmail, userName, userPhone} = props.route.params
+
   const navigation = useNavigation();
     const handlePress = () => {
 	navigation.navigate('Trabajos');
