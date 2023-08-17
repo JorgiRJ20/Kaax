@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React,{useEffect,useState,useCallback} from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import { URL_API } from "../utils/enviroments";
@@ -23,8 +24,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, auth, storage } from "../utils/firebaseConfig";
 import * as ImagePicker from "expo-image-picker";
 import useAuth from "../hooks/useAuth";
-import { ActivityIndicator, MD2Colors, Modal } from "react-native-paper";
 import Loader from "../components/Loader";
+import { Modal } from 'react-native-paper';
 
 export default function CrearPublicacion() {
   const navigation = useNavigation();
@@ -33,6 +34,14 @@ export default function CrearPublicacion() {
   const [statusUploadImg, setStatusUploadImg] = useState(false);
   const [statusUploadImgs, setStatusUploadImgs] = useState(false);
   const [visible, setVisible] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [visibleMod, setVisibleMod] = React.useState(false);
+
+  const showModal = () => setVisibleMod(true);
+  const hideModal = () => setVisibleMod(false);	
+
+  
+
   // funcion para subir una imagen
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [fileBlob, setFileBlob] = useState("");
@@ -66,27 +75,34 @@ export default function CrearPublicacion() {
     Creamos un efecto para que al salir, 
     se inicie el state con los datos defecto
     */
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(URL_API + "v1/direcciones", config);
-        let direccionesFil = [];
-        response.data.map((item) => {
-          if (item.user.idUser == idUser) {
-            const objUbi = {
-              key: item.idDireccion,
-              value: `${item.nameDireccion} \n(${item.calle} ${item.numExt})`,
-            };
-            direccionesFil.push(objUbi);
+
+    useFocusEffect(
+      useCallback(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(URL_API + "v1/direcciones", config);
+            let direccionesFil = [];
+            response.data.map((item) => {
+              if (item.user.idUser == idUser) {
+                const objUbi = {
+                  key: item.idDireccion,
+                  value: `${item.nameDireccion} \n(${item.calle} ${item.numExt})`,
+                };
+                direccionesFil.push(objUbi);
+              }
+            });
+            //Set Data Variable
+            setData(direccionesFil);
+          } catch (error) {
+            console.log(error);
           }
-        });
-        //Set Data Variable
-        setData(direccionesFil);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
+        };
+        fetchData();
+      }, [])
+    );
+
+
+  useEffect(() => {
     return () =>
       setPublicacion({
         titulo: "",
@@ -124,17 +140,22 @@ export default function CrearPublicacion() {
       selectedImages.length < 1
       
     ) {
+      
+      setMessage("Ingresa todos los datos");
+      showModal();
       setVisible(false);
-      Alert.alert("¡ERROR!", "Ingresa todos los datos");
+      //Alert.alert("¡ERROR!", "Ingresa todos los datos");
       return;
     }
 
     handleUploadImage();
 
     } catch (error) {
-      Alert.alert("Error!", "Ocurrio un error al crear la publicación", [
+     /* Alert.alert("Error!", "Ocurrio un error al crear la publicación", [
         { text: "OK", onPress: goToPubli },
-      ]);
+      ]);*/
+      setMessage("Error al registrar usuario");
+      showModal();
       console.error(error.config.data);
     }
 
@@ -319,9 +340,11 @@ const savePublicacion = async (url) => {
 
   } catch (error) {
     console.error(error);
-    Alert.alert("Error!", "Ocurrió un error al crear la publicacion", [
+   /* Alert.alert("Error!", "Ocurrió un error al crear la publicacion", [
       { text: "OK", onPress: goToPubli },
-    ]);
+    ]);*/
+    setMessage("ocurrió un error al crear la publicacion");
+    showModal();
   }
 };
 
@@ -466,15 +489,20 @@ const savePublicacion = async (url) => {
       }
   
       setVisible(false);
-      Alert.alert("¡Éxito!", "Publicación registrada con exito", [
+      /*Alert.alert("¡Éxito!", "Publicación registrada con exito", [
         { text: "OK", onPress: goToPubli },
-      ]);
+      ]);*/
+      
+      setMessage("Publicación registrada correctamente");
+      showModal();
     } catch (error) {
       console.log(error, "Ocurrió un error al guardar las imágenes")
       setVisible(false);
-      Alert.alert("Error!", "Ocurrió un error al guardar las imágenes", [
+      /*Alert.alert("Error!", "Ocurrió un error al guardar las imágenes", [
         { text: "OK", onPress: goToPubli },
-      ]);
+      ]);*/
+      setMessage("Ocurrió un error al guardar las imágenes");
+      showModal();
     }
   };
 
@@ -702,6 +730,24 @@ const savePublicacion = async (url) => {
         <Icon name="arrow-circle-up" color={"#fff"} size={30} />
         <Text style={styles.textTouchable}>Publicar</Text>
       </TouchableOpacity>
+      <Modal visible={visibleMod} contentContainerStyle={styles.modal}>
+						<View style={styles.modalResponse}>
+							<Text style={styles.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={styles.aceptarbtn}
+							onPress={() => {
+                if (message === 'Ingresa todos los datos' || message === 'Error al registrar usuario'
+                    || message === 'ocurrió un error al crear la publicacion' || message === 'Ocurrió un error al guardar las imágenes' ) {
+                  hideModal();
+                } else {
+                  goToPubli(); 
+                }
+              }}
+							>
+								<Text style={styles.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
+						</View>
+					</Modal>
     </ScrollView>
   );
 }
@@ -804,15 +850,12 @@ const styles = StyleSheet.create({
     marginStart: 8,
   },
   modal: {
-    backgroundColor: "white",
-    padding: 20,
-    margin: 20,
-    width: "80%",
-    height: "20%",
     alignContent: "center",
     alignSelf: "center",
     alignItems: "center",
-    borderRadius: 20,
+    marginTop:520,
+    flex: 1,
+    width: "100%",
   },
   textProgress: {
     fontSize: 20,
@@ -832,5 +875,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
+  },
+  modalResponse: {
+    textAlign: "center",
+    backgroundColor: "white",
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 20,
   },
 });

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { SelectList } from 'react-native-dropdown-select-list'
 import useAuth from '../hooks/useAuth';
 import { useNavigation } from '@react-navigation/native';
+import { Modal } from 'react-native-paper';
 
 export default function (props) {
 
@@ -21,7 +22,12 @@ export default function (props) {
 
   const [selected, setSelected] = useState(params.direccion);
   const [data,setData] = useState([params.titulo]);
-    
+
+  const [message, setMessage] = React.useState("");
+  const [visibleMod, setVisibleMod] = React.useState(false);
+  const showModal = () => setVisibleMod(true);
+  const hideModal = () => setVisibleMod(false);	
+
 
     const [modificado, setModificado] = useState({
         idPublicacion:'',
@@ -121,10 +127,8 @@ const EditarPub = async () => {
         almacenafecha == 0 ||
         almacenaHora == 0
       ) {
-        Alert.alert(
-          '¡ERROR!',
-          'Ingresa todos los datos'
-        );
+        setMessage("Ingresa todos los datos");
+        showModal();
         return;
       }
        try {
@@ -147,11 +151,8 @@ const EditarPub = async () => {
         } catch (error) {
             console.error(error);
         }
-        Alert.alert(
-            '¡Exito!',
-            'Publicación Editada ',[
-                {text: 'OK', onPress: goToPublicaciones},]
-          );
+        setMessage("Publicación Editada");
+        showModal();
 }
     
     const [date, setDate] = useState(new Date());
@@ -332,6 +333,24 @@ const EditarPub = async () => {
                   <Icon name="edit" color={'#fff'} size={28}/>
                   <Text style={styles.textTouchable}>Editar Publicación</Text>
                 </TouchableOpacity>
+
+            <Modal visible={visibleMod} contentContainerStyle={styles.modal}>
+						<View style={styles.modalResponse}>
+							<Text style={styles.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={styles.aceptarbtn}
+							onPress={() => {
+                if (message === 'Ingresa todos los datos') {
+                  hideModal();
+                } else {
+                  goToPublicaciones(); 
+                }
+              }}
+							>
+								<Text style={styles.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
+						</View>
+					</Modal>
           
       </ScrollView>
     )
@@ -411,5 +430,39 @@ const EditarPub = async () => {
           fontSize: 14,
           fontWeight: 'bold',
           marginStart:10
+        },
+        modal: {
+          alignContent: "center",
+          alignSelf: "center",
+          alignItems: "center",
+          marginTop:430,
+          flex: 1,
+          width: "100%",
+        },
+        textProgress: {
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "#05668D",
+          textAlign: "center",
+        },
+        aceptarbtn: {
+          backgroundColor: "#05668D",
+          padding: 15,
+          width: "80%",
+          borderRadius: 20,
+          marginTop: 20,
+        },
+        textaceptar: {
+          fontSize: 20,
+          fontWeight: "bold",
+          color: "white",
+          textAlign: "center",
+        },
+        modalResponse: {
+          textAlign: "center",
+          backgroundColor: "white",
+          alignItems: "center",
+          padding: 20,
+          borderRadius: 20,
         },
   })
