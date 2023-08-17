@@ -64,18 +64,18 @@ export default function NavigationTab() {
 				options={{
 					tabBarIcon: ({ focused }) => (
 						<View style={{justifyContent: 'center', alignItems: 'center'}}>
-							<View style={styles.circleContainer}>
+							
 								<Image
 									source={require('../assets/images/iconPublicaciones.png')}
 									resizeMode='contain'
 									style={{
 										...styles.iconTab,
-										width: 35,
-										height: 35,
-										tintColor: Palette.colors.white ,
+										width: 105,
+										height: 105,
+										
 									}}
 								/>
-							</View>
+							
 							
 							<Text style={{...styles.textTab, top: -16, color: focused ? Palette.colors.primary : Palette.colors.outFocus}}>Publicaciones</Text>
 						</View>
