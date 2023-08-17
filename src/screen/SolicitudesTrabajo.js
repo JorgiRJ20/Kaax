@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Loader from '../components/Loader'; // Asegúrate de importar el componente Loader desde la ubicación correcta
 import Card from '../components/SolicitudesTrabajoCard';
 import useAuth from '../hooks/useAuth';
@@ -17,33 +18,32 @@ export default function SolicitudesTrabajo() {
   };
 
   const [solicitudes, setSolicitudes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [showLoader, setShowLoader] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (idUser) {
-          const data = await getSolicitudes(idUser,config);
-          setSolicitudes(data);
-          setLoading(false);
-        }
-      } catch (error) {
-        setError(error);
-        setLoading(false);
+  const fetchData = async () => {
+    try {
+      if (idUser) {
+        setShowLoader(true);
+        const data = await getSolicitudes(idUser, config);
+        setSolicitudes(data);
+        setShowLoader(false);
       }
-    };
-
-    fetchData();
-  }, [idUser]);
-
-  const handleRefresh = () => {
-    setLoading(true);
-    fetchData();
+    } catch (error) {
+      setError(error);
+      setShowLoader(false);
+    }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
+      <Loader show={showLoader}/>
       {solicitudes.length === 0 ? (
         <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>No hay solicitudes por el momento.</Text>
@@ -51,7 +51,7 @@ export default function SolicitudesTrabajo() {
       ) : (
         <ScrollView
           contentContainerStyle={styles.cardContainer}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
+          
         >
         {solicitudes.map(solicitud => (
           <Card

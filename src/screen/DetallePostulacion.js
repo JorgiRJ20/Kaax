@@ -45,6 +45,8 @@ export default function DetallePostulacion() {
     nombreUsuario: '',
     idLimpiador:'',
     userImage: '',
+    email:'',
+    phone:'',
     fechaPostulacion: '',
     comment: '',
   });

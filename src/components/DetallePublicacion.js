@@ -11,6 +11,7 @@ import Swiper from 'react-native-swiper';
 
 const { width, height } = Dimensions.get('screen');
 
+import { Modal } from 'react-native-paper';
 export default function DetallePublicacion(props) {
 
   const [images, setImages] = useState([]);
@@ -18,6 +19,11 @@ export default function DetallePublicacion(props) {
   const [usersPostulantes, setUsersPostulantes] = useState([]);
   const navigation = useNavigation();
   const [showLoader, setShowLoader] = useState(false);
+
+  const [message, setMessage] = React.useState("");
+ const [visibleMod, setVisibleMod] = React.useState(false);
+ const showModal = () => setVisibleMod(true);
+ const hideModal = () => {setVisibleMod(false); goToPublicaciones();}
 
   const goToPublicaciones = () => {
     navigation.navigate("Tab");
@@ -97,11 +103,8 @@ const EliminarPub = async () => {
         } catch (error) {
             console.error(error);
         }
-        Alert.alert(
-            '¡Exito!',
-            'Publicación Eliminada ',[
-                {text: 'OK', onPress: goToPublicaciones},]
-          );
+        setMessage("Publicación Eliminada");
+        showModal();
 }
 
   /**
@@ -290,10 +293,18 @@ const EliminarPub = async () => {
           </TouchableOpacity>
         </View>
       )} 
-      
-
-            
       </ScrollView>
+      <Modal visible={visibleMod} contentContainerStyle={styles.modal}>
+						<View style={styles.modalResponse}>
+							<Text style={styles.textProgress}>{message}</Text>
+							<TouchableOpacity
+							style={styles.aceptarbtn}
+							onPress={() => hideModal()}
+							>
+								<Text style={styles.textaceptar}>Aceptar</Text>
+							</TouchableOpacity>
+						</View>
+					</Modal>
     </SafeAreaView>
   )
 }
@@ -437,6 +448,39 @@ const styles = StyleSheet.create({
           height: 250,
           width: width,
           resizeMode: 'cover',
+      },
+      modal: {
+        alignContent: "center",
+        alignSelf: "center",
+        alignItems: "center",
+        flex: 1,
+        width: "100%",
+      },
+      textProgress: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#05668D",
+        textAlign: "center",
+      },
+      aceptarbtn: {
+        backgroundColor: "#05668D",
+        padding: 15,
+        width: "80%",
+        borderRadius: 20,
+        marginTop: 20,
+      },
+      textaceptar: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+        textAlign: "center",
+      },
+      modalResponse: {
+        textAlign: "center",
+        backgroundColor: "white",
+        alignItems: "center",
+        padding: 20,
+        borderRadius: 20,
       },
 
 })
