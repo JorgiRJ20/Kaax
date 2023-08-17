@@ -35,6 +35,5 @@ export default function PublicacionesList(props) {
 const styles = StyleSheet.create({
     container:{
         paddingHorizontal:0,
-        marginTop:50,
     }
 })

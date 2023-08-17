@@ -330,14 +330,26 @@ const goToDirecciones = () => {
             setMessage("Pedimos que asigne un nombre");
             showModal();
         }else {
-            // Si el input no estaba vació ya no subimos modal y podemos guardar
-            console.log("GUARDAMOS IF 2")
-            if(isUpdate){
-                EditarDirec();
-                console.log("se edito")
-            }
-            else{CrearDirec();
-            console.log("se guardo")
+
+            // Validamos que todos los campos tengan algo
+            if(infoOrigin.street && infoOrigin.streetNumber && 
+                infoOrigin.postalCode && infoOrigin.city && infoOrigin.region && 
+                infoOrigin.country
+            ) {
+                
+                // Si el input no estaba vació ya no subimos modal y podemos guardar
+                console.log("GUARDAMOS IF 2")
+                if(isUpdate){
+                    EditarDirec();
+                    console.log("se edito")
+                }
+                else{
+                    CrearDirec();
+                    console.log("se guardo")
+                }
+            }else {
+                setMessage("Ubicación no valida, seleccione otra");
+                showModal();
             }
         }
     }
@@ -451,7 +463,7 @@ const goToDirecciones = () => {
                         </>
                     )}
 
-                    {currentSnapPoint != 0 && (
+                    {currentSnapPoint != 0 && gettingLocation === false && (
                         <View style={style.containerInputName}>
                             <TextInput
                                 placeholder='Nombre para identificar ubicación'
@@ -463,17 +475,19 @@ const goToDirecciones = () => {
                         </View>
                     )}
                     
+                    {gettingLocation === false && (
+                        <View style={style.containerBtnSave}>
+                            <Button
+                                icon={"content-save-check-outline"}
+                                mode="contained"
+                                style={style.btnStyle}
+                                onPress={() => handlePressBtn()}
+                            >
+                                {isUpdate ? "Actualizar" : "Guardar"} ubicación
+                            </Button>
+                        </View>
+                    )}
                     
-                    <View style={style.containerBtnSave}>
-                        <Button
-                            icon={"content-save-check-outline"}
-                            mode="contained"
-                            style={style.btnStyle}
-                            onPress={() => handlePressBtn()}
-                        >
-                            {isUpdate ? "Actualizar" : "Guardar"} ubicación
-                        </Button>
-                    </View>
                     
                 </View>
             </BottomSheet>
@@ -483,7 +497,7 @@ const goToDirecciones = () => {
 							<TouchableOpacity
 							style={style.aceptarbtn}
 							onPress={() => {
-                                if (message === 'Pedimos que asigne un nombre') {
+                                if (message === 'Pedimos que asigne un nombre' || message === "Ubicación no valida, seleccione otra") {
                                   hideModal();
                                 } else {
                                   goToDirecciones(); 
