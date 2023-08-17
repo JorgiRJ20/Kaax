@@ -83,11 +83,28 @@ export default function DetallePostulacion() {
     }
   };
 
+  const goPerfilDetail = () => {
+    navigation.navigate("MiPerfil", {
+      userId: data.idLimpiador,
+      userName: data.nombreUsuario,
+      userPhone: data.phone,
+      userEmail: data.email,
+      userPhoto: data.userImage
+    })
+    
+  }
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       
         <Text style={styles.title}>Responder solicitud</Text>
-        <Image source={{ uri: data.userImage }} style={styles.image} />
+
+        <TouchableOpacity
+          onPress={() => goPerfilDetail()}
+          activeOpacity={0.5}
+        >
+          <Image source={{ uri: data.userImage }} style={styles.image} />
+        </TouchableOpacity>
 
         <Text style={styles.subtitle}>Detalles de la solicitud:</Text>
         <View style={styles.ContainerStatus}>

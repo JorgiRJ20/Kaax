@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   ContainerStatus: {
     marginBottom: 8,
     backgroundColor:'#EEEBEB',
-    borderRadius:'10',
+    borderRadius: 10,
     height:70,
     width:380,
     marginTop: 2,

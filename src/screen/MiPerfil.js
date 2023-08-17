@@ -12,6 +12,8 @@ export default function MiPerfil(props) {
 
   const {userId, userEmail, userName, userPhone, userPhoto} = props.route.params
   const navigation = useNavigation();
+  console.log("userId, userEmail, userName, userPhone, userPhoto")
+  console.log(userId, userEmail, userName, userPhone, userPhoto)
     const handlePress = () => {
 	navigation.navigate('Trabajos');
 	};

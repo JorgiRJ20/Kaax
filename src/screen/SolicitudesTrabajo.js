@@ -51,10 +51,9 @@ export default function SolicitudesTrabajo() {
       ) : (
         <ScrollView
           contentContainerStyle={styles.cardContainer}
-          
         >
         {solicitudes.map(solicitud => (
-          <Card
+            <Card
             key={solicitud.idPublicacion}
             titulo={solicitud.titulo}
             namePostulante={solicitud.nombreUsuarioPostulante}
@@ -67,7 +66,7 @@ export default function SolicitudesTrabajo() {
             userImage={solicitud.userImage}
             imagenUrl={solicitud.imagenUrl}
             />
-            ))}
+        ))}
           </ScrollView>
         )}
       </SafeAreaView>
@@ -81,6 +80,7 @@ export default function SolicitudesTrabajo() {
     },
     cardContainer: {
       marginTop: 16,
+      marginBottom: 130
     },
     emptyContainer: {
       flex: 1,

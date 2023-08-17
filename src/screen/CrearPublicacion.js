@@ -11,6 +11,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Platform
 } from "react-native";
 import React,{useEffect,useState,useCallback} from 'react'
 import { useFocusEffect } from '@react-navigation/native';
@@ -598,10 +599,12 @@ const savePublicacion = async (url) => {
       </View>
       <Text style={styles.labelS}>Ingresa el dia del trabajo</Text>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.buttontime} onPress={showDatepicker}>
-          <Icon name="calendar" color={"#fff"} size={17} />
-          <Text style={styles.buttonText}>Abir calendario</Text>
-        </TouchableOpacity>
+        {Platform.OS == "android" && (
+          <TouchableOpacity style={styles.buttontime} onPress={showDatepicker}>
+            <Icon name="calendar" color={"#fff"} size={17} />
+            <Text style={styles.buttonText}>Abir calendario</Text>
+          </TouchableOpacity>
+        )}
         <TextInput
           placeholder=""
           style={styles.inputText}
@@ -614,10 +617,13 @@ const savePublicacion = async (url) => {
       <Text style={styles.labelS}>Ingresa la hora del trabajo</Text>
 
       <View style={styles.container}>
-        <TouchableOpacity style={styles.buttontime} onPress={showTimepicker}>
-          <Icon name="clock-o" color={"#fff"} size={20} />
-          <Text style={styles.buttonText}>Abrir reloj</Text>
-        </TouchableOpacity>
+        {Platform.OS == "android" && (
+          <TouchableOpacity style={styles.buttontime} onPress={showTimepicker}>
+            <Icon name="clock-o" color={"#fff"} size={20} />
+            <Text style={styles.buttonText}>Abrir reloj</Text>
+          </TouchableOpacity>
+        )}
+        
         <TextInput
           placeholder=""
           style={styles.inputText}
@@ -626,7 +632,18 @@ const savePublicacion = async (url) => {
           editable={false}
         />
       </View>
-      {show && (
+      {show && Platform.OS == "android" && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          timeZoneOffsetInSeconds={3600}
+          onChange={onChange}
+        />
+      )}
+
+      {Platform.OS == "ios" && (
         <DateTimePicker
           testID="dateTimePicker"
           value={date}

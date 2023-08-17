@@ -1,11 +1,11 @@
 import React,{useEffect,useState,useCallback} from 'react'
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import Card from '../components/SolicitudesCard';
 import useAuth from '../hooks/useAuth';
 import { getPostulaciones } from '../api/ApiSolicitud';
 import Loader from '../components/Loader';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 export default function Solicitudes() {
   const { auth } = useAuth();
   const { idUser } = auth;
@@ -51,8 +51,11 @@ export default function Solicitudes() {
           <Text style={styles.emptyText}>No hay solicitudes por el momento.</Text>
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.cardContainer}>
+        <ScrollView 
+          contentContainerStyle={styles.cardContainer}
+        >
           {solicitudes.map((solicitud) => (
+            <>
             <Card
               key={solicitud.idUsuarioPostulante}
               titulo={solicitud.titulo}
@@ -66,6 +69,21 @@ export default function Solicitudes() {
               horaTrabajo={solicitud.horaTrabajo}
               imagenUrl={solicitud.imagenUrl}
             />
+            <Card
+              key={solicitud.idUsuarioPostulante}
+              titulo={solicitud.titulo}
+              descripcion={solicitud.descripcion}
+              idUsuario={solicitud.idUsuarioPublicacion}
+              nameUser={solicitud.nombreUsuarioPublicacion}
+              precio={solicitud.pago}
+              status={solicitud.status}
+              idPostulacion={solicitud.idPostulacion}
+              fechaTrabajo={solicitud.fechaTrabajo}
+              horaTrabajo={solicitud.horaTrabajo}
+              imagenUrl={solicitud.imagenUrl}
+            />
+            </>
+
           ))}
         </ScrollView>
       )}
@@ -79,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   cardContainer: {
-    marginTop: 16,
+    paddingBottom: 130
   },
   emptyContainer: {
     flex: 1,
