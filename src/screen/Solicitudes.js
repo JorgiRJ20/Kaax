@@ -57,7 +57,7 @@ export default function Solicitudes() {
           {solicitudes.map((solicitud) => (
             <>
             <Card
-              key={solicitud.idUsuarioPostulante}
+              key={`${solicitud.idUsuarioPostulante}_${Math.random()}_${new Date().getTime()}`}
               titulo={solicitud.titulo}
               descripcion={solicitud.descripcion}
               idUsuario={solicitud.idUsuarioPublicacion}

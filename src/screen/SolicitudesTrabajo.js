@@ -53,8 +53,8 @@ export default function SolicitudesTrabajo() {
           contentContainerStyle={styles.cardContainer}
         >
         {solicitudes.map(solicitud => (
-            <Card
-            key={solicitud.idPublicacion}
+          <Card
+            key={`${solicitud.idPublicacion}_${Math.random()}_${new Date().getTime()}`}
             titulo={solicitud.titulo}
             namePostulante={solicitud.nombreUsuarioPostulante}
             comment={solicitud.descripcion}
