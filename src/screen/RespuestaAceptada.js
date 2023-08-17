@@ -4,8 +4,20 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { format } from 'date-fns';
 import { useRoute } from '@react-navigation/native';
 import { getDetallePostulacion } from '../api/ApiSolicitudDetalle';
+import useAuth from '../hooks/useAuth';
 
 export default function RespuestaAceptada() {
+  const { auth } = useAuth();
+  const { idUser } = auth;
+  //console.log(auth.token)
+  let token = auth.token;
+  //const role_user = auth.role;
+  //console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
   const { params } = useRoute();
   const idPostulacion = params?.idPostulacion;
   //console.log('is',idPostulacion)
@@ -14,7 +26,7 @@ export default function RespuestaAceptada() {
 
   useEffect(() => {
     //console.log('Fetching details for idPostulacion:', idPostulacion);
-    getDetallePostulacion(idPostulacion)
+    getDetallePostulacion(idPostulacion,config)
       .then((data) => {
         console.log('Details fetched:', data);
         setDetallePostulacion(data);
@@ -23,6 +35,7 @@ export default function RespuestaAceptada() {
         console.error('Error fetching details:', error);
       });
   }, []);
+ 
   
   
   //console.log(detallePostulacion)

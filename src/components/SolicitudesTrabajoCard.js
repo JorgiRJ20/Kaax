@@ -87,7 +87,7 @@ export default function SolicitudesTrabajoCard(props) {
 		  onPress={handleButtonPress}
 		  style={styles.card}>
 		<View style={styles.containerImage}>
-        	<Image source={require('../assets/departamento.jpg')}
+        	<Image source={{ uri: props.imagenUrl }}
           	style={styles.image}
         />
       	</View>

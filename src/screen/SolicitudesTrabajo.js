@@ -8,6 +8,13 @@ import { getSolicitudes } from '../api/ApiSolicitudTrabajo';
 export default function SolicitudesTrabajo() {
   const { auth } = useAuth();
   const { idUser } = auth;
+  let token = auth.token;
+  //const role_user = auth.role;
+  console.log(auth.token);
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +24,7 @@ export default function SolicitudesTrabajo() {
     const fetchData = async () => {
       try {
         if (idUser) {
-          const data = await getSolicitudes(idUser);
+          const data = await getSolicitudes(idUser,config);
           setSolicitudes(data);
           setLoading(false);
         }
@@ -32,8 +39,15 @@ export default function SolicitudesTrabajo() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Loader show={loading} /> 
-      <ScrollView contentContainerStyle={styles.cardContainer}>
+      {solicitudes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No hay solicitudes por el momento.</Text>
+      </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.cardContainer}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} />}
+        >
         {solicitudes.map(solicitud => (
           <Card
             key={solicitud.idPublicacion}
@@ -46,22 +60,33 @@ export default function SolicitudesTrabajo() {
             fechaTrabajo={solicitud.fechaTrabajo}
             horaTrabajo={solicitud.horaTrabajo}
             userImage={solicitud.userImage}
-          />
-        ))}
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+            imagenUrl={solicitud.imagenUrl}
+            />
+            ))}
+          </ScrollView>
+        )}
+      </SafeAreaView>
+    );
+  }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  cardContainer: {
-    marginTop: 16,
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    cardContainer: {
+      marginTop: 16,
+    },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    emptyText: {
+      fontSize: 18,
+      color: '#888', // Cambia el color del texto aquí
+    },
+  });
 
 
 	

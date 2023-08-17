@@ -87,12 +87,12 @@ export default function DetallePublicacionLim(props) {
     //Para enviar comentario al postularme 
     const enviarComentario = async () => {
       const fechaPostulacion = moment().format('YYYY-MM-DDTHH:mm:ss');
-      console.log('idUser:', idUser);
-      console.log('idPublicacion:', params.idPublicacion);
-      console.log('comment:', comment);
-      console.log('fecha_postulacion:', fechaPostulacion);
+      //console.log('idUser:', idUser);
+      //console.log('idPublicacion:', params.idPublicacion);
+      //console.log('comment:', comment);
+      //console.log('fecha_postulacion:', fechaPostulacion);
       try {
-        await postularse(idUser, params.idPublicacion, comment,fechaPostulacion,1);     
+        await postularse(idUser, params.idPublicacion, comment,fechaPostulacion,1,config);     
         // El comentario se envió correctamente, 
         console.log('Comentario enviado con éxito');
         // Mostrar el modal
