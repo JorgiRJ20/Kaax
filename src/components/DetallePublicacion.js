@@ -1,5 +1,5 @@
-import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,Alert, ScrollView} from 'react-native'
-import React, {useEffect,useState,useCallback} from 'react'
+import { View, Text,StyleSheet,Image,SafeAreaView,TouchableOpacity,Alert, ScrollView, Dimensions, FlatList} from 'react-native'
+import React, {useEffect,useState,useCallback, useRef} from 'react'
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import useAuth from '../hooks/useAuth';
@@ -7,6 +7,9 @@ import { URL_API } from '../utils/enviroments';
 import axios from 'axios';
 import Palette from '../constants/Palette';
 import Loader from './Loader';
+
+const { width, height } = Dimensions.get('screen');
+
 export default function DetallePublicacion(props) {
 
   const [usersPostulantes, setUsersPostulantes] = useState([]);
@@ -18,7 +21,7 @@ export default function DetallePublicacion(props) {
 }
 
   const {route:{params}} = props
-
+  console.log(params)
 
   const goToEditarPub = () =>{
   navigation.navigate('EditarPublicacion',{idPublicacion:params.idPublicacion,
@@ -41,7 +44,15 @@ let idUser = auth.idUser;
 const config = {
   headers: { Authorization: `Bearer ${token}` }
 };
-
+  const [indexCarousel, setIndexCarousel] = useState(0);
+  const flatListRef = useRef(null);
+  const [imagesDetail, setImagesDetail] = useState([
+    { id_local_img: 1, urlImage: "url_aqui"},
+    { id_local_img: 2, urlImage: "url_aqui"},
+    { id_local_img: 3, urlImage: "url_aqui"},
+    { id_local_img: 4, urlImage: "url_aqui"},
+    { id_local_img: 5, urlImage: "url_aqui"},
+  ]);
 
 
 const EliminarPub = async () => {
@@ -82,10 +93,15 @@ const EliminarPub = async () => {
  * @param {*} subtitle - valor de la información
  * @returns {*}
  */
-  const RenderCardDataDetail = (icon, title, subtitle) => {
+  const RenderCardDataDetail = ({icon, title, subtitle, isPress, handlePress}) => {
     const flex = params.is_location_available ? 0.5 : 1;
     return (
-      <View style={{...styles.cardInfoDetail, flex: flex}}>
+      <TouchableOpacity 
+        style={{...styles.cardInfoDetail, flex: flex}}
+        disabled={!isPress}
+        onPress={handlePress}
+        activeOpacity={0.5}
+      >
         <View style={{ alignItems: 'center' }}>
           <View
             style={styles.circleContainer}
@@ -99,7 +115,7 @@ const EliminarPub = async () => {
           <Text style={styles.subTitleTextInfoDetail}>{subtitle}</Text>
         </View>
         
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -130,6 +146,65 @@ const EliminarPub = async () => {
     setShowLoader(false);
   }
 
+  const handleShowImage = (url) => {
+    navigation.navigate("ShowImages", {
+        arrayImages: selectedImages,
+        indexShow: 1,
+        howShow: 'onlyImage',
+        uriUrl: url,
+    });
+  }
+
+  const CarouselCardItem = ({ item, indexCar }) => {
+    return (
+      <View style={styles.containerItemCarousel}>
+
+        <TouchableOpacity
+            onPress={() => handleShowImage(item.urlImg)}
+            activeOpacity={1}
+        >
+          <View style={{position: 'absolute', zIndex: 1000, right: 5, top: 5, backgroundColor: 'rgba(000, 000, 000, 0.2)', borderRadius: 50, paddingHorizontal: 4}}>
+            <Text style={{color: Palette.colors.white}}>{(indexCarousel+1)}/{imagesDetail.length}</Text>
+          </View>
+          <Image
+            // source={{
+            //   uri: item.urlImg,
+            // }}
+            source={require('../assets/departamento.jpg')}
+            style={styles.imageItemCarousel}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  /**
+   * Función para obtener la cantidad de pixeles que se han recorrido scrolleando
+   * y poder calcular en que indice esta el scroll dividiendo el ancho del componente
+   * con la cantidad de pixeles recorridos
+   * @date 8/16/2023 - 10:22:18 PM
+   * @author Alessandro Guevara
+   *
+   * @param {*} event
+   */
+  const handleScroll = (event) => {
+    // Obtenemos cuantos pixeles se han scrolleado en x (Horizontal)
+    const offsetY = event.nativeEvent.contentOffset.x;
+    // Ancho de nuestro componente en el flatlist
+    const itemHeight = width-5;
+    // Dividimos para obtener el scroll
+    const indexScroll = (Math.floor(offsetY / itemHeight)) < 0 ? 0  :  (Math.floor(offsetY / itemHeight));
+    setIndexCarousel(indexScroll);
+  };
+
+  const goPerfilDetail = () => {
+    // navigation.navigate("MiPerfil", {
+    //   id_user: 1
+    // })
+    console.log("PRESSSS");
+  }
+ 
+
   useEffect(() => {
     getPostulantesPublicacion();
   }, []);
@@ -139,21 +214,35 @@ const EliminarPub = async () => {
       <Loader show={showLoader}/>
       <ScrollView style={{flex: 1}}>
 
-      
-      <Image source={require('../assets/departamento.jpg')} style={styles.imagen}/>
+      <View style={{ marginLeft: 0}}>
+        <FlatList 
+            style={{margin:0, padding: 0, left: 0}}
+            ref={flatListRef}
+            horizontal={true}
+            bounces={true}
+            showsHorizontalScrollIndicator={false}
+            renderItem={(item) => CarouselCardItem(item)}
+            data={imagesDetail}
+            keyExtractor={(item) => item.id_local_img}
+            decelerationRate={"fast"}
+            snapToInterval={width}
+            onScroll={handleScroll}
+            
+        />
+      </View>
       <Text style={styles.title}>{params.titulo}</Text>
       <Text style={styles.descripcion}>{params.descripcion}</Text>
       <View
         style={styles.containerLineInfo}
       >
-        {RenderCardDataDetail("money", "Pago", `$${params.pago}`)}
-        {RenderCardDataDetail("home", "Número cuartos", `${params.numCuartos}`)}
+        <RenderCardDataDetail icon={"money"} title={"Pago"} subtitle={`$${params.pago}`} isPress={false}/>
+        <RenderCardDataDetail icon={"home"} title={"cuartos"} subtitle={`${params.numCuartos}`} isPress={false}/>
       </View>
       <View
         style={styles.containerLineInfo}
       >
-        {RenderCardDataDetail("user", "Solicitante", params.user)}
-        {RenderCardDataDetail("calendar", "Fecha de limpieza", `${params.fechaTrabajo} ${params.horaTrabajo}`)}
+        <RenderCardDataDetail icon={"user"} title={"Solicitante"} subtitle={params.user} isPress={true} handlePress={goPerfilDetail}/>
+        <RenderCardDataDetail icon={"calendar"} title={"Fecha de limpieza"} subtitle={`${params.fechaTrabajo} ${params.horaTrabajo}`} isPress={false} />
       </View>
 
       {usersPostulantes.length === 0 && (
@@ -287,11 +376,23 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignSelf: "center",
-        marginTop: 10,
         marginBottom: 10,
       },
       containerOptions: {
         alignItems: 'center'
-      }
+      },
+      containerItemCarousel: {
+          width: width, 
+          shadowOffset: { width: 1, height: 1 },
+          shadowColor: 'black',
+          shadowOpacity: 0.4,
+          shadowRadius: 1,
+          elevation: 8,
+      },
+      imageItemCarousel: {
+          height: 250,
+          width: width,
+          resizeMode: 'cover',
+      },
 
 })

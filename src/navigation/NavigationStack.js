@@ -24,6 +24,7 @@ import DetallePostulacion from '../screen/DetallePostulacion';
 import RespuestaAceptada from '../screen/RespuestaAceptada';
 import MiPerfil from '../screen/MiPerfil';
 import Trabajos from '../screen/Trabajos';
+import ShowImages from '../components/ShowImages';
 
 
 export default function NavigationStack() {
@@ -175,6 +176,15 @@ export default function NavigationStack() {
             title:''
           }}
         />
+		<Stack.Screen
+		name={'ShowImages'}
+			component={ShowImages}
+			options={{
+				headerTransparent: true,
+				headerShown: false,
+				title: 'Ver imágenes',
+			}}
+		/>
 		</Stack.Navigator>
 	);
 }
